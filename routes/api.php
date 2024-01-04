@@ -22,4 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware(['Api_Auth'])->group(function () {
     Route::post('/user-login', [UserController::class, 'UserLogin']);
+    Route::post('/user-register', [UserController::class, 'UserRegister']);
 });
