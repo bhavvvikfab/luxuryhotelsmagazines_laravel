@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DatabaseMigrationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::middleware(['Api_Auth'])->group(function () {
+    Route::get('/migrate-database', [DatabaseMigrationController::class, 'migrate']);
+
+
+
     Route::get('/test', function(){
         return ['status'=>true,'message'=>"Hello,i'm test."];
     });
