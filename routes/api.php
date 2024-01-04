@@ -21,6 +21,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::middleware(['Api_Auth'])->group(function () {
+    Route::get('/test', function(){
+        return ['status'=>true,'message'=>"Hello,i'm test."];
+    });
+
     Route::post('/user-login', [UserController::class, 'UserLogin']);
     Route::post('/user-register', [UserController::class, 'UserRegister']);
 });
