@@ -29,15 +29,16 @@ class UserController extends Controller
 
                 if (Auth::attempt($credentials)) {
                     $user = Auth::user();
+                    
                     if(isset($requestData['role']) && !empty($requestData['role']) && $requestData['role'] == 1){
-                        if ($user->type === 1) {
+                        if ($user->type == 1) {
                             $response = ['status' => true, 'message' => 'Login Successfully'];
                         } else {
                             Auth::logout();
                             $response = ['status' => true, 'message' => 'Unauthorized access'];
                         }
                     }else{
-                        if ($user->type === 2) {
+                        if ($user->type == 2) {
                             $response = ['status' => true, 'message' => 'Login Successfully'];
                         } else {
                             Auth::logout();
