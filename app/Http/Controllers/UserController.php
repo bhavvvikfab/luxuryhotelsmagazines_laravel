@@ -16,13 +16,17 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ];
-        $validator = Validator::make($request->all(), $rules);
+        $requestData = $request->json()->all();
+// dd($requestData);
+        $validator = Validator::make($requestData, $rules);
         
             if ($validator->fails()) {
                 $response['message'] = $validator->messages();
               } else {
-                $credentials = $request->only('email', 'password');
-// dd(Hash::make($credentials['password']));
+                  // $credentials = $request->only('email', 'password');
+                  $credentials['email'] = $requestData['email'];
+                  $credentials['password'] = $requestData['password'];
+
                 if (Auth::attempt($credentials)) {
                     // Instead of setting response within 'response' key, set it directly
                     $response = ['status' => true, 'message' => 'Login Successfully'];
@@ -41,20 +45,21 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ];
-        $validator = Validator::make($request->all(), $rules);
+        $requestData = $request->json()->all();
+        $validator = Validator::make($requestData, $rules);
         
             if ($validator->fails()) {
                 $response['message'] = $validator->messages();
               } else {
-                if (User::where('email', $request->email)->exists()) {
+                if (User::where('email', $requestData['email'])->exists()) {
                     return response()->json(['status' => false,'message' => 'Email already exists']);
                     exit;
                 }
 
                 $user = new User();
-                $user->name = $request->name;
-                $user->email = $request->email;
-                $user->password = Hash::make($request->password);
+                $user->name = $requestData['name'];
+                $user->email = $requestData['email'];
+                $user->password = Hash::make($requestData['password']);
 
                 $user->save();
 
