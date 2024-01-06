@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HotelController;
 use App\Http\Controllers\DatabaseMigrationController;
 
 /*
@@ -32,4 +33,8 @@ Route::middleware(['Api_Auth'])->group(function () {
 
     Route::post('/user-login', [UserController::class, 'UserLogin']);
     Route::post('/user-register', [UserController::class, 'UserRegister']);
+
+
+
+    Route::post('/hotel-register', [HotelController::class, 'HotelRegister']);
 });
