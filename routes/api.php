@@ -37,4 +37,5 @@ Route::middleware(['Api_Auth'])->group(function () {
 
 
     Route::post('/hotel-register', [HotelController::class, 'HotelRegister']);
+    Route::post('/search-hotel', [HotelController::class, 'SearchHotel']);
 });

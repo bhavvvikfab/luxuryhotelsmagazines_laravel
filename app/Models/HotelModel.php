@@ -12,6 +12,7 @@ class HotelModel extends Model
     protected $table = "hotels";
     protected $fillable = [
         'user_id',
+        'country_id',
         'hotel_title',
         'address',
         'hotel_images',
@@ -23,4 +24,10 @@ class HotelModel extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function country()
+{
+    return $this->belongsTo(CountryModel::class, 'country_id');
+}
+
 }
