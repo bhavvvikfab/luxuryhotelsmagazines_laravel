@@ -104,6 +104,7 @@ class HotelController extends Controller
 
     $rules = [
         'user_id' => 'required',
+        'coutry_id' => 'required',
         'hotel_title' => 'required',
         'address' => 'required',
         'hotel_images' => 'required',
@@ -131,6 +132,8 @@ class HotelController extends Controller
 
 
 
+
+
     $validator = Validator::make($requestData, $rules);
 
     if ($validator->fails()) {
@@ -139,6 +142,8 @@ class HotelController extends Controller
         $hotel = new HotelModel();
 
         $hotel->user_id = $requestData['user_id'];
+        $hotel->coutry_id = $requestData['coutry_id'];
+        //  $hotel->coutry_id = 1;
         $hotel->hotel_title = $requestData['hotel_title'];
         $hotel->address = $requestData['address'];
         $hotel->hotel_images = $requestData['hotel_images'];
@@ -165,7 +170,9 @@ class HotelController extends Controller
 
         $hotel_special_offer->hotel_id = $last_insert_id; // Assuming you want to link the contacts to the hotel
         $hotel_special_offer->offer_title = $requestData['offer_title'];
+        $hotel_special_offer->type = $requestData['type'];
         $hotel_special_offer->contact_no = $requestData['contact_no'];
+        $hotel_special_offer->description = $requestData['description'];
         $hotel_special_offer->from_date = $requestData['from_date'];
         $hotel_special_offer->to_date = $requestData['to_date'];
 
@@ -191,6 +198,103 @@ class HotelController extends Controller
     }
 
     return $response;
+}
+
+
+// public function SearchHotel(Request $request)
+// {
+
+// // echo "hii";
+// // die;
+
+
+// $requestData = $request->json()->all();
+
+
+//     $coutry_id = $requestData['coutry_id'];
+
+
+//     $hotel_name = $requestData['hotel_keyword'];
+//     dd($hotel_name);
+
+ 
+
+
+//     if (!empty($coutry_id) && empty($hotel_name)) {
+//         echo "tjhtyjh";
+
+//         $hotel_data = HotelModel::where('coutry_id', $coutry_id)->get();
+//     } elseif (!empty($hotel_name) && empty($coutry_id)) {
+
+//         echo "tjhtyjhwefwfw";
+
+//         $hotel_data = HotelModel::where('hotel_title', 'like', '%' . $hotel_name . '%')
+//             ->orWhere('address', 'like', '%' . $hotel_name . '%')
+//             // ->orWhere('hotel_description', 'like', '%' . $hotel_name . '%')
+//             ->get();
+//     } elseif (!empty($coutry_id) && !empty($hotel_name)) {
+
+//         echo "454tjhtyjhwefwfw";
+
+//         $hotel_data = HotelModel::where('coutry_id', $coutry_id)
+//             ->where(function ($query) use ($hotel_name) {
+//                 $query->where('hotel_title', 'like', '%' . $hotel_name . '%')
+//                     ->orWhere('address', 'like', '%' . $hotel_name . '%');
+//                     // ->orWhere('hotel_description', 'like', '%' . $hotel_name . '%');
+//             })
+//             ->get();
+//     } else {
+
+//         echo "45654454tjhtyjhwefwfw";
+
+//         $hotel_data = HotelModel::all();
+//     }
+
+
+
+
+//     if ($hotel_data->isEmpty()) {
+//         return response()->json(['message' => 'No data found']);
+//     }
+
+//     return response()->json(['hotel_data' => $hotel_data]);
+// }
+public function searchHotel(Request $request)
+{
+    try {
+        $requestData = $request->all(); // Use $request->all() instead of $request->json()->all()
+
+        $coutry_id = isset($requestData['coutry_id'])?$requestData['coutry_id']:''; // Fix typo in variable name
+
+        $hotel_name = isset($requestData['hotel_keyword'])?$requestData['hotel_keyword']:'';
+        
+        // dd($coutry_id, $hotel_name);
+
+        if (!empty($coutry_id) && empty($hotel_name)) {
+            $hotel_data = HotelModel::where('coutry_id', $coutry_id)->get();
+        } elseif (!empty($hotel_name) && empty($coutry_id)) {
+            $hotel_data = HotelModel::where('hotel_title', 'like', '%' . $hotel_name . '%')
+                ->orWhere('address', 'like', '%' . $hotel_name . '%')
+                ->get();
+        } elseif (!empty($coutry_id) && !empty($hotel_name)) {
+            $hotel_data = HotelModel::where('coutry_id', $coutry_id)
+                ->where(function ($query) use ($hotel_name) {
+                    $query->where('hotel_title', 'like', '%' . $hotel_name . '%')
+                        ->orWhere('address', 'like', '%' . $hotel_name . '%');
+                })
+                ->get();
+        } else {
+            $hotel_data = HotelModel::all();
+        }
+
+        if ($hotel_data->isEmpty()) {
+            return response()->json(['message' => 'No data found']);
+        }
+
+        return response()->json(['hotel_data' => $hotel_data]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
 }
 
 
