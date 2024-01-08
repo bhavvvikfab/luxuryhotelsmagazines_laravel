@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('subscription_plan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('hotels');
+            $table->bigInteger('user_id')->unsigned();
             $table->string('plan_name', 255);
             $table->string('payment_type', 255);
             $table->integer('no_of_days')->unsigned()->nullable()->change();

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('hotels', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
+            $table->bigInteger('user_id')->unsigned();
             $table->string('hotel_title', 255);
             $table->text('address');
             $table->text('hotel_images');
