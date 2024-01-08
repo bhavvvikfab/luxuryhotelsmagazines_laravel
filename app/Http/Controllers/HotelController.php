@@ -246,27 +246,21 @@ public function AddHotelAmeties(Request $request)
     $rules = [
         'title' => 'required|unique:hotel_amieties',
         'type' => 'required',
-        'imag' => 'required',
+        'image' => 'required',
         
     ];
 
-    $requestData = $request->json()->all();
+    // $requestData = $request->json()->all();
 
-    $validator = Validator::make($requestData, $rules);
-
-
+    $validator = Validator::make($request->all(), $rules);
 
     if ($validator->fails()) {
-        // echo "rthrtgh";
-
         $response['message'] = $validator->messages();
     } else {
-        // echo "rthrtgh6563";
         $hotel_ameties = new HotelAmetiesModel();
-        
-        $hotel_ameties->title = $requestData['title'];
-        $hotel_ameties->type = $requestData['type'];
-        $hotel_ameties->imag = $requestData['imag'];
+        $hotel_ameties->title = $request['title'];
+        $hotel_ameties->type = $request['type'];
+        $hotel_ameties->image = $request->file('image')->store('uploads');
 
         $hotel_ameties->save();
 
@@ -287,19 +281,19 @@ public function UpdateHotelAmeties(Request $request)
 
 
     $response = array("status" => false, 'message' => '');
-    $requestData = $request->json()->all();
-    $ameties_id = $requestData['ameties_id'];
+    // $requestData = $request->all();
+    $ameties_id = $request['ameties_id'];
 
     $rules = [
         'ameties_id' => 'required',
         'title' => 'required|unique:hotel_amieties,title,'. $ameties_id ,
         'type' => 'required',
-        'imag' => 'required',
+        // 'image' => 'required',
     ];
 
    
  
-    $validator = Validator::make($requestData, $rules);
+    $validator = Validator::make($request->all(), $rules);
   
  
     // $validator = Validator::make($request->all(), $rules);
@@ -322,9 +316,11 @@ public function UpdateHotelAmeties(Request $request)
             $response['message'] = 'Amenity not found';
         } else {
             // Update the fields
-            $amenity->title = $requestData['title'];
-            $amenity->type = $requestData['type'];
-            $amenity->imag =$requestData['imag'];
+            $amenity->title = $request['title'];
+            $amenity->type = $request['type'];
+            if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                $amenity->image = $request->file('image')->store('uploads');
+            }
             // $amenity->amenities_id = $requestData->input('amenities_id');
             // Handle image update logic here
 
@@ -354,11 +350,11 @@ public function DeleteHotelAmeties(Request $request)
         
     ];
 
-    $requestData = $request->json()->all();
+    // $requestData = $request->json()->all();
 
-    $validator = Validator::make($requestData, $rules);
+    // $validator = Validator::make($requestData, $rules);
 
-    // $validator = Validator::make($request->all(), $rules);
+    $validator = Validator::make($request->all(), $rules);
 
     if ($validator->fails()) {
         $response['message'] = $validator->messages();
@@ -367,7 +363,7 @@ public function DeleteHotelAmeties(Request $request)
 
     
 
-    $ameties_id = $requestData['ameties_id'];
+    $ameties_id = $request['ameties_id'];
 
 
     $hotel_ameties = HotelAmetiesModel::find($ameties_id);
@@ -407,14 +403,14 @@ public function EditHotelAmeties(Request $request)
         
     ];
 
-    $requestData = $request->json()->all();
+    // $requestData = $request->json()->all();
 
-    $validator = Validator::make($requestData, $rules);
+    $validator = Validator::make($request->all(), $rules);
 
     if ($validator->fails()) {
-        $response['message'] = $validator->messages();
+        $response['message'] = $request->messages();
     } else {
-        $ameties_id = $requestData['ameties_id'];
+        $ameties_id = $request['ameties_id'];
 
         $hotel_amenity = HotelAmetiesModel::find($ameties_id);
     
