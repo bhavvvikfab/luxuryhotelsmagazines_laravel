@@ -38,4 +38,11 @@ Route::middleware(['Api_Auth'])->group(function () {
 
     Route::post('/hotel-register', [HotelController::class, 'HotelRegister']);
     Route::post('/search-hotel', [HotelController::class, 'SearchHotel']);
+     Route::post('/add-hotel-ameties', [HotelController::class, 'AddHotelAmeties']);
+     Route::post('/update-hotel-ameties', [HotelController::class, 'UpdateHotelAmeties']);
+     Route::post('/delete-hotel-ameties', [HotelController::class, 'DeleteHotelAmeties']);
+     Route::get('/all-hotel-ameties', [HotelController::class, 'AllHotelAmeties']);
+     Route::post('/edit-hotel-ameties', [HotelController::class, 'EditHotelAmeties']);
+     
+     
 });

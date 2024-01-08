@@ -10,6 +10,7 @@ use App\Models\HotelModel;
 use App\Models\HotelContactsModel;
 use App\Models\HotelSpecialOfferModel;
 use App\Models\HotelPageAddonModel;
+use App\Models\HotelAmetiesModel;
 
 
 
@@ -130,10 +131,6 @@ class HotelController extends Controller
 
     $requestData = $request->json()->all();
 
-
-
-
-
     $validator = Validator::make($requestData, $rules);
 
     if ($validator->fails()) {
@@ -201,64 +198,7 @@ class HotelController extends Controller
 }
 
 
-// public function SearchHotel(Request $request)
-// {
 
-// // echo "hii";
-// // die;
-
-
-// $requestData = $request->json()->all();
-
-
-//     $coutry_id = $requestData['coutry_id'];
-
-
-//     $hotel_name = $requestData['hotel_keyword'];
-//     dd($hotel_name);
-
- 
-
-
-//     if (!empty($coutry_id) && empty($hotel_name)) {
-//         echo "tjhtyjh";
-
-//         $hotel_data = HotelModel::where('coutry_id', $coutry_id)->get();
-//     } elseif (!empty($hotel_name) && empty($coutry_id)) {
-
-//         echo "tjhtyjhwefwfw";
-
-//         $hotel_data = HotelModel::where('hotel_title', 'like', '%' . $hotel_name . '%')
-//             ->orWhere('address', 'like', '%' . $hotel_name . '%')
-//             // ->orWhere('hotel_description', 'like', '%' . $hotel_name . '%')
-//             ->get();
-//     } elseif (!empty($coutry_id) && !empty($hotel_name)) {
-
-//         echo "454tjhtyjhwefwfw";
-
-//         $hotel_data = HotelModel::where('coutry_id', $coutry_id)
-//             ->where(function ($query) use ($hotel_name) {
-//                 $query->where('hotel_title', 'like', '%' . $hotel_name . '%')
-//                     ->orWhere('address', 'like', '%' . $hotel_name . '%');
-//                     // ->orWhere('hotel_description', 'like', '%' . $hotel_name . '%');
-//             })
-//             ->get();
-//     } else {
-
-//         echo "45654454tjhtyjhwefwfw";
-
-//         $hotel_data = HotelModel::all();
-//     }
-
-
-
-
-//     if ($hotel_data->isEmpty()) {
-//         return response()->json(['message' => 'No data found']);
-//     }
-
-//     return response()->json(['hotel_data' => $hotel_data]);
-// }
 public function searchHotel(Request $request)
 {
     try {
@@ -295,6 +235,203 @@ public function searchHotel(Request $request)
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
     }
+}
+
+public function AddHotelAmeties(Request $request)
+{
+
+
+    $response = array("status" => false, 'message' => '');
+
+    $rules = [
+        'title' => 'required|unique:hotel_amieties',
+        'type' => 'required',
+        'imag' => 'required',
+        
+    ];
+
+    $requestData = $request->json()->all();
+
+    $validator = Validator::make($requestData, $rules);
+
+
+
+    if ($validator->fails()) {
+        // echo "rthrtgh";
+
+        $response['message'] = $validator->messages();
+    } else {
+        // echo "rthrtgh6563";
+        $hotel_ameties = new HotelAmetiesModel();
+        
+        $hotel_ameties->title = $requestData['title'];
+        $hotel_ameties->type = $requestData['type'];
+        $hotel_ameties->imag = $requestData['imag'];
+
+        $hotel_ameties->save();
+
+
+        if ($hotel_ameties) {
+            $response = response()->json(['status' => true, 'message' => 'Hotel Ameties Added Successfully']);
+        } else {
+            $response = response()->json(['status' => false, 'message' => 'Failed to add hotel ameties!']);
+        }
+    }
+
+    return $response;
+}
+
+public function UpdateHotelAmeties(Request $request)
+{
+
+
+
+    $response = array("status" => false, 'message' => '');
+    $requestData = $request->json()->all();
+    $ameties_id = $requestData['ameties_id'];
+
+    $rules = [
+        'ameties_id' => 'required',
+        'title' => 'required|unique:hotel_amieties,title,'. $ameties_id ,
+        'type' => 'required',
+        'imag' => 'required',
+    ];
+
+   
+ 
+    $validator = Validator::make($requestData, $rules);
+  
+ 
+    // $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+
+    } else {
+
+        // Validation passed, proceed with the update logic
+
+        // Assuming you have a model for HotelAmenity
+        
+ 
+        $amenity = HotelAmetiesModel::find($ameties_id);
+
+
+
+        if (!$amenity) {
+            $response['message'] = 'Amenity not found';
+        } else {
+            // Update the fields
+            $amenity->title = $requestData['title'];
+            $amenity->type = $requestData['type'];
+            $amenity->imag =$requestData['imag'];
+            // $amenity->amenities_id = $requestData->input('amenities_id');
+            // Handle image update logic here
+
+            // Save the changes
+            $amenity->save();
+
+            if ($amenity) {
+                $response = response()->json(['status' => true, 'message' => 'Hotel Ameties Updated Successfully']);
+            } else {
+                $response = response()->json(['status' => false, 'message' => 'Failed to update hotel ameties!']);
+            }
+        }
+    
+    }
+    return $response;
+}
+
+public function DeleteHotelAmeties(Request $request)
+{
+
+    // echo "rtrt";
+
+    $response = array("status" => false, 'message' => '');
+
+    $rules = [
+        'ameties_id' => 'required',
+        
+    ];
+
+    $requestData = $request->json()->all();
+
+    $validator = Validator::make($requestData, $rules);
+
+    // $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    } else {
+
+
+    
+
+    $ameties_id = $requestData['ameties_id'];
+
+
+    $hotel_ameties = HotelAmetiesModel::find($ameties_id);
+
+        if (!$hotel_ameties) {
+            return response()->json(['message' => 'Hotel Ameties not found'], 404);
+        }
+
+        $hotel_ameties->delete();
+
+        return response()->json(['message' => 'Hotel Ameties deleted successfully']);
+
+    
+    }
+   
+}
+
+public function AllHotelAmeties()
+{
+
+
+    $data = HotelAmetiesModel::all();
+
+
+
+        return response()->json(['status' => true,'data'=>$data]);
+
+}
+
+public function EditHotelAmeties(Request $request)
+{
+
+    $response = array("status" => false, 'message' => '');
+
+    $rules = [
+        'ameties_id' => 'required',
+        
+    ];
+
+    $requestData = $request->json()->all();
+
+    $validator = Validator::make($requestData, $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    } else {
+        $ameties_id = $requestData['ameties_id'];
+
+        $hotel_amenity = HotelAmetiesModel::find($ameties_id);
+    
+
+
+        if ($hotel_amenity) {
+            $response['status'] = true;
+            $response['message'] = $hotel_amenity;
+            // Do something with $hotel_amenity
+     
+        } else {
+            $response['message'] = 'Hotel amenity not found';
+        }
+    }
+
+    // You might want to return the response at the end of your function
+    return response()->json($response);
 }
 
 
