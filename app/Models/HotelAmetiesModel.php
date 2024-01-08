@@ -13,7 +13,7 @@ class HotelAmetiesModel extends Model
     protected $fillable = [
         'title',
         'type',
-        'imag',
+        'image',
         'created_at',
         'updated_at',
     ];
