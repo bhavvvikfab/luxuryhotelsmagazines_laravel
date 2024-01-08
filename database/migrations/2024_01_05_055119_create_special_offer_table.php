@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('special_offer', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hotel_id')->constrained('hotels');
+            $table->bigInteger('hotel_id')->unsigned();
             $table->string('offer_title', 255);
             $table->string('contact_no', 255);
             $table->text('from_date');

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('home_page_addon', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hotel_id')->constrained('hotels');
+            $table->bigInteger('hotel_id')->unsigned();
             $table->string('home_page_latest_news', 255);
             $table->string('hotel_latest_news', 255);
             $table->string('special_offer_to_homepage', 255);
