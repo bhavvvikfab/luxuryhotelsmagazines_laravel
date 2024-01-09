@@ -14,7 +14,7 @@ class HotelSpecialOfferModel extends Model
         'hotel_id',
         'news_id',
         'type',
-       'offer_title',
+        'offer_title',
         'contact_no',
         'from_date',
         'to_date',
@@ -23,4 +23,9 @@ class HotelSpecialOfferModel extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function news()
+    {
+        return $this->belongsTo(News::class, 'news_id');
+    }
 }
