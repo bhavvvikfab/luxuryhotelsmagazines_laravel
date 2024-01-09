@@ -11,7 +11,7 @@ use App\Models\HotelContactsModel;
 use App\Models\HotelSpecialOfferModel;
 use App\Models\HotelPageAddonModel;
 use App\Models\HotelAmetiesModel;
-
+use Illuminate\Support\Facades\Storage;
 
 
 
@@ -386,7 +386,10 @@ public function AllHotelAmeties()
 
 
     $data = HotelAmetiesModel::all();
-
+    $data->transform(function ($item) {
+        $item->fullImagePath = asset("storage/app/".$item->image);
+        return $item;
+    });
 
 
         return response()->json(['status' => true,'data'=>$data]);
@@ -417,6 +420,7 @@ public function EditHotelAmeties(Request $request)
 
 
         if ($hotel_amenity) {
+            $hotel_amenity->fullImagePath = asset("storage/app/".$hotel_amenity->image);
             $response['status'] = true;
             $response['message'] = $hotel_amenity;
             // Do something with $hotel_amenity
