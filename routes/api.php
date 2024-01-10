@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\DatabaseMigrationController;
+use App\Http\Middleware\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,7 +41,19 @@ Route::middleware(['Api_Auth'])->group(function () {
     Route::post('/update-news', [NewsController::class, 'UpdateNews']);
     Route::post('/views-news', [NewsController::class, 'ViewNews']);
 
+
+    Route::middleware(['user_login'])->group(function () {
+
+    
+
+    });
+
     Route::post('/hotel-register', [HotelController::class, 'HotelRegister']);
+    Route::get('/all-hotels', [HotelController::class, 'AllHotels']);
+    Route::post('/edit-hotels', [HotelController::class, 'EditHotels']);
+    Route::post('/update-hotels', [HotelController::class, 'UpdateHotels']);
+    Route::post('/delete-hotels', [HotelController::class, 'DeleteHotels']);
+    
     Route::post('/search-hotel', [HotelController::class, 'SearchHotel']);
      Route::post('/add-hotel-ameties', [HotelController::class, 'AddHotelAmeties']);
      Route::post('/update-hotel-ameties', [HotelController::class, 'UpdateHotelAmeties']);

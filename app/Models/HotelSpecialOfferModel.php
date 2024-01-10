@@ -28,4 +28,8 @@ class HotelSpecialOfferModel extends Model
     {
         return $this->belongsTo(News::class, 'news_id');
     }
+    public function hotels()
+    {
+        return $this->belongsTo(HotelModel::class, 'hotel_id');
+    }
 }
