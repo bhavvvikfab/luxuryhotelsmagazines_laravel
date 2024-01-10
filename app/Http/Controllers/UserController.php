@@ -32,14 +32,16 @@ class UserController extends Controller
                     
                     if(isset($requestData['role']) && !empty($requestData['role']) && $requestData['role'] == 1){
                         if ($user->type == 1) {
-                            $response = ['status' => true, 'message' => 'Login Successfully'];
+                            $token = $user->createToken('token-name')->plainTextToken;
+                            $response = ['status' => true, 'message' => 'Login Successfully','token'=>$token];
                         } else {
                             Auth::logout();
                             $response = ['status' => true, 'message' => 'Unauthorized access'];
                         }
                     }else{
                         if ($user->type == 2) {
-                            $response = ['status' => true, 'message' => 'Login Successfully'];
+                            $token = $user->createToken('token-name')->plainTextToken;
+                            $response = ['status' => true, 'message' => 'Login Successfully','token'=>$token];
                         } else {
                             Auth::logout();
                             $response = ['status' => true, 'message' => 'Unauthorized access'];
