@@ -32,7 +32,8 @@ class UserController extends Controller
                     
                     if(isset($requestData['role']) && !empty($requestData['role']) && $requestData['role'] == 1){
                         if ($user->type == 1) {
-                            $token = $user->createToken('token-name')->plainTextToken;
+                            // $token = $user->createToken('token-name')->plainTextToken;
+                            $token = $user->createToken('AppName')->accessToken;
                             $response = ['status' => true, 'message' => 'Login Successfully','token'=>$token];
                         } else {
                             Auth::logout();
@@ -40,7 +41,9 @@ class UserController extends Controller
                         }
                     }else{
                         if ($user->type == 2) {
-                            $token = $user->createToken('token-name')->plainTextToken;
+                            // $token = $user->createToken('token-name')->plainTextToken;
+                            $token = $user->createToken('AppName')->accessToken;
+                            
                             $response = ['status' => true, 'message' => 'Login Successfully','token'=>$token];
                         } else {
                             Auth::logout();

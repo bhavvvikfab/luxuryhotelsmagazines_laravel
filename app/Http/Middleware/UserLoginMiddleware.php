@@ -16,12 +16,23 @@ class UserLoginMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // if (Auth::check()) {
+        //     // dd('hh');
+        //     // Redirect to login page
+        //     return $next($request);
+        // }
 
-        if (Auth::check()) {
-            // dd('hh');
-            // Redirect to login page
-            return $next($request);
-        } 
+        $token = $request->bearerToken();
+
+        if ($token) {
+            auth()->guard('api')->setRequest($request);
+
+            if (Auth::guard('api')->check()) {
+               
+                return $next($request);
+            }
+        }
+
         return response()->json(['message' => 'Unauthorized!','status'=>'fail']);
      
     }
