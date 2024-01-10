@@ -7,7 +7,7 @@ use App\Http\Controllers\HotelController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\DatabaseMigrationController;
 use App\Http\Middleware\Auth;
-
+use App\Http\Controllers\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware(['Api_Auth'])->group(function () {
     Route::get('/migrate-database', [DatabaseMigrationController::class, 'migrate']);
+    Route::post('/payment', [PaymentController::class, 'payment']);
 
 
 
