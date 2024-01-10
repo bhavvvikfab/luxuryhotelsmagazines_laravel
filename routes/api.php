@@ -26,7 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware(['Api_Auth'])->group(function () {
     Route::get('/migrate-database', [DatabaseMigrationController::class, 'migrate']);
-    Route::post('/payment', [PaymentController::class, 'payment']);
+    
 
 
 
@@ -43,12 +43,6 @@ Route::middleware(['Api_Auth'])->group(function () {
     Route::post('/views-news', [NewsController::class, 'ViewNews']);
 
 
-    Route::middleware(['user_login'])->group(function () {
-
-    
-
-    });
-
     Route::post('/hotel-register', [HotelController::class, 'HotelRegister']);
     Route::get('/all-hotels', [HotelController::class, 'AllHotels']);
     Route::post('/edit-hotels', [HotelController::class, 'EditHotels']);
@@ -63,4 +57,8 @@ Route::middleware(['Api_Auth'])->group(function () {
      Route::post('/edit-hotel-ameties', [HotelController::class, 'EditHotelAmeties']);
      
      
+});
+
+Route::middleware(['user_login'])->group(function () {
+    Route::post('/payment', [PaymentController::class, 'payment']);
 });
