@@ -19,4 +19,9 @@ class HotelPageAddonModel extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function hotels()
+    {
+        return $this->belongsTo(HotelModel::class, 'hotel_id');
+    }
 }
