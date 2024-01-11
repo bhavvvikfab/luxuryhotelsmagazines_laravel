@@ -10,8 +10,7 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
-        "laravel/passport": "*",
-        "srmklive/paypal": "*"
+        "laravel/passport": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -27,10 +26,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        },
-        "files": [
-            "app/helpers/CustomHelper.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
