@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\HotelMagazinesController;
 use App\Http\Controllers\DatabaseMigrationController;
 use App\Http\Middleware\Auth;
 use App\Http\Controllers\PaymentController;
@@ -61,4 +62,12 @@ Route::middleware(['Api_Auth'])->group(function () {
 
 Route::middleware(['user_login'])->group(function () {
     Route::post('/payment', [PaymentController::class, 'payment']);
+     Route::post('/add-hotel-magazines', [HotelMagazinesController::class, 'AddHotelMagazines']);
+     Route::get('/all-hotel-magazines', [HotelMagazinesController::class, 'AllHotelMagazines']);
+     Route::post('/edit-hotel-magazines', [HotelMagazinesController::class, 'EditHotelMagazines']);
+     Route::post('/update-hotel-magazines', [HotelMagazinesController::class, 'UpdateHotelMagazines']);
+     Route::post('/delte-hotel-magazines', [HotelMagazinesController::class, 'DeleteHotelMagazines']);
+     Route::post('/delte-hotel-magazines-single-pdffile', [HotelMagazinesController::class, 'DeleteHotelMagazinesSinglePdffile']);
+
+
 });
