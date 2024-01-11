@@ -325,6 +325,7 @@ public function DeleteHotels(Request $request)
     $hotel_data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->find($hotel_id);
 
 
+
         if (!$hotel_data) {
             return response()->json(['message' => 'Hotel not found'], 404);
         }
