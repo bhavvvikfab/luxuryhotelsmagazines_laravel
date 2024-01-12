@@ -37,6 +37,7 @@ Route::middleware(['Api_Auth'])->group(function () {
 
     Route::post('/user-login', [UserController::class, 'UserLogin']);
     Route::post('/user-register', [UserController::class, 'UserRegister']);
+
     Route::get('/all-news/{id?}', [NewsController::class, 'index']);
 	Route::post('/create-news', [NewsController::class, 'CreateNews']);
     Route::post('/edit-news', [NewsController::class, 'EditNews']);
@@ -44,23 +45,17 @@ Route::middleware(['Api_Auth'])->group(function () {
     Route::post('/views-news', [NewsController::class, 'ViewNews']);
 
 
-    Route::post('/hotel-register', [HotelController::class, 'HotelRegister']);
-    Route::get('/all-hotels', [HotelController::class, 'AllHotels']);
-    Route::post('/edit-hotels', [HotelController::class, 'EditHotels']);
-    Route::post('/update-hotels', [HotelController::class, 'UpdateHotels']);
-    Route::post('/delete-hotels', [HotelController::class, 'DeleteHotels']);
+    
     
     Route::post('/search-hotel', [HotelController::class, 'SearchHotel']);
-     Route::post('/add-hotel-ameties', [HotelController::class, 'AddHotelAmeties']);
-     Route::post('/update-hotel-ameties', [HotelController::class, 'UpdateHotelAmeties']);
-     Route::post('/delete-hotel-ameties', [HotelController::class, 'DeleteHotelAmeties']);
-     Route::get('/all-hotel-ameties', [HotelController::class, 'AllHotelAmeties']);
-     Route::post('/edit-hotel-ameties', [HotelController::class, 'EditHotelAmeties']);
+    
      
      
 });
 
 Route::middleware(['user_login'])->group(function () {
+    Route::post('/user-logout', [UserController::class, 'UserLogout']);
+
     Route::post('/payment', [PaymentController::class, 'payment']);
      Route::post('/add-hotel-magazines', [HotelMagazinesController::class, 'AddHotelMagazines']);
      Route::get('/all-hotel-magazines', [HotelMagazinesController::class, 'AllHotelMagazines']);
@@ -70,4 +65,19 @@ Route::middleware(['user_login'])->group(function () {
      Route::post('/delte-hotel-magazines-single-pdffile', [HotelMagazinesController::class, 'DeleteHotelMagazinesSinglePdffile']);
 
 
+     Route::post('/hotel-register', [HotelController::class, 'HotelRegister']);
+    Route::get('/all-hotels', [HotelController::class, 'AllHotels']);
+    Route::post('/edit-hotels', [HotelController::class, 'EditHotels']);
+    Route::post('/update-hotels', [HotelController::class, 'UpdateHotels']);
+    Route::post('/delete-hotels', [HotelController::class, 'DeleteHotels']);
+
+
+    Route::post('/add-hotel-ameties', [HotelController::class, 'AddHotelAmeties']);
+    Route::post('/update-hotel-ameties', [HotelController::class, 'UpdateHotelAmeties']);
+    Route::post('/delete-hotel-ameties', [HotelController::class, 'DeleteHotelAmeties']);
+    Route::get('/all-hotel-ameties', [HotelController::class, 'AllHotelAmeties']);
+    Route::post('/edit-hotel-ameties', [HotelController::class, 'EditHotelAmeties']);
+
 });
+
+Route::get('/home', [HotelController::class, 'AllHomeData']);
