@@ -25,6 +25,7 @@ class HotelMagazinesController extends Controller
      
     
         $rules = [
+            'user_id' => 'required',
             'title' => 'required',
             'thumbnail' => 'required',
             'file_pdf' => 'required',
@@ -39,6 +40,7 @@ class HotelMagazinesController extends Controller
         } else {
             $hotel_magazines = new MagazinesModel();
             $hotel_magazines->title = $request['title'];
+            $hotel_magazines->user_id = $request['user_id'];
             // $hotel_magazines->file_pdf = $request->file('file_pdf')->store('uploads');
 
            
@@ -131,6 +133,7 @@ if ($request->hasFile('thumbnail')) {
             if ($hotel_magazine) {
                 $hotel_magazine->thumbnail = asset("storage/app/".$hotel_magazine->thumbnail);
                 $pdf_files = $hotel_magazine->file_pdf;
+                $pdfarr = []; // Initialize $pdfarr here
                 if(!empty($pdf_files)){
        
                    $pdf  = json_decode($pdf_files);
@@ -157,65 +160,7 @@ if ($request->hasFile('thumbnail')) {
         return response()->json($response);
     }
 
-//     public function UpdateHotelMagazines(Request $request)
-//     {
- 
 
-
-//         $response = array("status" => false, 'message' => '');
-//         $requestData = $request->all(); 
-  
-
-//         $rules = [
-//             'title' => 'required',
-//             'thumbnail' => 'required',
-//             'file_pdf' => 'required',
-//         ];
-
-//         $validator = Validator::make($request->all(), $rules);
-//         $hotel_magazine_id = $requestData['hotel_magazine_id'];
-    
-
-
-//         if ($validator->fails()) {
-            
-
-//             $response['message'] = $validator->messages();
-//         } else {
-       
-//             $hotel_magazine = MagazinesModel::find($hotel_magazine_id);
-
-
-//             if ($hotel_magazine) {
-//                 $hotel_magazine->title = $requestData['title']; 
-//                 $hotel_magazine->thumbnail = asset("storage/app/".$hotel_magazine->thumbnail);
-//                 $pdf_files = $hotel_magazine->file_pdf;
-//                 if(!empty($pdf_files)){
-       
-//                    $pdf  = json_decode($pdf_files);
-//                    foreach ($pdf as $key => $val) {
-//                        $fullImagePath = asset("storage/app/".$val);
-//                        $pdfarr[] = $fullImagePath;
-//                    }
-                   
-           
-//                 }
-
-//                 $hotel_magazine->file_pdf = $pdfarr; 
-//             $hotel_magazine->save();
-
-//             if ($hotel_magazine) {
-//                 $response = response()->json(['status' => true, 'message' => 'Hotel Magazine Updated Successfully']);
-//             } else {
-//                 $response = response()->json(['status' => false, 'message' => 'Failed to update hotel magazine!']);
-//             }
-//         }
-    
-   
-//         }
-//  return $response;
-
-//     }
 
 public function UpdateHotelMagazines(Request $request)
 {
@@ -304,46 +249,7 @@ public function DeleteHotelMagazines(Request $request)
 
 }
 
-// public function DeleteHotelMagazinesSinglePdffile(Request $request) 
-// {
-    
-//     $response = array("status" => false, 'message' => '');
-//     $requestData = $request->all(); 
 
-//     $rules = [
-//         'key' => 'required',
-//         'hotel_magazine_id' => 'required',
-     
-//     ];
-
-//     $validator = Validator::make($request->all(), $rules);
-//     if ($validator->fails()) {
-//         $response['message'] = $request->messages();
-//     }
-//     else {
-
-//     $hotel_magazine_id = $requestData['hotel_magazine_id'];
-//     $key = $requestData['key'];
-//     $delete_hotel_magazine = MagazinesModel::find($hotel_magazine_id);
-
-// if($delete_hotel_magazine){
-//     $file_pdf =  $delete_hotel_magazine['file_pdf'];
-//     $file = json_decode($file_pdf);
-
-//     // $index = array_search($key, $file);
-//     unset($file[$key]);
-
-
-//     print_r($file);
-// }
-    
-
-
-//     }
-
-
-
-// }
 public function DeleteHotelMagazinesSinglePdffile(Request $request)
 {
     $response = array("status" => false, 'message' => '');

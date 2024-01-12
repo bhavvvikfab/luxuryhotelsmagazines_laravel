@@ -11,6 +11,8 @@ use App\Models\HotelContactsModel;
 use App\Models\HotelSpecialOfferModel;
 use App\Models\HotelPageAddonModel;
 use App\Models\HotelAmetiesModel;
+use App\Models\MagazinesModel;
+use App\Models\News;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -18,6 +20,36 @@ use Illuminate\Support\Facades\Storage;
 
 class HotelController extends Controller
 {
+
+
+    public function AllHomeData()
+{
+   
+
+    // Retrieve data from MagazinesModel
+    $magazine_data = MagazinesModel::orderBy('id', 'desc')->limit(10)->get();
+
+
+
+    // Retrieve data from HotelModel
+    $hotel_data = HotelModel::orderBy('id', 'desc')->limit(10)->get();
+
+    // Retrieve data from News model
+    $news_data = News::orderBy('id', 'desc')->limit(10)->get();
+
+    // Merge data into a single array
+    $data = [
+        'magazines' => $magazine_data,
+        'hotels' => $hotel_data,
+        'news' => $news_data,
+    ];
+
+    // Debug the data
+
+
+    // Return the data as JSON
+    return response()->json(['status' => true, 'data' => $data]);
+}
 
 public function HotelRegister(Request $request)
 {
@@ -178,8 +210,7 @@ public function UpdateHotels(Request $request){
         'website' => 'required',
         'contact_no' => 'required',
         'name' => 'required',
-
-        'email' => 'required',
+         'email' => 'required',
         'contact_no' => 'required',
         'offer_title' => 'required',
         'type' => 'required',

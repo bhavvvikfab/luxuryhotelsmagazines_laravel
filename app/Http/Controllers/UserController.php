@@ -94,4 +94,30 @@ class UserController extends Controller
 
               return $response;
     }
+
+    public function UserLogout(Request $request)
+ 
+{
+ 
+    $user = Auth::guard('api')->user();
+    if ($user) {
+        // Auth::guard('api')->logout();
+        $user->tokens()->delete();
+        // $user = Auth::guard('api')->user();
+    
+    } else {
+        dd('User not authenticated');
+    }
+
+    
+
+    
+       $response =  response()->json([
+            'status' => true,
+            'message' => 'Logout Successfully!',
+        ]);
+        return  $response;
+
+    }
 }
+
