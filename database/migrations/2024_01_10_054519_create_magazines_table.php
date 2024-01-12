@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('magazines', function (Blueprint $table) {
             $table->id();
+            $table->tinyInteger('user_id');
             $table->string('title');
             $table->text('thumbnail');
             $table->text('file_pdf');
-            $table->tinyInteger('user_id')->after('id');
             $table->timestamps();
         });
     }
