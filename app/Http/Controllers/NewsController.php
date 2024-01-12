@@ -242,4 +242,41 @@ class NewsController extends Controller
 
               return $response;
     }
+
+    public function DeleteNews(Request $request)
+    {
+        $response = array("status" => false, 'message' => '');
+    
+        $rules = [
+            'news_id' => 'required',
+        ];
+    
+        $requestData = $request->all();
+    
+        $validator = Validator::make($requestData, $rules);
+    
+        if ($validator->fails()) {
+            $response['message'] = $validator->messages();
+        } else {
+    
+         $news_id = $requestData['news_id'];
+    
+    
+        $news_data = News::with('special_offer')->find($news_id);
+       
+            if (!$news_data) {
+                return response()->json(['status'=>false,'message'=>'News not found'], 404);
+            }
+    
+            $news_data->special_offer()->delete();
+    
+            $news_data->delete();
+    
+            $response = response()->json(['status'=>true,'message'=>'News Deleted Successfully!']);
+    
+        
+        }
+    
+        return $response;
+    }
 }

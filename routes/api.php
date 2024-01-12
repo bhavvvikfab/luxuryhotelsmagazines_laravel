@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\HotelMagazinesController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\DatabaseMigrationController;
 use App\Http\Middleware\Auth;
 use App\Http\Controllers\PaymentController;
@@ -43,7 +44,7 @@ Route::middleware(['Api_Auth'])->group(function () {
     Route::post('/edit-news', [NewsController::class, 'EditNews']);
     Route::post('/update-news', [NewsController::class, 'UpdateNews']);
     Route::post('/views-news', [NewsController::class, 'ViewNews']);
-
+    Route::post('/delete-news', [NewsController::class, 'DeleteNews']);
 
     
     
@@ -51,6 +52,9 @@ Route::middleware(['Api_Auth'])->group(function () {
     
      
      
+    Route::post('/create-review', [ReviewController::class, 'CreateReview']);
+    Route::get('/all-review/{type?}', [ReviewController::class, 'index']);
+    Route::post('/delete-review', [ReviewController::class, 'DeleteReview']);
 });
 
 Route::middleware(['user_login'])->group(function () {
