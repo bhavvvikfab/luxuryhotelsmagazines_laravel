@@ -60,7 +60,7 @@ public function HotelRegister(Request $request)
     // dd($requestData);
 
     $rules = [
-        'user_id' => 'required',
+        // 'user_id' => 'required',
         'country' => 'required',
         'hotel_title' => 'required',
         'address' => 'required',
@@ -95,7 +95,8 @@ public function HotelRegister(Request $request)
     if ($validator->fails()) {
         $response['message'] = $validator->messages();
     } else {
-        $hotel = new HotelModel($request->only(['user_id', 'country', 'hotel_title', 'address', 'about_hotel', 'restaurent_bars', 'description','spa_wellness', 'rooms_and_suites', 'amities', 'other_facilities', 'youtube_link', 'otherInformation1', 'otherInformation2', 'website', 'contact_no']));
+         $hotel = new HotelModel($request->only(['user_id', 'country', 'hotel_title', 'address', 'about_hotel', 'restaurent_bars', 'description','spa_wellness', 'rooms_and_suites', 'amities', 'other_facilities', 'youtube_link', 'otherInformation1', 'otherInformation2', 'website', 'contact_no']));
+        // $hotel = new HotelModel($request->only(['country', 'hotel_title', 'address', 'about_hotel', 'restaurent_bars', 'description','spa_wellness', 'rooms_and_suites', 'amities', 'other_facilities', 'youtube_link', 'otherInformation1', 'otherInformation2', 'website', 'contact_no']));
         // $hotel->hotel_images = $this->uploadImage($request->file('hotel_images'));
         $hotel->hotel_images = $request->file('hotel_images')->store('uploads');
  
@@ -192,7 +193,7 @@ public function UpdateHotels(Request $request){
     $response = array("status"=>false,'message' => '');
 
      $rules = [
-        'user_id' => 'required',
+        // 'user_id' => 'required',
         'hotel_id' => 'required',
         'country' => 'required',
         'hotel_title' => 'required',
@@ -609,6 +610,19 @@ public function EditHotelAmeties(Request $request)
     // You might want to return the response at the end of your function
     return response()->json($response);
 }
+
+public function LoginUserHotels(Request $request)
+{
+    $user = Auth::guard('api')->user();
+    
+    $u_id = $user['id'];
+    $data = HotelModel::where('user_id', $u_id)->orderBy('id', 'desc')->get();
+
+    return response()->json(['status' => true,'login_user_hotel_data'=>$data]);
+
+
+}
+
 
 
 }
