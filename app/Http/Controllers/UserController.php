@@ -109,14 +109,30 @@ class UserController extends Controller
         dd('User not authenticated');
     }
 
-    
-
-    
        $response =  response()->json([
             'status' => true,
             'message' => 'Logout Successfully!',
         ]);
         return  $response;
+
+    }
+
+    public function LoginUserProfile(Request $request)
+    { 
+
+        $response = array("status"=>false,'message' => '');
+
+     $user = Auth::guard('api')->user();
+    if($user)
+    {
+       $response = ['status' => true, 'message' => 'Profile Data Successfully!','profile_data'=>$user];
+    }
+    else {
+        $response = ['status' => false,'message' => 'Failed to register user'];
+
+    }
+    return $response;
+
 
     }
 }

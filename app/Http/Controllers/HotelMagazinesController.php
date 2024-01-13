@@ -25,7 +25,7 @@ class HotelMagazinesController extends Controller
      
     
         $rules = [
-            'user_id' => 'required',
+            // 'user_id' => 'required',
             'title' => 'required',
             'thumbnail' => 'required',
             'file_pdf' => 'required',
@@ -298,6 +298,16 @@ public function DeleteHotelMagazinesSinglePdffile(Request $request)
     return response()->json($response);
 }
 
+public function LoginUserHotelMagazines(Request $request)
+{
+    $user = Auth::guard('api')->user();
+    
+    $u_id = $user['id'];
+    $data = MagazinesModel::where('user_id', $u_id)->orderBy('id', 'desc')->get();
+
+    return response()->json(['status' => true,'login_user_hotel_magazines_data'=>$data]);
+
+}
 
     }
 
