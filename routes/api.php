@@ -12,6 +12,8 @@ use App\Http\Middleware\Auth;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MediakitController;
 use App\Http\Controllers\DistibutionController;
+use App\Http\Controllers\HomeHotelController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -73,6 +75,14 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/delete-distibutor', [DistibutionController::class, 'DeleteDistributor']);
     
     
+
+
+    Route::post('/add-home-hotel', [HomeHotelController::class, 'AddHomeHotel']);
+    Route::get('/all-home-hotel', [HomeHotelController::class, 'AllHomeHotel']);
+    Route::post('/edit-home-hotel', [HomeHotelController::class, 'EditHomeHotel']);
+    Route::post('/update-home-hotel', [HomeHotelController::class, 'UpdateHomeHotel']);
+    Route::post('/delete-home-hotel', [HomeHotelController::class, 'DeleteHomeHotel']);
+    Route::post('/limit-all-home-hotel', [HomeHotelController::class, 'LimitAllHomeHotel']);
     
 
     Route::post('/payment', [PaymentController::class, 'payment']);

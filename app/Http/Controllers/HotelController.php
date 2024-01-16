@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +14,8 @@ use App\Models\HotelPageAddonModel;
 use App\Models\HotelAmetiesModel;
 use App\Models\MagazinesModel;
 use App\Models\News;
+
+
 use Illuminate\Support\Facades\Storage;
 
 
@@ -21,7 +24,8 @@ use Illuminate\Support\Facades\Storage;
 class HotelController extends Controller
 {
 
-
+   
+    
     public function AllHomeData()
 {
    
@@ -54,7 +58,9 @@ class HotelController extends Controller
 public function HotelRegister(Request $request)
 {
     
-
+  
+  
+    
     $response = array("status" => false, 'message' => '');
     // $requestData = $request->all(); 
     // dd($requestData);
