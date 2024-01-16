@@ -30,7 +30,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
+Route::get('/reset-password/{token}/{id}', [UserController::class, 'resetPassword'])
+    ->name('password.reset');
 Route::middleware(['Api_Auth'])->group(function () {
     Route::get('/migrate-database', [DatabaseMigrationController::class, 'migrate']);
     
@@ -42,6 +43,8 @@ Route::middleware(['Api_Auth'])->group(function () {
     });
 
     Route::post('/user-login', [UserController::class, 'UserLogin']);
+    Route::post('/forgot-password', [UserController::class, 'Forgotpassword']);
+    
     Route::post('/user-register', [UserController::class, 'UserRegister']);
     
     Route::post('/add-user', [UserController::class, 'AddUser']);
@@ -50,12 +53,7 @@ Route::middleware(['Api_Auth'])->group(function () {
     Route::post('/update-user', [UserController::class, 'UpdateUser']);
     Route::post('/delete-user', [UserController::class, 'DeleteUser']);
     
-    Route::get('/all-news/{id?}', [NewsController::class, 'index']);
-	Route::post('/create-news', [NewsController::class, 'CreateNews']);
-    Route::post('/edit-news', [NewsController::class, 'EditNews']);
-    Route::post('/update-news', [NewsController::class, 'UpdateNews']);
-    Route::post('/views-news', [NewsController::class, 'ViewNews']);
-    Route::post('/delete-news', [NewsController::class, 'DeleteNews']);
+    
 
     
     
@@ -94,6 +92,12 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/update-distibutor-detail', [DistibutionController::class, 'UpdateDistributorDetail']);
     Route::post('/delete-distibutor-detail', [DistibutionController::class, 'DeleteDistributorDetail']);
     
+    Route::get('/all-news/{id?}', [NewsController::class, 'index']);
+	Route::post('/create-news', [NewsController::class, 'CreateNews']);
+    Route::post('/edit-news', [NewsController::class, 'EditNews']);
+    Route::post('/update-news', [NewsController::class, 'UpdateNews']);
+    Route::post('/views-news', [NewsController::class, 'ViewNews']);
+    Route::post('/delete-news', [NewsController::class, 'DeleteNews']);
     
 
 

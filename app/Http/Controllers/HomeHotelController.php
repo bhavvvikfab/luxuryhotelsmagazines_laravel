@@ -64,7 +64,7 @@ class HomeHotelController extends Controller
 
     public function AllHomeHotel()
     {
-        $data = HomeHotelModel::all();
+        $data = HomeHotelModel::orderBy('id', 'desc')->get();
       
             return response()->json(['status' => true,'data'=>$data]);
 
@@ -75,7 +75,8 @@ class HomeHotelController extends Controller
         
         $perPage = $request->input('paginate', 10); // Set a default value (e.g., 10) if 'paginate' is not provided
 
-        $data = HomeHotelModel::paginate($perPage);
+        $data = HomeHotelModel::orderBy('id', 'desc')->paginate($perPage);
+   
     
         return response()->json(['status' => true, 'data' => $data]);
 
@@ -156,7 +157,7 @@ class HomeHotelController extends Controller
 
 
         if (!$home_hotel_data) {
-            $response['message'] = 'Amenity not found';
+            $response['message'] ='Home hotel not found';
         } else {
             // Update the fields
             $home_hotel_data->country_name = $request['country_name'];

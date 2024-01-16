@@ -15,7 +15,6 @@ use App\Models\HotelAmetiesModel;
 use App\Models\MagazinesModel;
 use App\Models\News;
 
-
 use Illuminate\Support\Facades\Storage;
 
 
@@ -57,136 +56,146 @@ class HotelController extends Controller
 
 public function HotelRegister(Request $request)
 {
-    
-  
-  
-    
-    $response = array("status" => false, 'message' => '');
-    // $requestData = $request->all(); 
-    // dd($requestData);
-
-    $rules = [
-        // 'user_id' => 'required',
-        'country' => 'required',
-        'hotel_title' => 'required',
-        'address' => 'required',
-        'about_hotel' => 'required',
-        'restaurent_bars' => 'required',
-        'spa_wellness' => 'required',
-        // 'hotel_images' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        'rooms_and_suites' => 'required',
-        'amities' => 'required',
-        'other_facilities' => 'required',
-        'youtube_link' => 'required',
-        'otherInformation1' => 'required',
-        'otherInformation2' => 'required',
-        'website' => 'required',
-        'contact_no' => 'required',
-        'name' => 'required',
-        'email' => 'required',
-        'contact_no' => 'required',
-        'offer_title' => 'required',
-        'type' => 'required',
-        'from_date' => 'required',
-        'to_date' => 'required',
-        'home_page_latest_news' => 'required',
-        'hotel_latest_news' => 'required',
-        'special_offer_to_homepage' => 'required',
-        'home_page_spotlight' => 'required',
-    ];
-
-    $validator = Validator::make($request->all(), $rules);
-
-
-    if ($validator->fails()) {
-        $response['message'] = $validator->messages();
-    } else {
-         $hotel = new HotelModel($request->only(['user_id', 'country', 'hotel_title', 'address', 'about_hotel', 'restaurent_bars', 'description','spa_wellness', 'rooms_and_suites', 'amities', 'other_facilities', 'youtube_link', 'otherInformation1', 'otherInformation2', 'website', 'contact_no']));
-        // $hotel = new HotelModel($request->only(['country', 'hotel_title', 'address', 'about_hotel', 'restaurent_bars', 'description','spa_wellness', 'rooms_and_suites', 'amities', 'other_facilities', 'youtube_link', 'otherInformation1', 'otherInformation2', 'website', 'contact_no']));
-        // $hotel->hotel_images = $this->uploadImage($request->file('hotel_images'));
-        $hotel->hotel_images = $request->file('hotel_images')->store('uploads');
  
-
-        $hotel->save();
-  
-// print_r($request->input('name'));
-
-        $contact_name = json_encode($request->input('name'));
-        $contact_email = json_encode($request->input('email'));
-        $contact_no = json_encode($request->input('contact'));
-       
-        $hotel_contacts = new HotelContactsModel([
-            'hotel_id' => $hotel->id,
-            'name' => $contact_name,
-            'email' => $contact_email,
-            'contact_no' => $contact_no,
-        ]);
-        $hotel_contacts->save();
-
-        $hotel_special_offer = new HotelSpecialOfferModel([
-            'hotel_id' => $hotel->id,
-            'offer_title' => $request->input('offer_title'),
-            'type' => $request->input('type'),
-            'contact_no' => $request->input('contact_no'),
-            'description' => $request->input('description'),
-            'from_date' => $request->input('from_date'),
-            'to_date' => $request->input('to_date'),
-            'redeem_link' => $request->input('redeem_link'),
-        ]);
-        $hotel_special_offer->save();
-
-        $hotel_page_addon = new HotelPageAddonModel([
-            'hotel_id' => $hotel->id,
-            'home_page_latest_news' => $request->input('home_page_latest_news'),
-            'hotel_latest_news' => $request->input('hotel_latest_news'),
-            'special_offer_to_homepage' => $request->input('special_offer_to_homepage'),
-            'home_page_spotlight' => $request->input('home_page_spotlight'),
-        ]);
-        $hotel_page_addon->save();
-
-        $response = response()->json(['status' => true, 'message' => 'Hotel Created Successfully']);
+    $response = array("status" => false, 'message' => '');
+    $user = Auth::guard('api')->user();
+    if(isset($request['user_id']) && !empty($request['user_id'])){
+        $userExists = User::where('id', $request['user_id'])->exists();
+        if ($userExists) {
+            $user = User::where('id', $request['user_id'])->first();
+        } else {
+            $response['message'] = 'User does not exist.';
+            return $response;
+        }
     }
 
-    return $response;
-}
+        // if($user['id']) 
+            // $requestData = $request->all(); 
+            // dd($requestData);
+
+            $rules = [
+                // 'user_id' => 'required',
+                'country' => 'required',
+                'hotel_title' => 'required',
+                'address' => 'required',
+                'about_hotel' => 'required',
+                'restaurent_bars' => 'required',
+                'spa_wellness' => 'required',
+                // 'hotel_images' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'rooms_and_suites' => 'required',
+                'amities' => 'required',
+                'other_facilities' => 'required',
+                'youtube_link' => 'required',
+                'otherInformation1' => 'required',
+                'otherInformation2' => 'required',
+                'website' => 'required',
+                'contact_no' => 'required',
+                'name' => 'required',
+                'email' => 'required',
+                'contact_no' => 'required',
+                'offer_title' => 'required',
+                'type' => 'required',
+                'from_date' => 'required',
+                'to_date' => 'required',
+                'home_page_latest_news' => 'required',
+                'hotel_latest_news' => 'required',
+                'special_offer_to_homepage' => 'required',
+                'home_page_spotlight' => 'required',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
 
 
-public function AllHotels()
-{
 
-    $data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->get();
+            if ($validator->fails()) {
+                $response['message'] = $validator->messages();
+            } else {
+                $hotel = new HotelModel($request->only(['user_id','country', 'hotel_title', 'address', 'about_hotel', 'restaurent_bars', 'description','spa_wellness', 'rooms_and_suites', 'amities', 'other_facilities', 'youtube_link', 'otherInformation1', 'otherInformation2', 'website', 'contact_no']));
+                // $hotel = new HotelModel($request->only(['country', 'hotel_title', 'address', 'about_hotel', 'restaurent_bars', 'description','spa_wellness', 'rooms_and_suites', 'amities', 'other_facilities', 'youtube_link', 'otherInformation1', 'otherInformation2', 'website', 'contact_no']));
+                // $hotel->hotel_images = $this->uploadImage($request->file('hotel_images'));
 
-    $data->transform(function ($item) {
-        $item->fullImagePath = asset("storage/app/".$item->hotel_images);
-        return $item;
-    });
-
-        return response()->json(['status' => true,'data'=>$data]);
-
-}
-
-
-
-public function EditHotels(Request $request)
-{
-
-    $response = array("status" => false, 'message' => '');
-
-    $rules = [
-        'hotel_id' => 'required',
+                $hotel->user_id = $user['id'];
+                $hotel->hotel_images = $request->file('hotel_images')->store('uploads');
+                $hotel->save();
         
-    ];
+        // print_r($request->input('name'));
 
-    $requestData = $request->all();
+                $contact_name = json_encode($request->input('name'));
+                $contact_email = json_encode($request->input('email'));
+                $contact_no = json_encode($request->input('contact'));
+            
+                $hotel_contacts = new HotelContactsModel([
+                    'hotel_id' => $hotel->id,
+                    'name' => $contact_name,
+                    'email' => $contact_email,
+                    'contact_no' => $contact_no,
+                ]);
+                $hotel_contacts->save();
 
-    $validator = Validator::make($requestData, $rules);
+                $hotel_special_offer = new HotelSpecialOfferModel([
+                    'hotel_id' => $hotel->id,
+                    'offer_title' => $request->input('offer_title'),
+                    'type' => $request->input('type'),
+                    'contact_no' => $request->input('contact_no'),
+                    'description' => $request->input('description'),
+                    'from_date' => $request->input('from_date'),
+                    'to_date' => $request->input('to_date'),
+                    'redeem_link' => $request->input('redeem_link'),
+                ]);
+                $hotel_special_offer->save();
 
-    if ($validator->fails()) {
-        $response['message'] = $validator->messages();
-    } else {
-        $hotel_id = $requestData['hotel_id'];
+                $hotel_page_addon = new HotelPageAddonModel([
+                    'hotel_id' => $hotel->id,
+                    'home_page_latest_news' => $request->input('home_page_latest_news'),
+                    'hotel_latest_news' => $request->input('hotel_latest_news'),
+                    'special_offer_to_homepage' => $request->input('special_offer_to_homepage'),
+                    'home_page_spotlight' => $request->input('home_page_spotlight'),
+                ]);
+                $hotel_page_addon->save();
 
-    $data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->find($hotel_id);
+                $response = response()->json(['status' => true, 'message' => 'Hotel Created Successfully']);
+            }
+
+            return $response;
+}
+
+
+        public function AllHotels()
+        {
+
+            $data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->get();
+
+            $data->transform(function ($item) {
+                $item->fullImagePath = asset("storage/app/".$item->hotel_images);
+                return $item;
+            });
+
+                return response()->json(['status' => true,'data'=>$data]);
+
+        }
+
+
+
+        public function EditHotels(Request $request)
+        {
+
+            $response = array("status" => false, 'message' => '');
+
+            $rules = [
+                'hotel_id' => 'required',
+                
+            ];
+
+            $requestData = $request->all();
+
+            $validator = Validator::make($requestData, $rules);
+
+            if ($validator->fails()) {
+                $response['message'] = $validator->messages();
+            } else {
+                $hotel_id = $requestData['hotel_id'];
+
+            $data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->find($hotel_id);
 
 }
 
@@ -196,7 +205,24 @@ return response()->json(['status' => true,'data'=>$data]);
 
 public function UpdateHotels(Request $request){
 
-    $response = array("status"=>false,'message' => '');
+    $response = array("status" => false, 'message' => '');
+    $user = Auth::guard('api')->user();
+
+    if(isset($request['user_id']) && !empty($request['user_id'])){
+        $userExists = User::where('id', $request['user_id'])->exists();
+        if ($userExists) {
+            $user = User::where('id', $request['user_id'])->first();
+      
+        } else {
+            $response['message'] = 'User does not exist.';
+            return $response;
+        }
+      
+    // $user = User::find($request['user_id']);
+    }
+       $u_id = $user['id'];
+    // dd($u_id);
+
 
      $rules = [
         // 'user_id' => 'required',
@@ -238,10 +264,14 @@ public function UpdateHotels(Request $request){
           }else {
             $hotel_id = $requestData['hotel_id'];
             $hotel_data = HotelModel::find($hotel_id);
+         
+
     
             if ($hotel_data) {
-                
-                $hotel_data->user_id = $requestData['user_id'];
+                // if (isset($user['id'])) {
+                //     $hotel->user_id = $user['id'];
+                // }
+                $hotel_data->user_id = $user['id'];
                 $hotel_data->country = $requestData['country'];
                 $hotel_data->hotel_title =$requestData['hotel_title'];
                 $hotel_data->address = $requestData['address'];
@@ -293,17 +323,15 @@ public function UpdateHotels(Request $request){
 
 
                 $HotelSpecialOfferModel->offer_title = $requestData['offer_title'];
-            $HotelSpecialOfferModel->type = $requestData['type'];
-            $HotelSpecialOfferModel->from_date =$requestData['from_date'];
-            $HotelSpecialOfferModel->to_date =$requestData['to_date'];
-
-            $HotelSpecialOfferModel->redeem_link =$requestData['redeem_link'];
-            $HotelSpecialOfferModel->description =$requestData['description'];
-
-            $HotelSpecialOfferModel->save();
+                $HotelSpecialOfferModel->type = $requestData['type'];
+                $HotelSpecialOfferModel->from_date =$requestData['from_date'];
+                $HotelSpecialOfferModel->to_date =$requestData['to_date'];
+                $HotelSpecialOfferModel->redeem_link =$requestData['redeem_link'];
+                $HotelSpecialOfferModel->description =$requestData['description'];
+                $HotelSpecialOfferModel->save();
 
 
-            $HotelPageAddonModel = HotelPageAddonModel::where('hotel_id', $hotel_id)->first();
+                $HotelPageAddonModel = HotelPageAddonModel::where('hotel_id', $hotel_id)->first();
     
                 if (!$HotelPageAddonModel) {
                     $HotelPageAddonModel = new HotelPageAddonModel();
@@ -312,17 +340,11 @@ public function UpdateHotels(Request $request){
 
 
                 $HotelPageAddonModel->hotel_latest_news =$requestData['hotel_latest_news'];
-               
                 $HotelPageAddonModel->home_page_latest_news =$requestData['home_page_latest_news'];
                 $HotelPageAddonModel->special_offer_to_homepage =$requestData['special_offer_to_homepage'];
                 $HotelPageAddonModel->home_page_spotlight =$requestData['home_page_spotlight'];
+                $HotelPageAddonModel->save();
 
-            $HotelPageAddonModel->save();
-
-
-
-
-    
                 $response = response()->json(['status' => true, 'message' => 'Hotel Updated Successfully']);
             } else {
                 $response = response()->json(['status' => false, 'message' => 'Hotel not found']);

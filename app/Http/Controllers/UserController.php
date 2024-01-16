@@ -7,6 +7,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Password;
+
+
+use App\Mail\MyCustomMail;
+use Illuminate\Support\Facades\Mail;
+
 
 class UserController extends Controller
 {
@@ -313,6 +319,8 @@ public function AllUser()
         $response = array("status"=>false,'message' => '');
 
      $user = Auth::guard('api')->user();
+     
+
     if($user)
     {
        $response = ['status' => true, 'message' => 'Profile Data Successfully!','profile_data'=>$user];
@@ -326,6 +334,262 @@ public function AllUser()
 
     }
 
+    // public function Forgotpassword(Request $request)
+    // {
+      
+    //     $response = array("status"=>false,'message' => '');
+
+    //     $rules = [
+    //         'email' => 'required|email',
+    //     ];
+
+    //     $requestData = $request->all();
+      
+
+    //     $email = $requestData['email'];
+      
+    //     $validator = Validator::make($requestData, $rules);
+
+    //     if ($validator->fails()) {
+    //         $response['message'] = $validator->messages();
+    //     } else {
+    //         $email = $requestData['email'];
+    
+    //         if (User::where('email', $email)->exists()) {
+    //             // Data to pass to the email view (you can customize this data)
+    //             $data = ['name' => 'John Doe'];
+    
+    //             // Send the custom email
+    //             Mail::to($email)->send(new MyCustomMail($data));
+    
+    //             return response()->json(['message' => 'Email sent successfully']);
+    //         } else {
+    //             return response()->json(['status' => false, 'message' => 'Email not registered!']);
+    //         }
+    //     }
+    // }
+    public function Forgotpassword(Request $request)
+    {
+        $responseData = ['status' => false, 'message' => ''];
+
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        // Shuffle the characters to create randomness
+        $shuffledString = str_shuffle($characters);
+    
+        // Take the first $length characters from the shuffled string
+        $randomString = substr($shuffledString, 0, 16);
+
+    
+        $rules = [
+            'email' => 'required|email',
+        ];
+    
+        $validator = Validator::make($request->all(), $rules);
+    
+        if ($validator->fails()) {
+            $responseData['message'] = $validator->messages();
+        } else {
+            $email = $request->input('email');
+          
+    
+            try {
+                if (User::where('email', $email)->exists()) {
+                    // Retrieve user data from the database
+                    $user = User::where('email', $email)->first();
+                
+                    // Data to pass to the email view
+                    $data = [
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'key' => $randomString,
+                        'id' => $user->id,
+                        // Add more data as needed
+                    ];
+                
+               
+
+                    // Send the custom email
+                    Mail::to($email)->send(new MyCustomMail($data));
+                
+                    $responseData['status'] = true;
+                    $responseData['message'] = 'Email sent successfully';
+                } else {
+                    // User does not exist
+                    $responseData['status'] = false;
+                    $responseData['message'] = 'User not found';
+                }
+                 
+            } catch (\Exception $e) {
+                // Log or handle the exception as needed
+                $responseData['message'] = 'Error sending email: ' . $e->getMessage();
+            }
+        }
+    
+        return response()->json($responseData);
+    }
+    
+    // public function Resetpassword(Request $request)
+    // {
+    //     echo "tyh";
+
+       
+
+
+    //     $response = array("status"=>false,'message' => '');
+    //     $user = Auth::guard('api')->user();
+
+    //     $requestData = $request->all();
+
+
+ 
+    //     $rules = [
+    //         // 'old_password' => 'required',
+    //         'new_password' => 'required|min:6',
+    //         'confirm_password' => 'required|same:new_password',
+    //     ];
+    //     $validator = Validator::make($request->all(), $rules);
+
+    //     if ($validator->fails()) {
+    //         $arr = array("status" => 400, "message" => $validator->errors()->first(), "data" => array());
+    //     } else {
+    //         try {
+    //             // if ((Hash::check(request('old_password'), Auth::user()->password)) == false) {
+    //             //     $arr = array("status" => 400, "message" => "Check your old password.", "data" => array());
+    //             // }
+    //             //  else if ((Hash::check(request('new_password'), Auth::user()->password)) == true) {
+    //                 if ((Hash::check(request('new_password'), Auth::user()->password)) == true) {
+    //                 $arr = array("status" => 400, "message" => "Please enter a password which is not similar then current password.", "data" => array());
+    //             } else {
+    //                 User::where('id', $userid)->update(['password' => Hash::make($input['new_password'])]);
+    //                 $arr = array("status" => 200, "message" => "Password updated successfully.", "data" => array());
+    //             }
+    //         } catch (\Exception $ex) {
+    //             if (isset($ex->errorInfo[2])) {
+    //                 $msg = $ex->errorInfo[2];
+    //             } else {
+    //                 $msg = $ex->getMessage();
+    //             }
+    //             $arr = array("status" => 400, "message" => $msg, "data" => array());
+    //         }
+    //     }
+    //     return \Response::json($arr);
+    // }
+
+    // public function resetPassword(Request $request)
+    // {
+    //     $response = array("status" => false, 'message' => '');
+    
+    //     // Check if the user is authenticated
+    //     // if (!Auth::guard('api')->check()) {
+    //     //     $arr = array("status" => 401, "message" => "Unauthorized", "data" => array());
+    //     //     return \Response::json($arr);
+    //     // }
+    
+    //     $user = Auth::guard('api')->user();
+    //     dd($user);
+    //     $requestData = $request->all();
+    
+    //     $rules = [
+    //         'new_password' => 'required|min:6',
+    //         'confirm_password' => 'required|same:new_password',
+    //     ];
+    
+    //     $validator = Validator::make($requestData, $rules);
+    
+    //     if ($validator->fails()) {
+    //         $arr = array("status" => 400, "message" => $validator->errors()->first(), "data" => array());
+    //     } else {
+    //         try {
+    //             if ((Hash::check($requestData['new_password'], $user->password)) == true) {
+    //                 $arr = array("status" => 400, "message" => "Please enter a password that is not similar to the current password.", "data" => array());
+    //             } else {
+    //                 // Use $user->id instead of undefined $userid
+    //                 User::where('id', $user->id)->update(['password' => Hash::make($requestData['new_password'])]);
+    //                 $arr = array("status" => 200, "message" => "Password updated successfully.", "data" => array());
+    //             }
+    //         } catch (\Exception $ex) {
+    //             if (isset($ex->errorInfo[2])) {
+    //                 $msg = $ex->errorInfo[2];
+    //             } else {
+    //                 $msg = $ex->getMessage();
+    //             }
+    //             $arr = array("status" => 400, "message" => $msg, "data" => array());
+    //         }
+    //     }
+    //     return \Response::json($arr);
+    // }
+    
+    // public function resetPassword(Request $request, $token)
+    // {
+    //     $this->validateReset($request);
+    
+    //     $response = $this->broker()->reset(
+    //         $this->credentials($request),
+    //         function ($user, $password) {
+    //             $this->resetPassword($user, $password);
+    //         }
+    //     );
+    
+    //     return $response == Password::PASSWORD_RESET
+    //         ? response()->json(['message' => 'Password reset successfully'])
+    //         : response()->json(['error' => 'Unable to reset password'], 422);
+    // }
+
+    // public function Resetpassword(Request $request)
+    // {
+
+    //     echo "tgrt";
+    //     die;
+
+
+    //    $request->validate([
+    //         'email' => 'required|email',
+    //         'password' => 'required|confirmed|min:8',
+    //         'token' => 'required',
+    //     ]);
+    //     $response = Password::reset(
+    //         $request->only('email', 'password', 'password_confirmation', 'token'),
+    //         function ($user, $password) {
+    //             $user->forceFill([
+    //                 'password' => bcrypt($password),
+    //                 'remember_token' => Str::random(60),
+    //             ])->save();
+    //         }
+    //     );
+
+    //     return $response == Password::PASSWORD_RESET
+    //         ? response()->json(['message' => 'Password reset successfully'], 200)
+    //         : response()->json(['message' => 'Password reset failed'], 400);
+    // }
+
+    public function Resetpassword($token, $id)
+{  
+
+
+    // $newPassword = $request->input('new_password');
+    // $confirmPassword = $request->input('confirm_password');
+    // $id = $request->input('userid');
+    // $resetPasswordKey = $request->input('reset_password_key');
+
+    // if ($confirmPassword == $newPassword) {
+    //     $user = User::find($id);
+
+    //     if (!$user || $user->forgot_pass_key != $resetPasswordKey) {
+    //         return response()->json(['status' => 'fail', 'message' => 'Invalid user or reset password key'], 400);
+    //     }
+
+    //     $user->password = Hash::make($newPassword);
+    //     $user->forgot_pass_key = null;
+    //     $user->save();
+
+    //     return response()->json(['status' => 'success', 'message' => 'Password updated successfully']);
+    // } else {
+    //     return response()->json(['status' => 'fail', 'message' => 'Confirm password does not match with new password'], 400);
+    // }
+    return view('reset password');
+}
 
 }
 
+    

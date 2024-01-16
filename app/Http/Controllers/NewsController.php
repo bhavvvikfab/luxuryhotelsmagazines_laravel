@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\News;
+use App\Models\User;
 use App\Models\HotelSpecialOfferModel;
+use Illuminate\Support\Facades\Auth;
+
 class NewsController extends Controller
 {
 
@@ -31,7 +34,24 @@ class NewsController extends Controller
     
     public function CreateNews(Request $request){
 
-        $response = array("status"=>false,'message' => '');
+        $response = array("status" => false, 'message' => '');
+    $user = Auth::guard('api')->user();
+
+    if(isset($request['user_id']) && !empty($request['user_id'])){
+        $userExists = User::where('id', $request['user_id'])->exists();
+        if ($userExists) {
+            $user = User::where('id', $request['user_id'])->first();
+      
+        } else {
+            $response['message'] = 'User does not exist.';
+            return $response;
+        }
+      
+    // $user = User::find($request['user_id']);
+    }
+       $u_id = $user['id'];
+    // dd($u_id);
+
         $rules = [
                 'bussiness_name' => 'required',
                 'country' => 'required',
@@ -40,13 +60,19 @@ class NewsController extends Controller
                 'news_title' => 'required',
                 'news_desc' => 'required',
                 'news_image' => 'required',
+                'status' => 'required',
+                'catagory' => 'required',
+                'editor_choice' => 'required',
+                'phone_number' => 'required',
+                'news_views' => 'required',
+                'news_likes' => 'required',
                 'youtube_link' => 'required',
                 'offer_title' => 'required',
-                'contact_no' => 'required',
                 'from_date' => 'required',
                 'to_date' => 'required',
                 'description' => 'required',
-                'redeem_link' => 'required'
+                'redeem_link' => 'required',
+                'contact_no' => 'required',
             ];
 
         $requestData = $request->all();
@@ -61,7 +87,8 @@ class NewsController extends Controller
                 // }
 
                 $news = new News();
-                $news->user_id = $requestData['user_id'];
+                $news->user_id = $user['id'];
+                // $news->user_id = $requestData['user_id'];
                 $news->bussiness_name = $requestData['bussiness_name'];
                 $news->country = $requestData['country'];
                 $news->full_name = $requestData['full_name'];
@@ -81,6 +108,12 @@ class NewsController extends Controller
                     $news->news_image = $request->file('news_image')->store('uploads');
                 }
                 
+                $news->status = $requestData['status'];
+                $news->catagory = $requestData['catagory'];
+                $news->editor_choice = $requestData['editor_choice'];
+                $news->phone_number = $requestData['phone_number'];
+                $news->news_views = $requestData['news_views'];
+                $news->news_likes = $requestData['news_likes'];
                 $news->youtube_link = $requestData['youtube_link'];
                 $news->save();
 
@@ -141,24 +174,47 @@ class NewsController extends Controller
     
     public function UpdateNews(Request $request){
 
-        $response = array("status"=>false,'message' => '');
-        $rules = [
-                'news_id' => 'required',
-                'bussiness_name' => 'required',
-                'country' => 'required',
-                'full_name' => 'required',
-                'email_address' => 'required|email',
-                'news_title' => 'required',
-                'news_desc' => 'required',
-                // 'news_image' => 'required',
-                'youtube_link' => 'required',
-                'offer_title' => 'required',
-                'contact_no' => 'required',
-                'from_date' => 'required',
-                'to_date' => 'required',
-                'description' => 'required',
-                'redeem_link' => 'required'
-            ];
+       
+        $response = array("status" => false, 'message' => '');
+    $user = Auth::guard('api')->user();
+
+    if(isset($request['user_id']) && !empty($request['user_id'])){
+        $userExists = User::where('id', $request['user_id'])->exists();
+        if ($userExists) {
+            $user = User::where('id', $request['user_id'])->first();
+      
+        } else {
+            $response['message'] = 'User does not exist.';
+            return $response;
+        }
+      
+    // $user = User::find($request['user_id']);
+    }
+       $u_id = $user['id'];
+
+       $rules = [
+        'news_id' => 'required',
+        'bussiness_name' => 'required',
+        'country' => 'required',
+        'full_name' => 'required',
+        'email_address' => 'required|email',
+        'news_title' => 'required',
+        'news_desc' => 'required',
+        'news_image' => 'required',
+        'status' => 'required',
+        'catagory' => 'required',
+        'editor_choice' => 'required',
+        'phone_number' => 'required',
+        'news_views' => 'required',
+        'news_likes' => 'required',
+        'youtube_link' => 'required',
+        'offer_title' => 'required',
+        'from_date' => 'required',
+        'to_date' => 'required',
+        'description' => 'required',
+        'redeem_link' => 'required',
+        'contact_no' => 'required',
+    ];
 
         $requestData = $request->all();
         $validator = Validator::make($requestData, $rules);
@@ -171,6 +227,7 @@ class NewsController extends Controller
         
                 if ($news) {
                     
+                    $news->user_id = $user['id'];
                     $news->bussiness_name = $requestData['bussiness_name'];
                     $news->country = $requestData['country'];
                     $news->full_name = $requestData['full_name'];
@@ -183,7 +240,14 @@ class NewsController extends Controller
                         $news->news_image = $request->file('news_image')->store('uploads');
                     }
                     
+                    $news->status = $requestData['status'];
+                    $news->catagory = $requestData['catagory'];
+                    $news->editor_choice = $requestData['editor_choice'];
+                    $news->phone_number = $requestData['phone_number'];
+                    $news->news_views = $requestData['news_views'];
+                    $news->news_likes = $requestData['news_likes'];
                     $news->youtube_link = $requestData['youtube_link'];
+                    
                     $news->save();
         
                    

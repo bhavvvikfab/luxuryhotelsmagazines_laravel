@@ -16,6 +16,12 @@ class News extends Model
         'news_title',
         'news_desc',
         'news_image',
+        'status',
+        'catagory',
+        'editor_choice',
+        'phone_number',
+        'news_views',
+        'news_likes',
         'youtube_link',
     ];
 
