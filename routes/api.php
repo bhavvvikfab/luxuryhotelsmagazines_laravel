@@ -44,7 +44,12 @@ Route::middleware(['Api_Auth'])->group(function () {
     Route::post('/user-login', [UserController::class, 'UserLogin']);
     Route::post('/user-register', [UserController::class, 'UserRegister']);
     
-
+    Route::post('/add-user', [UserController::class, 'AddUser']);
+    Route::get('/all-user', [UserController::class, 'AllUser']);
+    Route::post('/edit-user', [UserController::class, 'EditUser']);
+    Route::post('/update-user', [UserController::class, 'UpdateUser']);
+    Route::post('/delete-user', [UserController::class, 'DeleteUser']);
+    
     Route::get('/all-news/{id?}', [NewsController::class, 'index']);
 	Route::post('/create-news', [NewsController::class, 'CreateNews']);
     Route::post('/edit-news', [NewsController::class, 'EditNews']);
@@ -73,6 +78,9 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/edit-distibutor', [DistibutionController::class, 'EditDistributor']);
     Route::post('/update-distibutor', [DistibutionController::class, 'UpdateDistributor']);
     Route::post('/delete-distibutor', [DistibutionController::class, 'DeleteDistributor']);
+
+    
+
     
     
 
