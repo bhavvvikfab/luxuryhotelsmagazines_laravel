@@ -79,8 +79,20 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/update-distibutor', [DistibutionController::class, 'UpdateDistributor']);
     Route::post('/delete-distibutor', [DistibutionController::class, 'DeleteDistributor']);
 
-    
 
+
+    Route::post('/add-distibutor-data', [DistibutionController::class, 'AddDistributorData']);
+    Route::get('/all-distibutor-data', [DistibutionController::class, 'AllDistributorData']);
+    Route::post('/edit-distibutor-data', [DistibutionController::class, 'EditDistributorData']);
+    Route::post('/update-distibutor-data', [DistibutionController::class, 'UpdateDistributorData']);
+    Route::post('/delete-distibutor-data', [DistibutionController::class, 'DeleteDistributorData']);
+
+    
+    Route::post('/add-distibutor-detail', [DistibutionController::class, 'AddDistributorDetail']);
+    Route::get('/all-distibutor-detail', [DistibutionController::class, 'AllDistributorDetail']);
+    Route::post('/edit-distibutor-detail', [DistibutionController::class, 'EditDistributorDetail']);
+    Route::post('/update-distibutor-detail', [DistibutionController::class, 'UpdateDistributorDetail']);
+    Route::post('/delete-distibutor-detail', [DistibutionController::class, 'DeleteDistributorDetail']);
     
     
 
