@@ -5,15 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DistributionModel extends Model
+class DistributionDataModel extends Model
 {
     use HasFactory;
-    protected $table = "distribution";
+    protected $table = "distributions_data";
     protected $fillable = [
-        'title',
-        'country_name',
-        'hotel_image',
-        'hotel_description',
+        'header_info',
+        'services_data',
         'created_at',
         'updated_at',
     ];
