@@ -59,10 +59,10 @@ class MediakitController extends Controller
                     return $response;
                 }
             
-            }
+    }
 
-                public function AllMediaKit()
-                {
+    public function AllMediaKit()
+        {
                     $data = MediaKitModel::all();
                   
 
@@ -79,10 +79,10 @@ class MediakitController extends Controller
                 
                         return response()->json(['status' => true,'data'=>$data]);
                 
-                }
+        }
 
-                public function UpdateMediaKit(Request $request)
-                {
+    public function UpdateMediaKit(Request $request)
+        {
 
                 
 
@@ -134,10 +134,10 @@ class MediakitController extends Controller
                 
                     // You might want to return the response at the end of your function
                     return response()->json($response);
-                }
+        }
                 
-                public function EditMediaKit(Request $request)
-                {
+    public function EditMediaKit(Request $request)
+        {
 
                     $response = array("status" => false, 'message' => '');
                     $requestData = $request->all(); 
@@ -184,34 +184,34 @@ class MediakitController extends Controller
                 
                     // You might want to return the response at the end of your function
                     return response()->json($response);
-                }
+        }
 
 
-                public function DeleteMediaKit(Request $request)
+public function DeleteMediaKit(Request $request)
     {
 
-        $response = array("status" => false, 'message' => '');
-        $requestData = $request->all(); 
-  
-        $rules = [
-            'media_kit_id' => 'required',
-         
-        ];
+            $response = array("status" => false, 'message' => '');
+            $requestData = $request->all(); 
+    
+            $rules = [
+                'media_kit_id' => 'required',
+            
+            ];
 
-        $validator = Validator::make($request->all(), $rules);
+            $validator = Validator::make($request->all(), $rules);
 
 
-       $media_kit_id = $requestData['media_kit_id'];
-       $delete_media_kit = MediaKitModel::find($media_kit_id);
+        $media_kit_id = $requestData['media_kit_id'];
+        $delete_media_kit = MediaKitModel::find($media_kit_id);
 
-       if (!$delete_media_kit) {
-        return response()->json(['message' => 'Media kit not found'], 404);
+        if (!$delete_media_kit) {
+            return response()->json(['message' => 'Media kit not found'], 404);
+        }
+
+        $delete_media_kit->delete();
+
+        return response()->json(['message' => 'Media Kit deleted successfully']);
+
+
     }
-
-    $delete_media_kit->delete();
-
-    return response()->json(['message' => 'Media Kit deleted successfully']);
-
-
-}
             }

@@ -8,7 +8,8 @@ use App\Models\ReviewModel;
 
 class ReviewController extends Controller
 {
-    public function index($type=null){
+    public function index($type=null)
+    {
         $query = ReviewModel::query();
 
         if (isset($type) && !empty($type)) {
@@ -25,7 +26,8 @@ class ReviewController extends Controller
         }
     }
     
-    public function CreateReview(Request $request){
+    public function CreateReview(Request $request)
+    {
 
         $response = array("status"=>false,'message' => '');
         $rules = [
@@ -60,7 +62,8 @@ class ReviewController extends Controller
               return $response;
     }
 
-    public function DeleteReview(Request $request){
+    public function DeleteReview(Request $request)
+    {
         
         $response = array("status" => false, 'message' => '');
 

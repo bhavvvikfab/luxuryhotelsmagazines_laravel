@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Auth;
 class NewsController extends Controller
 {
 
-    public function index($type=null){
+    public function index($type=null)
+    {
         $data = News::with('special_offer');
         if(isset($type) && !empty($type)){
             $data->whereHas('special_offer', function ($query) use ($type) {
@@ -32,27 +33,29 @@ class NewsController extends Controller
         }
     }
     
-    public function CreateNews(Request $request){
+    public function CreateNews(Request $request)
+    {
 
         $response = array("status" => false, 'message' => '');
-    $user = Auth::guard('api')->user();
+        $user = Auth::guard('api')->user();
 
-    if(isset($request['user_id']) && !empty($request['user_id'])){
-        $userExists = User::where('id', $request['user_id'])->exists();
-        if ($userExists) {
+        if(isset($request['user_id']) && !empty($request['user_id']))
+        {
+            $userExists = User::where('id', $request['user_id'])->exists();
+            if ($userExists) {
             $user = User::where('id', $request['user_id'])->first();
       
-        } else {
+            } else {
             $response['message'] = 'User does not exist.';
             return $response;
-        }
+            }
       
-    // $user = User::find($request['user_id']);
-    }
-       $u_id = $user['id'];
-    // dd($u_id);
+            // $user = User::find($request['user_id']);
+        }
+            $u_id = $user['id'];
+            // dd($u_id);
 
-        $rules = [
+            $rules = [
                 'bussiness_name' => 'required',
                 'country' => 'required',
                 'full_name' => 'required',
@@ -137,12 +140,14 @@ class NewsController extends Controller
                     $response = response()->json(['status' => false,'message' => 'Failed to create news']);
                 }
         
-              }
+          }
 
               return $response;
     }
 
-    public function EditNews(Request $request){
+
+    public function EditNews(Request $request)
+    {
         $response = array("status"=>false,'message' => '');
         $rules = [
                 'news_id' => 'required'
@@ -172,13 +177,15 @@ class NewsController extends Controller
               return $response;
     }
     
-    public function UpdateNews(Request $request){
+    public function UpdateNews(Request $request)
+    {
 
        
         $response = array("status" => false, 'message' => '');
-    $user = Auth::guard('api')->user();
+        $user = Auth::guard('api')->user();
 
-    if(isset($request['user_id']) && !empty($request['user_id'])){
+        if(isset($request['user_id']) && !empty($request['user_id']))
+        {
         $userExists = User::where('id', $request['user_id'])->exists();
         if ($userExists) {
             $user = User::where('id', $request['user_id'])->first();
@@ -188,44 +195,44 @@ class NewsController extends Controller
             return $response;
         }
       
-    // $user = User::find($request['user_id']);
-    }
-       $u_id = $user['id'];
+            // $user = User::find($request['user_id']);
+       }
+             $u_id = $user['id'];
 
-       $rules = [
-        'news_id' => 'required',
-        'bussiness_name' => 'required',
-        'country' => 'required',
-        'full_name' => 'required',
-        'email_address' => 'required|email',
-        'news_title' => 'required',
-        'news_desc' => 'required',
-        'news_image' => 'required',
-        'status' => 'required',
-        'catagory' => 'required',
-        'editor_choice' => 'required',
-        'phone_number' => 'required',
-        'news_views' => 'required',
-        'news_likes' => 'required',
-        'youtube_link' => 'required',
-        'offer_title' => 'required',
-        'from_date' => 'required',
-        'to_date' => 'required',
-        'description' => 'required',
-        'redeem_link' => 'required',
-        'contact_no' => 'required',
-    ];
+            $rules = [
+                'news_id' => 'required',
+                'bussiness_name' => 'required',
+                'country' => 'required',
+                'full_name' => 'required',
+                'email_address' => 'required|email',
+                'news_title' => 'required',
+                'news_desc' => 'required',
+                'news_image' => 'required',
+                'status' => 'required',
+                'catagory' => 'required',
+                'editor_choice' => 'required',
+                'phone_number' => 'required',
+                'news_views' => 'required',
+                'news_likes' => 'required',
+                'youtube_link' => 'required',
+                'offer_title' => 'required',
+                'from_date' => 'required',
+                'to_date' => 'required',
+                'description' => 'required',
+                'redeem_link' => 'required',
+                'contact_no' => 'required',
+            ];
 
-        $requestData = $request->all();
-        $validator = Validator::make($requestData, $rules);
+            $requestData = $request->all();
+            $validator = Validator::make($requestData, $rules);
         
-            if ($validator->fails()) {
-                $response['message'] = $validator->messages();
-              }else {
-                $newsId = $requestData['news_id'];
-                $news = News::find($newsId);
-        
-                if ($news) {
+                if ($validator->fails()) {
+                    $response['message'] = $validator->messages();
+                }else {
+                    $newsId = $requestData['news_id'];
+                    $news = News::find($newsId);
+            
+                    if ($news) {
                     
                     $news->user_id = $user['id'];
                     $news->bussiness_name = $requestData['bussiness_name'];
@@ -277,7 +284,9 @@ class NewsController extends Controller
     }
 
     
-     public function ViewNews(Request $request){
+     public function ViewNews(Request $request)
+     {
+        
         $response = array("status"=>false,'message' => '');
         $rules = [
                 'news_id' => 'required'

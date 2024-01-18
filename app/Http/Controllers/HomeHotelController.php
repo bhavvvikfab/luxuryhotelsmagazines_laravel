@@ -22,7 +22,6 @@ class HomeHotelController extends Controller
     public function AddHomeHotel(Request $request)
     {
 
-
         $response = array("status" => false, 'message' => '');
         // $requestData = $request->all(); 
         // dd($requestData);
@@ -39,9 +38,9 @@ class HomeHotelController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         
-    if ($validator->fails()) {
-        $response['message'] = $validator->messages();
-    } else {
+        if ($validator->fails()) {
+            $response['message'] = $validator->messages();
+        } else {
         $home_hotel = new HomeHotelModel();
         $home_hotel->country_name = $request['country_name'];
         $home_hotel->title = $request['title'];
@@ -57,10 +56,10 @@ class HomeHotelController extends Controller
         } else {
             $response = response()->json(['status' => false, 'message' => 'Failed to add home hotel!']);
         }
-    }
+        }
 
-    return $response;
-}
+        return $response;
+    }
 
     public function AllHomeHotel()
     {
