@@ -13,6 +13,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MediakitController;
 use App\Http\Controllers\DistibutionController;
 use App\Http\Controllers\HomeHotelController;
+use App\Http\Controllers\About_Us_Controller;
 
 
 /*
@@ -61,15 +62,16 @@ Route::middleware(['Api_Auth'])->group(function () {
     
      
      
-    Route::post('/create-review', [ReviewController::class, 'CreateReview']);
-    Route::get('/all-review/{type?}', [ReviewController::class, 'index']);
-    Route::post('/delete-review', [ReviewController::class, 'DeleteReview']);
+   
+
+    // Route::get('/about-us', [About_Us_Controller::class, 'index']);
+  
 });
 
 Route::middleware(['user_login'])->group(function () {
     Route::post('/user-logout', [UserController::class, 'UserLogout']);
     Route::post('/login-user-profile', [UserController::class, 'LoginUserProfile']);
-
+    
 
     Route::post('/add-distibutor', [DistibutionController::class, 'AddDistributor']);
     Route::get('/all-distibutor', [DistibutionController::class, 'AllDistributor']);
@@ -99,7 +101,6 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/views-news', [NewsController::class, 'ViewNews']);
     Route::post('/delete-news', [NewsController::class, 'DeleteNews']);
     
-
 
     Route::post('/add-home-hotel', [HomeHotelController::class, 'AddHomeHotel']);
     Route::get('/all-home-hotel', [HomeHotelController::class, 'AllHomeHotel']);
@@ -144,9 +145,20 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/delete-media-kit', [MediakitController::class, 'DeleteMediaKit']);
     Route::post('/edit-media-kit', [MediakitController::class, 'EditMediaKit']);
 
-
+  
+    
     // Route::post('/login-user-hotel-ameties', [HotelController::class, 'LoginUserHotelAmeties']);
 
+    Route::post('/create-review', [ReviewController::class, 'CreateReview']);
+    Route::get('/all-review/{type?}', [ReviewController::class, 'index']);
+    Route::post('/delete-review', [ReviewController::class, 'DeleteReview']);
+
+
+    Route::post('/update-about-us', [About_Us_Controller::class, 'update_about_us']);
+    Route::get('/edit-about-us', [About_Us_Controller::class, 'index']);
+    Route::post('/edit-magzine-distributed', [About_Us_Controller::class, 'edit_magzine_distributed']);
+    Route::post('/update-magzine-distributed', [About_Us_Controller::class, 'update_magzine_distributed']);
+    
 });
 
 Route::get('/home', [HotelController::class, 'AllHomeData']);

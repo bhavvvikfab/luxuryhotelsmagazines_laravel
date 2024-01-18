@@ -14,7 +14,8 @@ class ReviewController extends Controller
         if (isset($type) && !empty($type)) {
             $query->where('review_type', $type);
         }
-    
+        
+        $query->orderBy('id', 'desc');
         $result = $query->get();
     
         if (empty($result)) {
