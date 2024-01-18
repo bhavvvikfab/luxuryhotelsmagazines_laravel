@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
-    public function UserLogin(Request $request){
+    public function UserLogin(Request $request)
+    {
         
         $response = array("status"=>false,'message' => '');
         $rules = [
@@ -24,7 +25,7 @@ class UserController extends Controller
             'password' => 'required',
         ];
         $requestData = $request->json()->all();
-// dd($requestData);
+        // dd($requestData);
         $validator = Validator::make($requestData, $rules);
         
             if ($validator->fails()) {

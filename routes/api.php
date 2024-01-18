@@ -14,6 +14,9 @@ use App\Http\Controllers\MediakitController;
 use App\Http\Controllers\DistibutionController;
 use App\Http\Controllers\HomeHotelController;
 use App\Http\Controllers\About_Us_Controller;
+use App\Http\Controllers\BannerController;
+use App\Http\Controllers\QueriesController;
+use App\Http\Controllers\TeamController;
 
 
 /*
@@ -145,8 +148,28 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/delete-media-kit', [MediakitController::class, 'DeleteMediaKit']);
     Route::post('/edit-media-kit', [MediakitController::class, 'EditMediaKit']);
 
-  
-    
+
+    Route::post('/add-banner', [BannerController::class, 'AddBanner']);
+    Route::get('/all-banner', [BannerController::class, 'AllBanner']);
+    Route::post('/update-banner', [BannerController::class, 'UpdateBanner']);
+    Route::post('/delete-banner', [BannerController::class, 'DeleteBanner']);
+    Route::post('/edit-banner', [BannerController::class, 'EditBanner']);
+
+    Route::post('/add-query', [QueriesController::class, 'AddQuery']);
+    Route::get('/all-query', [QueriesController::class, 'AllQuery']);
+    Route::post('/update-query', [QueriesController::class, 'UpdateQuery']);
+    Route::post('/delete-query', [QueriesController::class, 'DeleteQuery']);
+    Route::post('/edit-query', [QueriesController::class, 'EditQuery']);
+
+    Route::post('/add-team', [TeamController::class, 'AddTeam']);
+    Route::get('/all-team', [TeamController::class, 'AllTeam']);
+    Route::post('/update-team', [TeamController::class, 'UpdateTeam']);
+    Route::post('/delete-team', [TeamController::class, 'DeleteTeam']);
+    Route::post('/edit-team', [TeamController::class, 'EditTeam']);
+
+
+
+
     // Route::post('/login-user-hotel-ameties', [HotelController::class, 'LoginUserHotelAmeties']);
 
     Route::post('/create-review', [ReviewController::class, 'CreateReview']);

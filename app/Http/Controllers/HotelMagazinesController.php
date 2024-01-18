@@ -45,26 +45,26 @@ class HotelMagazinesController extends Controller
 
            
 
-if ($request->hasFile('file_pdf')) {
-    $pdfFiles = $request->file('file_pdf');
-    
+        if ($request->hasFile('file_pdf')) {
+            $pdfFiles = $request->file('file_pdf');
+        
 
-    
-    foreach ($pdfFiles as $pdfFile) {
-       
-        $path = $pdfFile->store('uploads');
+        
+        foreach ($pdfFiles as $pdfFile) {
+        
+            $path = $pdfFile->store('uploads');
 
-     
-        $filePaths[] = $path;
-    }
-    
-    $hotel_magazines->file_pdf = json_encode($filePaths);
-    
-}
-if ($request->hasFile('thumbnail')) {
-     $hotel_magazines->thumbnail = $request->file('thumbnail')->store('uploads');
-}
-            $hotel_magazines->save();
+        
+            $filePaths[] = $path;
+        }
+        
+        $hotel_magazines->file_pdf = json_encode($filePaths);
+        
+        }
+        if ($request->hasFile('thumbnail')) {
+            $hotel_magazines->thumbnail = $request->file('thumbnail')->store('uploads');
+        }
+                $hotel_magazines->save();
     
     
             if ($hotel_magazines) {
@@ -187,25 +187,25 @@ public function UpdateHotelMagazines(Request $request)
 
        
 
-if ($request->hasFile('file_pdf')) {
-$pdfFiles = $request->file('file_pdf');
+    if ($request->hasFile('file_pdf')) {
+    $pdfFiles = $request->file('file_pdf');
 
 
 
-foreach ($pdfFiles as $pdfFile) {
-   
-    $path = $pdfFile->store('uploads');
+    foreach ($pdfFiles as $pdfFile) {
+    
+        $path = $pdfFile->store('uploads');
 
  
     $filePaths[] = $path;
-}
+        }
 
-$hotel_magazine->file_pdf = json_encode($filePaths);
+    $hotel_magazine->file_pdf = json_encode($filePaths);
 
-}
-if ($request->hasFile('thumbnail')) {
- $hotel_magazine->thumbnail = $request->file('thumbnail')->store('uploads');
-}
+    }
+    if ($request->hasFile('thumbnail')) {
+    $hotel_magazine->thumbnail = $request->file('thumbnail')->store('uploads');
+    }
         $hotel_magazine->save();
 
 
@@ -240,14 +240,14 @@ public function DeleteHotelMagazines(Request $request)
 
        if (!$delete_hotel_magazine) {
         return response()->json(['message' => 'Magazine not found'], 404);
+         }
+
+     $delete_hotel_magazine->delete();
+
+            return response()->json(['message' => 'Magazine deleted successfully']);
+
+
     }
-
-    $delete_hotel_magazine->delete();
-
-    return response()->json(['message' => 'Magazine deleted successfully']);
-
-
-}
 
 
 public function DeleteHotelMagazinesSinglePdffile(Request $request)

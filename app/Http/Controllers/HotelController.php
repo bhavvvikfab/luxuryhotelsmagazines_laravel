@@ -176,7 +176,7 @@ public function HotelRegister(Request $request)
 
 
 
-        public function EditHotels(Request $request)
+    public function EditHotels(Request $request)
         {
 
             $response = array("status" => false, 'message' => '');
@@ -197,13 +197,14 @@ public function HotelRegister(Request $request)
 
             $data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->find($hotel_id);
 
-}
+            }
 
-return response()->json(['status' => true,'data'=>$data]);
-}
+            return response()->json(['status' => true,'data'=>$data]);
+        }
 
 
-public function UpdateHotels(Request $request){
+public function UpdateHotels(Request $request)
+{
 
     $response = array("status" => false, 'message' => '');
     $user = Auth::guard('api')->user();
