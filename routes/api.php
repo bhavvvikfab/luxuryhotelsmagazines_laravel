@@ -17,6 +17,10 @@ use App\Http\Controllers\About_Us_Controller;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\QueriesController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\VotedHotelController;
+use App\Http\Controllers\PropertiesController;
+use App\Http\Controllers\PackagePriceController;
+use App\Http\Controllers\EmployerController;
 
 
 /*
@@ -56,6 +60,10 @@ Route::middleware(['Api_Auth'])->group(function () {
     Route::post('/edit-user', [UserController::class, 'EditUser']);
     Route::post('/update-user', [UserController::class, 'UpdateUser']);
     Route::post('/delete-user', [UserController::class, 'DeleteUser']);
+
+
+    
+    
     
     
 
@@ -105,6 +113,7 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/delete-news', [NewsController::class, 'DeleteNews']);
     
 
+    
     Route::post('/add-home-hotel', [HomeHotelController::class, 'AddHomeHotel']);
     Route::get('/all-home-hotel', [HomeHotelController::class, 'AllHomeHotel']);
     Route::post('/edit-home-hotel', [HomeHotelController::class, 'EditHomeHotel']);
@@ -167,6 +176,32 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/delete-team', [TeamController::class, 'DeleteTeam']);
     Route::post('/edit-team', [TeamController::class, 'EditTeam']);
 
+
+    Route::post('/add-voted-hotel', [VotedHotelController::class, 'AddVotedHotel']);
+    Route::post('/update-voted-hotel', [VotedHotelController::class, 'UpdateVotedHotel']);
+    Route::post('/delete-voted-hotel', [VotedHotelController::class, 'DeleteVotedHotel']);
+    Route::get('/all-voted-hotel', [VotedHotelController::class, 'AllVotedHotel']);
+    Route::post('/edit-voted-hotel', [VotedHotelController::class, 'EditVotedHotel']);
+
+
+    Route::post('/add-hotel-properties', [PropertiesController::class, 'AddHotelProperties']);
+    Route::post('/update-hotel-properties', [PropertiesController::class, 'UpdateHotelProperties']);
+    Route::post('/delete-hotel-properties', [PropertiesController::class, 'DeleteHotelProperties']);
+    Route::get('/all-hotel-properties', [PropertiesController::class, 'AllHotelProperties']);
+    Route::post('/edit-hotel-properties', [PropertiesController::class, 'EditHotelProperties']);
+
+
+    Route::post('/add-package-price', [PackagePriceController::class, 'AddPackagePrice']);
+    Route::post('/update-package-price', [PackagePriceController::class, 'UpdatePackagePrice']);
+    Route::post('/delete-package-price', [PackagePriceController::class, 'DeletePackagePrice']);
+    Route::get('/all-package-price', [PackagePriceController::class, 'AllPackagePrice']);
+    Route::post('/edit-package-price', [PackagePriceController::class, 'EditPackagePrice']);
+
+    Route::post('/add-employer', [EmployerController::class, 'AddEmployer']);
+    Route::get('/all-employer', [EmployerController::class, 'AllEmployer']);
+    Route::post('/edit-employer', [EmployerController::class, 'EditEmployer']);
+    Route::post('/update-employer', [EmployerController::class, 'UpdateEmployer']);
+    Route::post('/delete-employer', [EmployerController::class, 'DeleteEmployer']);
 
 
 
