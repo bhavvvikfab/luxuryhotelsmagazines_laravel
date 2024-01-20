@@ -195,12 +195,23 @@ public function HotelRegister(Request $request)
             } else {
                 $hotel_id = $requestData['hotel_id'];
 
-            $data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->find($hotel_id);
+            $hotel_data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->find($hotel_id);
 
+            if ($hotel_data) {
+               
+                $response['status'] = true;
+                $response['message'] = $hotel_data;
+                // Do something with $hotel_amenity
+         
+            } else {
+                $response['message'] = 'Hotel not found';
             }
-
-            return response()->json(['status' => true,'data'=>$data]);
         }
+    
+        // You might want to return the response at the end of your function
+        return response()->json($response);
+    }
+
 
 
 public function UpdateHotels(Request $request)
