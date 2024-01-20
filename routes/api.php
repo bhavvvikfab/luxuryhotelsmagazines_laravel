@@ -21,6 +21,7 @@ use App\Http\Controllers\VotedHotelController;
 use App\Http\Controllers\PropertiesController;
 use App\Http\Controllers\PackagePriceController;
 use App\Http\Controllers\EmployerController;
+use App\Http\Controllers\SubscribersController;
 
 
 /*
@@ -59,20 +60,9 @@ Route::middleware(['Api_Auth'])->group(function () {
     Route::post('/update-user', [UserController::class, 'UpdateUser']);
     Route::post('/delete-user', [UserController::class, 'DeleteUser']);
 
-
-    
-    
-    
-    
-
-    
     
     Route::post('/search-hotel', [HotelController::class, 'SearchHotel']);
     
-     
-     
-   
-
     // Route::get('/about-us', [About_Us_Controller::class, 'index']);
   
 });
@@ -200,6 +190,13 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/edit-employer', [EmployerController::class, 'EditEmployer']);
     Route::post('/update-employer', [EmployerController::class, 'UpdateEmployer']);
     Route::post('/delete-employer', [EmployerController::class, 'DeleteEmployer']);
+
+
+    Route::post('/add-subscriber', [SubscribersController::class, 'AddSubscriber']);
+    Route::get('/all-subscriber', [SubscribersController::class, 'AllSubscriber']);
+    Route::post('/edit-subscriber', [SubscribersController::class, 'EditSubscriber']);
+    Route::post('/update-subscriber', [SubscribersController::class, 'UpdateSubscriber']);
+    Route::post('/delete-subscriber', [SubscribersController::class, 'DeleteSubscriber']);
 
 
 
