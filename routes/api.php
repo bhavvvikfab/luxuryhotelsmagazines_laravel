@@ -42,13 +42,11 @@ Route::get('/reset-password/{token}/{id}', [UserController::class, 'resetPasswor
     ->name('password.reset');
 Route::middleware(['Api_Auth'])->group(function () {
     Route::get('/migrate-database', [DatabaseMigrationController::class, 'migrate']);
+    Route::get('/swaggerGenerate', [DatabaseMigrationController::class, 'swaggerGenerate']);
     
 
+    Route::get('/test', [UserController::class, 'test']);
 
-
-    Route::get('/test', function(){
-        return ['status'=>true,'message'=>"Hello,i'm test."];
-    });
 
     Route::post('/user-login', [UserController::class, 'UserLogin']);
     Route::post('/forgot-password', [UserController::class, 'Forgotpassword']);

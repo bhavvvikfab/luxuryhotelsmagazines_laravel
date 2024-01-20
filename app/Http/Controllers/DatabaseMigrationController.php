@@ -16,4 +16,13 @@ class DatabaseMigrationController extends Controller
             return 'Migration failed: ' . $e->getMessage();
         }
     }
+
+    public function swaggerGenerate(){
+        try{
+            Artisan::call('l5-swagger:generate');
+            return 'Swagger Generate successfully.';
+        } catch (\Exception $e) {
+            return 'Swagger Generate failed: ' . $e->getMessage();
+        }
+    }
 }
