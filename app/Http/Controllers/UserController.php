@@ -16,6 +16,30 @@ use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/api/test",
+     *     summary="this is for test",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             properties={
+     *                 @OA\Property(property="status", type="boolean", example=true),
+     *                 @OA\Property(property="message", type="string", example="Hello,i'm test."),
+     *             }
+     *         )
+     *     ),
+     *     security={
+     *         {"bearerAuth": {"hXuRUGsEGuhGf6KM"}}
+     *     }
+     * )
+     */
+    public function test(){
+        return ['status'=>true,'message'=>"Hello,i'm test."];
+    }
+
     public function UserLogin(Request $request)
     {
         
@@ -28,7 +52,7 @@ class UserController extends Controller
         // dd($requestData);
         $validator = Validator::make($requestData, $rules);
         
-            if ($validator->fails()) {
+            if ($validator->fails()) {  
                 $response['message'] = $validator->messages();
               } else {
                   // $credentials = $request->only('email', 'password');
