@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use Stripe\Stripe;
+use Stripe\Charge;
+use Stripe\Token;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
@@ -76,4 +81,104 @@ class PaymentController extends Controller
             return response()->json(['error' => json_decode($response->getBody(), true)], $response->getStatusCode());
         }
     }
+
+  public function stripe_Single_Payment(Request $request){
+    require_once app_path('helpers/helpers.php');
+
+    $rules = [
+        'user_id' => 'required|numeric',
+        'amount' => 'required|numeric',
+        'card_number' => 'required|regex:/^[0-9 ]+$/',
+        'exp_month' => 'required|numeric',
+        'exp_year' => 'required|numeric',
+        'cvc' => 'required|numeric',
+    ];
+
+    
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        return $validator->messages();
+    }
+    $cardDetails = [
+        'user_id' => $request->user_id,
+        'amount' => $request->amount,
+        'number' => $request->card_number, // Replace with a valid card number
+        'exp_month' => $request->exp_month,
+        'exp_year' => $request->exp_year,
+        'cvc' => $request->cvc
+    ];
+    $stripe_single_payment = stripeSinglePayment($cardDetails);
+    return $stripe_single_payment;
+       
+  }
+
+  public function stripeSubscriptionPayment(Request $request){
+      require_once app_path('helpers/helpers.php');
+      $auth = Auth::guard('api')->user();
+    
+    $rules = [
+        'amount' => 'required|numeric',
+        'card_number' => 'required|regex:/^[0-9 ]+$/',
+        'exp_month' => 'required|numeric',
+        'exp_year' => 'required|numeric',
+        'cvc' => 'required|numeric',
+    ];
+
+    
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        return $validator->messages();
+    }
+    $cardDetails = [
+        'user_id' =>  $auth->id,
+        'amount' => $request->amount,
+        'number' => $request->card_number, // Replace with a valid card number
+        'exp_month' => $request->exp_month,
+        'exp_year' => $request->exp_year,
+        'cvc' => $request->cvc
+    ];
+    $stripeSubscriptionPayment = stripeSubscriptionPayment($cardDetails);
+    return $stripeSubscriptionPayment;
+       
+  }
+
+
+  public function paypalSinglePayment(Request $request){
+    require_once app_path('helpers/helpers.php');
+
+    $rules = [
+        'user_id' => 'required|numeric',
+        'amount' => 'required|numeric',
+        'card_number' => 'required|regex:/^[0-9 ]+$/',
+        'exp_month' => 'required|numeric',
+        'exp_year' => 'required|numeric',
+        'cvc' => 'required|numeric',
+    ];
+
+    
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        return $validator->messages();
+    }
+    $cardDetails = [
+        'user_id' => $request->user_id,
+        'amount' => $request->amount,
+        'number' => $request->card_number, // Replace with a valid card number
+        'exp_month' => $request->exp_month,
+        'exp_year' => $request->exp_year,
+        'cvc' => $request->cvc
+    ];
+    $paypalSinglePayment = paypalSinglePayment($cardDetails);
+    return $paypalSinglePayment;
+    
+       
+  }
+  public function paypalPaymentSuccess(Request $request){
+    // echo "sajsgbas";
+    return view('demo');
+  }
+  
 }

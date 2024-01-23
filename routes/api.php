@@ -120,8 +120,8 @@ Route::middleware(['user_login'])->group(function () {
      
      Route::post('/login-user-hotel-magazines', [HotelMagazinesController::class, 'LoginUserHotelMagazines']);
 
-
-     Route::post('/hotel-register', [HotelController::class, 'HotelRegister']);
+     
+         Route::post('/hotel-register', [HotelController::class, 'HotelRegister']);
     Route::get('/all-hotels', [HotelController::class, 'AllHotels']);
     Route::post('/edit-hotels', [HotelController::class, 'EditHotels']);
     Route::post('/update-hotels', [HotelController::class, 'UpdateHotels']);
@@ -212,6 +212,10 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/edit-magzine-distributed', [About_Us_Controller::class, 'edit_magzine_distributed']);
     Route::post('/update-magzine-distributed', [About_Us_Controller::class, 'update_magzine_distributed']);
     
+    Route::post('/stripe-Single-Payment', [PaymentController::class, 'stripe_Single_Payment']);
+    Route::post('/stripe-subscription-payment', [PaymentController::class, 'stripeSubscriptionPayment']);
+    Route::post('/paypal-single-payment', [PaymentController::class, 'paypalSinglePayment']);
+    Route::post('/payment-success', [PaymentController::class, 'paypalPaymentSuccess']);
 });
 
 Route::get('/home', [HotelController::class, 'AllHomeData']);
