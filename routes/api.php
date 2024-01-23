@@ -214,7 +214,7 @@ Route::middleware(['user_login'])->group(function () {
     
     Route::post('/stripe-Single-Payment', [PaymentController::class, 'stripe_Single_Payment']);
     Route::post('/stripe-subscription-payment', [PaymentController::class, 'stripeSubscriptionPayment']);
-    Route::post('/paypal-single-payment', [PaymentController::class, 'paypalSinglePayment']);
+    
     Route::post('/payment-success', [PaymentController::class, 'paypalPaymentSuccess']);
 });
 

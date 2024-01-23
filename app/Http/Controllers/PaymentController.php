@@ -10,7 +10,7 @@ use Stripe\Charge;
 use Stripe\Token;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-
+use App\Helpers\Helpers;
 class PaymentController extends Controller
 {
     private $apiContext;
@@ -108,7 +108,7 @@ class PaymentController extends Controller
         'exp_year' => $request->exp_year,
         'cvc' => $request->cvc
     ];
-    $stripe_single_payment = stripeSinglePayment($cardDetails);
+    $stripe_single_payment = Helpers::stripeSinglePayment($cardDetails);
     return $stripe_single_payment;
        
   }
@@ -139,46 +139,13 @@ class PaymentController extends Controller
         'exp_year' => $request->exp_year,
         'cvc' => $request->cvc
     ];
-    $stripeSubscriptionPayment = stripeSubscriptionPayment($cardDetails);
+    $stripeSubscriptionPayment = Helpers::stripeSubscriptionPayment($cardDetails);
     return $stripeSubscriptionPayment;
        
   }
 
-
-  public function paypalSinglePayment(Request $request){
-    require_once app_path('helpers/helpers.php');
-
-    $rules = [
-        'user_id' => 'required|numeric',
-        'amount' => 'required|numeric',
-        'card_number' => 'required|regex:/^[0-9 ]+$/',
-        'exp_month' => 'required|numeric',
-        'exp_year' => 'required|numeric',
-        'cvc' => 'required|numeric',
-    ];
-
-    
-    $validator = Validator::make($request->all(), $rules);
-
-    if ($validator->fails()) {
-        return $validator->messages();
-    }
-    $cardDetails = [
-        'user_id' => $request->user_id,
-        'amount' => $request->amount,
-        'number' => $request->card_number, // Replace with a valid card number
-        'exp_month' => $request->exp_month,
-        'exp_year' => $request->exp_year,
-        'cvc' => $request->cvc
-    ];
-    $paypalSinglePayment = paypalSinglePayment($cardDetails);
-    return $paypalSinglePayment;
-    
-       
-  }
   public function paypalPaymentSuccess(Request $request){
-    // echo "sajsgbas";
-    return view('demo');
+    return $request;
   }
   
 }
