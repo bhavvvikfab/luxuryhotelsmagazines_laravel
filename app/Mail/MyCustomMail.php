@@ -17,11 +17,12 @@ class MyCustomMail extends Mailable
      * Create a new message instance.
      */
 
-     public $email;
+     public $data;
 
-public function __construct($email)
+public function __construct($data)
 {
-    $this->email = $email;
+    
+    $this->data = $data;
 }
 
 
@@ -30,12 +31,18 @@ public function __construct($email)
      *
      * @return $this
      */
+
+    //  public function build()
+    // {
+    //     return $this->view('emails.my_mail')->with(['data' => $this->data]);
+    // }
+
     public function build()
     {
-       
-            return $this
-        ->subject('Thank you for subscribing to our newsletter')
-        ->markdown('emails.my_mail');
+      
+        return $this->subject('Thank you for subscribing to our newsletter')
+            ->markdown('emails.my_mail') // Assuming you have a Blade file named my_mail.blade.php in the emails directory
+            ->with(['data' => $this->data]);
     }
 
     /**

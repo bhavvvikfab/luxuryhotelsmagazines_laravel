@@ -32,19 +32,46 @@
       background-color: #007bff;
       border-radius: 5px;
     }
+    .reset-btn {
+    background-color: #3498db; /* Blue background color */
+    color: white; /* White text color */
+    padding: 10px 20px; /* Padding for better appearance */
+    border: 1px solid #3498db; /* Set border with the same color as the background */
+    border-radius: 5px; /* Add some border-radius for rounded corners */
+    cursor: pointer; /* Add pointer cursor on hover */
+}
   </style>
 </head>
 <body>
   <div class="container" style="border:1px solid grey; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
 
-    <h2>Forgot Password</h2>
- 
+  @if($data['key']==1)
+    <h2>Login</h2>
 
-    <p>Hi {{ is_array($email) ? $email['name'] : $email }}, <!-- Replace with the actual user's name --> </p>
-    <p>It seems you've forgotten your password. No worries! Click the button below to reset it:</p>
-    <p><a href="{{ route('password.reset', ['token' => $email['key'], 'id' => $email['id']]) }}" class="btn">Reset Password</a></p> <!-- Replace with the actual reset link -->
-    <p>If you didn't request a password reset, you can ignore this email.</p>
-    <p>Thanks,<br>Your Application Team</p>
+
+    <p>Hi {{ isset($data['name']) ? $data['name'] : 'User' }},</p>
+<!-- <p>It seems you've forgotten your password. No worries! Click the button below to reset it:</p> -->
+<p>Your OTP is: <b>{{ isset($data['token']) ? $data['token'] : 'N/A' }}</b></p>
+
+<!-- <p>If you didn't request a password reset, you can ignore this email.</p> -->
+<p>Thanks,<br>Your Application Team</p>
+@elseif($data['key']==2)
+
+<h2>Forgot Password</h2>
+
+
+
+<p>Hi {{ isset($data['name']) ? $data['name'] : 'User' }},</p>
+<p>It seems you've forgotten your password. No worries! Click the button below to reset it:</p>
+<p><a href="{{ url($data['url'] . '/forgot-password/' . $data['remember_token']) }}" class="btn">Reset Password</a></p>
+ 
+<!-- <button type="submit" class="btn btn-primary reset-btn">Reset Password </button> -->
+<p>If you didn't request a password reset, you can ignore this email.</p>
+<p>Thanks,<br>Your Application Team</p>
+  
+@endif
+
+
   </div>
 </body>
 </html>
