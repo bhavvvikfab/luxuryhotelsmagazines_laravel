@@ -50,7 +50,16 @@ Route::middleware(['Api_Auth'])->group(function () {
 
 
     Route::post('/user-login', [UserController::class, 'UserLogin']);
-    Route::post('/forgot-password', [UserController::class, 'Forgotpassword']);
+    // Route::post('/forget-password', [UserController::class, 'Forgotpassword']);
+    Route::post('/forgot-password/{remember_token}', [UserController::class, 'Resetpassword']);
+    Route::post('/reset_password', [UserController::class, 'Resetpassword']);
+    Route::post('/verify_otp', [UserController::class, 'verify_otp']);
+    Route::post('/resend_password', [UserController::class, 'resend_password']);
+    
+    
+
+    
+   
     
     Route::post('/user-register', [UserController::class, 'UserRegister']);
     
@@ -70,7 +79,7 @@ Route::middleware(['Api_Auth'])->group(function () {
 Route::middleware(['user_login'])->group(function () {
     Route::post('/user-logout', [UserController::class, 'UserLogout']);
     Route::post('/login-user-profile', [UserController::class, 'LoginUserProfile']);
-    
+    Route::post('/sendOTP', [UserController::class, 'sendOTP']);
 
     Route::post('/add-distibutor', [DistibutionController::class, 'AddDistributor']);
     Route::get('/all-distibutor', [DistibutionController::class, 'AllDistributor']);
