@@ -5,13 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AboutUs_Model extends Model
+class PackageModel extends Model
 {
     use HasFactory;
-    protected $table = "about_us";
+    protected $table = "packages";
     protected $fillable = [
         'title',
-        'about_image',
-        'about_content',
+        'created_at',
+        'updated_at',
     ];
+
+
 }

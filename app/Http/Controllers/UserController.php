@@ -381,6 +381,58 @@ public function AllUser()
 
     }
 
+    public function LoginUserUpdateProfile(Request $request)
+    { 
+    
+        $response = array("status" => false, 'message' => '');
+        $user = Auth::guard('api')->user();
+        
+        $user_id = $user->id;
+        $rules = [
+            'name' => 'required',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($user_id,'id'),
+            ],
+
+            'password' => 'required',
+            'confirm_password' => 'required|same:password'
+        ];
+
+        $requestData = $request->all();
+        $validator = Validator::make($requestData, $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    } else {
+
+     
+  
+     $user->name = $requestData['name'];
+     $user->email = $requestData['email'];
+     $user->password = $requestData['password'];
+
+     $user->save();
+
+
+
+    if($user)
+    {
+       $response = ['status' => true, 'message' => 'Profile Data Updated Successfully!'];
+    }
+    else {
+        $response = ['status' => false,'message' => 'Failed to update profile'];
+
+    }
+}
+
+    return $response;
+
+
+    }
+
+
     public function sendOTP(Request $request) {
       
         $user = Auth::guard('api')->user();
