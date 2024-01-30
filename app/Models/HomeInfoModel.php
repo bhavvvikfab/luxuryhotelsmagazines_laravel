@@ -5,13 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AboutUs_Model extends Model
+class HomeInfoModel extends Model
 {
     use HasFactory;
-    protected $table = "about_us";
+
+    protected $table = "home_info";
     protected $fillable = [
-        'title',
-        'about_image',
-        'about_content',
+        'type',
+        'details',
+        'created_at',
+        'updated_at',
     ];
 }

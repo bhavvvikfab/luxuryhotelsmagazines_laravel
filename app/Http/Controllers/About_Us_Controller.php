@@ -26,36 +26,56 @@ class About_Us_Controller extends Controller
 
             
             $about_us_data = AboutUs_Model::find($about_us_id);
-            
+            // dd($about_us_data);
             if ($about_us_data) {
-                $magzine_distributed = json_decode($about_us_data['magzine_distributed'], true);
-                $magazines = [];
-                foreach ($magzine_distributed as $magazine) {
-                    $magazines[] = [
-                        'image' => asset('storage/app/'.$magazine['image']),
-                        'title' => $magazine['title'],
-                        'desc' => $magazine['desc'],
-                    ];
-                }
-                
-                $about_us_data['magzine_distributed'] = $magazines;
-               
-                $data = $about_us_data;
-    
-                $response = response()->json(['status' => true, 'message' => 'Data Found', 'data' => $data]);
+                $about_us_data->about_image = asset("storage/app/".$about_us_data->about_image);
+                $response['status'] = true;
+                $response['message'] = $about_us_data;
+                // Do something with $hotel_amenity
+         
             } else {
-                $response = response()->json(['status' => false, 'message' => 'Data Not Found','data'=>$data]);
+                $response['message'] = 'About us not found';
             }
-        // }
+            return response()->json($response);
+        }
+    
+        // You might want to return the response at the end of your function
+       
+    // }
 
-          return $response;
-   }
+
+            
+//             if ($about_us_data) {
+//                 $about_us_data->about_image = asset("storage/app/".$home_info_detail['you_tybe_link']);
+//                 // $magzine_distributed = json_decode($about_us_data['magzine_distributed'], true);
+//                 // $magazines = [];
+//                 // foreach ($magzine_distributed as $magazine) {
+//                 //     $magazines[] = [
+//                 //         'image' => asset('storage/app/'.$magazine['image']),
+//                 //         'title' => $magazine['title'],
+//                 //         'desc' => $magazine['desc'],
+//                 //     ];
+//                 // }
+                
+//                 // $about_us_data['magzine_distributed'] = $magazines;
+               
+//                 // $data = $about_us_data;
+    
+//                 $response = response()->json(['status' => true, 'message' => 'Data Found', 'data' => $data]);
+//             } else {
+//                 $response = response()->json(['status' => false, 'message' => 'Data Not Found','data'=>$data]);
+//             }
+//         // }
+
+//           return $response;
+//    }
 
    public function update_about_us(Request $request){
         $response = array("status" => false, 'message' => '');
         $rules = [
-            'about_us' => 'required',
-            'distributed_desc' => 'required',
+            'title' => 'required',
+            'about_image' => 'required',
+            'about_content' => 'required',
         ];
 
         $requestData = $request->all();
@@ -70,8 +90,11 @@ class About_Us_Controller extends Controller
                 return response()->json(['status' => false, 'message' => 'About Us not found']);
             }
 
-            $about_us->about_us = $requestData['about_us'];
-            $about_us->distributed_desc = $requestData['distributed_desc'];
+            $about_us->title = $requestData['title'];
+            $about_us->about_content = $requestData['about_content'];
+            if ($request->hasFile('about_image')) {
+                $about_us->about_image = $request->file('about_image')->store('uploads');
+            }
             $about_us->save();
 
             if ($about_us) {

@@ -20,10 +20,12 @@ class News extends Model
         'status',
         'catagory',
         'editor_choice',
-        'phone_number',
+        // 'phone_number',
         'news_views',
         'news_likes',
         'youtube_link',
+        'youtube_shorts',
+        'special_offers'
     ];
 
     public function special_offer()

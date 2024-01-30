@@ -22,6 +22,7 @@ use App\Http\Controllers\PropertiesController;
 use App\Http\Controllers\PackagePriceController;
 use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\SubscribersController;
+use App\Http\Controllers\HomeInfoController;
 
 
 /*
@@ -56,6 +57,12 @@ Route::middleware(['Api_Auth'])->group(function () {
     Route::post('/verify_otp', [UserController::class, 'verify_otp']);
     Route::post('/resend_password', [UserController::class, 'resend_password']);
     
+    Route::post('/add-employer', [EmployerController::class, 'AddEmployer']);
+    Route::get('/all-employer', [EmployerController::class, 'AllEmployer']);
+    Route::post('/edit-employer', [EmployerController::class, 'EditEmployer']);
+    Route::post('/update-employer', [EmployerController::class, 'UpdateEmployer']);
+    Route::post('/delete-employer', [EmployerController::class, 'DeleteEmployer']);
+
     
 
     
@@ -79,6 +86,8 @@ Route::middleware(['Api_Auth'])->group(function () {
 Route::middleware(['user_login'])->group(function () {
     Route::post('/user-logout', [UserController::class, 'UserLogout']);
     Route::post('/login-user-profile', [UserController::class, 'LoginUserProfile']);
+    Route::post('/login-user-update-profile', [UserController::class, 'LoginUserUpdateProfile']);
+    
     Route::post('/sendOTP', [UserController::class, 'sendOTP']);
 
     Route::post('/add-distibutor', [DistibutionController::class, 'AddDistributor']);
@@ -188,18 +197,15 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/edit-hotel-properties', [PropertiesController::class, 'EditHotelProperties']);
 
 
+    Route::post('/add-package-title', [PackagePriceController::class, 'AddPackageTitle']);
+
     Route::post('/add-package-price', [PackagePriceController::class, 'AddPackagePrice']);
     Route::post('/update-package-price', [PackagePriceController::class, 'UpdatePackagePrice']);
     Route::post('/delete-package-price', [PackagePriceController::class, 'DeletePackagePrice']);
     Route::get('/all-package-price', [PackagePriceController::class, 'AllPackagePrice']);
     Route::post('/edit-package-price', [PackagePriceController::class, 'EditPackagePrice']);
 
-    Route::post('/add-employer', [EmployerController::class, 'AddEmployer']);
-    Route::get('/all-employer', [EmployerController::class, 'AllEmployer']);
-    Route::post('/edit-employer', [EmployerController::class, 'EditEmployer']);
-    Route::post('/update-employer', [EmployerController::class, 'UpdateEmployer']);
-    Route::post('/delete-employer', [EmployerController::class, 'DeleteEmployer']);
-
+    
 
     Route::post('/add-subscriber', [SubscribersController::class, 'AddSubscriber']);
     Route::get('/all-subscriber', [SubscribersController::class, 'AllSubscriber']);
@@ -228,3 +234,9 @@ Route::middleware(['user_login'])->group(function () {
 });
 
 Route::get('/home', [HotelController::class, 'AllHomeData']);
+Route::post('/add_home_info', [HomeInfoController::class, 'add_home_info']);
+Route::post('/update_home_info', [HomeInfoController::class, 'update_home_info']);
+Route::post('/delete_home_info', [HomeInfoController::class, 'delete_home_info']);
+Route::post('/edit_home_info', [HomeInfoController::class, 'edit_home_info']);
+
+

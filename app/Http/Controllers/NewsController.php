@@ -33,6 +33,12 @@ class NewsController extends Controller
         }
     }
     
+    // 1 = no 
+    // 2 = display for 1 week(+10 euro)
+    // 3 = display for 1 month(+25 euro)
+    // 4 = display for 2 month(+40 euro)
+    // 5 = display for 3 month(+50 euro)
+
     public function CreateNews(Request $request)
     {
 
@@ -70,6 +76,7 @@ class NewsController extends Controller
                 'news_views' => 'required',
                 'news_likes' => 'required',
                 'youtube_link' => 'required',
+                'special_offers' => 'required',
                 'offer_title' => 'required',
                 'from_date' => 'required',
                 'to_date' => 'required',
@@ -110,14 +117,18 @@ class NewsController extends Controller
                 if ($request->hasFile('news_image')) {
                     $news->news_image = $request->file('news_image')->store('uploads');
                 }
+                if ($request->hasFile('youtube_shorts')) {
+                    $news->youtube_shorts = $request->file('youtube_shorts')->store('uploads');
+                }
                 
                 $news->status = $requestData['status'];
                 $news->catagory = $requestData['catagory'];
                 $news->editor_choice = $requestData['editor_choice'];
-                $news->phone_number = $requestData['phone_number'];
+                // $news->phone_number = $requestData['phone_number'];
                 $news->news_views = $requestData['news_views'];
                 $news->news_likes = $requestData['news_likes'];
                 $news->youtube_link = $requestData['youtube_link'];
+                $news->special_offers = $requestData['special_offers'];
                 $news->save();
 
                 $lastInsertId = $news->id;
@@ -126,6 +137,7 @@ class NewsController extends Controller
                 $HotelSpecialOfferModel->news_id = $lastInsertId;
                 $HotelSpecialOfferModel->type = 2;
                 $HotelSpecialOfferModel->offer_title = $requestData['offer_title'];
+                $HotelSpecialOfferModel->phone_number = $requestData['phone_number'];
                 $HotelSpecialOfferModel->contact_no = $requestData['contact_no'];
                 $HotelSpecialOfferModel->from_date = $requestData['from_date'];
                 $HotelSpecialOfferModel->to_date = $requestData['to_date'];
@@ -215,6 +227,7 @@ class NewsController extends Controller
                 'news_views' => 'required',
                 'news_likes' => 'required',
                 'youtube_link' => 'required',
+                'special_offers' => 'required',
                 'offer_title' => 'required',
                 'from_date' => 'required',
                 'to_date' => 'required',
@@ -246,14 +259,19 @@ class NewsController extends Controller
                     if ($request->hasFile('news_image')) {
                         $news->news_image = $request->file('news_image')->store('uploads');
                     }
+                    if ($request->hasFile('youtube_shorts')) {
+                        $news->youtube_shorts = $request->file('youtube_shorts')->store('uploads');
+                    }
                     
                     $news->status = $requestData['status'];
                     $news->catagory = $requestData['catagory'];
                     $news->editor_choice = $requestData['editor_choice'];
-                    $news->phone_number = $requestData['phone_number'];
+                    // $news->phone_number = $requestData['phone_number'];
                     $news->news_views = $requestData['news_views'];
                     $news->news_likes = $requestData['news_likes'];
                     $news->youtube_link = $requestData['youtube_link'];
+                    $news->special_offers = $requestData['special_offers'];
+                    
                     
                     $news->save();
         
@@ -267,6 +285,7 @@ class NewsController extends Controller
         
                     $HotelSpecialOfferModel->type = 2;
                     $HotelSpecialOfferModel->offer_title = $requestData['offer_title'];
+                    $HotelSpecialOfferModel->phone_number = $requestData['phone_number'];
                     $HotelSpecialOfferModel->contact_no = $requestData['contact_no'];
                     $HotelSpecialOfferModel->from_date = $requestData['from_date'];
                     $HotelSpecialOfferModel->to_date = $requestData['to_date'];

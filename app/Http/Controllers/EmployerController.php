@@ -7,49 +7,157 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Validation\Rule;
+use App\Helpers\Helpers;
+use Illuminate\Support\Facades\Mail;
 
 class EmployerController extends Controller
 {
+    // public function AddEmployer(Request $request)
+    // {
+ 
+    //     $response = array("status" => false, 'message' => '');
+    //     $rules = [
+    //         'name' => 'required',
+    //         'email' => 'required|email|unique:users,email',
+    //         // 'password' => 'required',
+    //         'type' => 'required',
+    //         'contact_no' => 'nullable', // Making 'contact_no' optional
+    //     ];
+    //     $requestData = $request->all();
+      
+
+    //     $validator = Validator::make($requestData, $rules);
+    
+    //     if ($validator->fails()) {
+    //         $response['message'] = $validator->messages();
+    //     } else {
+           
+    //         $randomNumber = rand(100000, 999999);
+            
+    //         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    //         $employee_password = substr(str_shuffle($characters), 0, 8);
+
+    //         $user = new User();
+   
+    //         $user->name = $requestData['name'];
+    //         $user->user_name = $requestData['user_name'];
+    //         $user->email = $requestData['email'];
+    //         $user->token  = $randomNumber;
+    //         $user->password = $employee_password;
+    //         $user->type = $requestData['type'];
+    //         if (isset($requestData['contact_no'])) {
+    //             $user->contact_no = $requestData['contact_no'];
+    //         }
+     
+    //         $user->save();
+
+
+    //         $subject = 'Password for Employer Login';
+    //         $key = 2;
+    //         $body = 'Employer Details!
+    //         Name: ' . $requestData['name'] . '
+    //         Email: ' . $requestData['email'] . '
+    //         Password: ' . $employee_password;
+    
+
+    //         $to = $requestData['email'];
+
+    //         $data = [
+    //             'name' => $user->name,
+    //             'email' => $to,
+    //              'token' => $randomNumber,
+    //             'password' => $employee_password,
+    //             'id' => $user->id,
+    //             'key' => $key,
+    //         ];
+
+    //             $helpers = new Helpers();
+    //             $result = $helpers->sendEmail($to, $subject, $body, $key, $data);
+    
+    //         if ($user) {
+    //             $response =  response()->json(['status' => true, 'message' => 'Employer Added Successfully']);
+    //         } else {
+    //             $response = response()->json(['status' => false, 'message' => 'Failed to add employer']);
+    //         }
+    //     }
+    
+    //     return $response;
+    // }
+
     public function AddEmployer(Request $request)
     {
-        
         $response = array("status" => false, 'message' => '');
+        
+        // Validation rules
         $rules = [
             'name' => 'required',
+            'user_name' => 'required',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required',
             'type' => 'required',
             'contact_no' => 'nullable', // Making 'contact_no' optional
         ];
-        $requestData = $request->all();
-      
 
-        $validator = Validator::make($requestData, $rules);
-    
+        // Validate the request data
+        $validator = Validator::make($request->all(), $rules);
+
         if ($validator->fails()) {
             $response['message'] = $validator->messages();
         } else {
-           
+            // Generate random number and password
+            $randomNumber = rand(100000, 999999);
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $employee_password = substr(str_shuffle($characters), 0, 8);
 
+            // Create a new User instance
             $user = new User();
-   
-            $user->name = $requestData['name'];
-            $user->email = $requestData['email'];
-            $user->password = $requestData['password'];
-            $user->type = $requestData['type'];
-            if (isset($requestData['contact_no'])) {
-                $user->contact_no = $requestData['contact_no'];
+
+            // Assign values to User instance
+            $user->name = $request->input('name');
+            $user->user_name = $request->input('user_name');
+            $user->email = $request->input('email');
+            $user->token = $randomNumber;
+            $user->password = $employee_password;
+            $user->type = $request->input('type');
+            
+            // Check if 'contact_no' is set before assigning
+            if ($request->has('contact_no')) {
+                $user->contact_no = $request->input('contact_no');
             }
-     
+
+            // Save the user
             $user->save();
-    
-            if ($user) {
-                $response =  response()->json(['status' => true, 'message' => 'Employer Added Successfully']);
+
+            // Email details
+            $subject = 'Password for Employer Login';
+            $key = 3;
+            $body = "Employer Details!\nName: {$request->input('name')}\nEmail: {$request->input('email')}\nPassword: {$employee_password}";
+
+            // Email data
+            $to = $request->input('email');
+            $data = [
+                'name' => $user->name,
+                'user_name' => $user->user_name,
+                'email' => $to,
+                'token' => $randomNumber,
+                'password' => $employee_password,
+                'id' => $user->id,
+                'key' => $key,
+            ];
+
+     
+
+            // Use the helper function to send the email
+            $helpers = new Helpers();
+            $result = $helpers->sendEmail($to, $subject, $body, $key, $data);
+
+            // Check if the user was successfully saved
+            if ($result) {
+                $response = response()->json(['status' => true, 'message' => 'Employer Added Successfully']);
             } else {
                 $response = response()->json(['status' => false, 'message' => 'Failed to add employer']);
             }
         }
-    
+
         return $response;
     }
 

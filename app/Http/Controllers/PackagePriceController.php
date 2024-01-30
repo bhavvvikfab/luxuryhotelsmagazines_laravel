@@ -23,11 +23,44 @@ use App\Models\TeamModel;
 use App\Models\VotedHotelModel;
 use App\Models\PropertiesModel;
 use App\Models\PackagePriceModel;
+use App\Models\PackageModel;
+
 
 
 
 class PackagePriceController extends Controller
 {
+    public function AddPackageTitle(Request $request)
+
+{
+    $response = array("status" => false, 'message' => '');
+
+    $rules = [
+        'title' => 'required',
+    ];
+
+    $requestData = $request->all();
+    $validator = Validator::make($requestData, $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    } else {
+
+        $package_data = new PackageModel();
+
+        $package_data->title = $requestData['title'];
+        $package_data->save();
+    
+        if ($package_data) {
+            $response =  response()->json(['status' => true, 'message' => 'Package Title Added Successfully']);
+        } else {
+            $response = response()->json(['status' => false, 'message' => 'Failed to add Package title']);
+        }
+    }
+
+    return $response;
+}
+
     public function AddPackagePrice(Request $request)
     {
         

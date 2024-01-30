@@ -39,7 +39,7 @@ public function __construct($data)
 
     public function build()
     {
-      
+ 
         return $this->subject('Thank you for subscribing to our newsletter')
             ->markdown('emails.my_mail') // Assuming you have a Blade file named my_mail.blade.php in the emails directory
             ->with(['data' => $this->data]);

@@ -15,6 +15,7 @@ class HotelSpecialOfferModel extends Model
         'news_id',
         'type',
         'offer_title',
+        'phone_number',
         'contact_no',
         'from_date',
         'to_date',

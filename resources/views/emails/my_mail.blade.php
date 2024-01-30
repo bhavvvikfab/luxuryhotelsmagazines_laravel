@@ -68,6 +68,18 @@
 <!-- <button type="submit" class="btn btn-primary reset-btn">Reset Password </button> -->
 <p>If you didn't request a password reset, you can ignore this email.</p>
 <p>Thanks,<br>Your Application Team</p>
+@elseif($data['key']==3)
+    <h2>Employer Details</h2>
+
+
+    <p>Hi {{ isset($data['name']) ? $data['name'] : 'User' }},</p>
+<!-- <p>It seems you've forgotten your password. No worries! Click the button below to reset it:</p> -->
+<p>Name: <b>{{ isset($data['user_name']) ? $data['user_name'] : 'N/A' }}</b></p>
+<p>Email: <b>{{ isset($data['email']) ? $data['email'] : 'N/A' }}</b></p>
+<p>Password: <b>{{ isset($data['password']) ? $data['password'] : 'N/A' }}</b></p>
+
+<!-- <p>If you didn't request a password reset, you can ignore this email.</p> -->
+<p>Thanks,<br>Your Application Team</p>
   
 @endif
 
