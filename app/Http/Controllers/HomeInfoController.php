@@ -93,8 +93,8 @@ else if ($hotel_type == 2)
             'type' => 'required',
             'background_type' => 'required',
             'background' => 'required',
-            'overlay_image_1' => 'required',
-            'overlay_image_2' => 'required',
+            // 'overlay_image_1' => 'required',
+            // 'overlay_image_2' => 'required',
             
         ];
 
@@ -122,13 +122,13 @@ else if ($hotel_type == 2)
                             $homeaboutDetails['background'] = $request->file('background')->store('uploads');
                         }
 
-                        if ($request->hasFile('overlay_image_1')) {
-                            $homeaboutDetails['overlay_image_1'] = $request->file('overlay_image_1')->store('uploads');
-                        }
+                        // if ($request->hasFile('overlay_image_1')) {
+                        //     $homeaboutDetails['overlay_image_1'] = $request->file('overlay_image_1')->store('uploads');
+                        // }
 
-                        if ($request->hasFile('overlay_image_2')) {
-                            $homeaboutDetails['overlay_image_2'] = $request->file('overlay_image_2')->store('uploads');
-                        }
+                        // if ($request->hasFile('overlay_image_2')) {
+                        //     $homeaboutDetails['overlay_image_2'] = $request->file('overlay_image_2')->store('uploads');
+                        // }
 
                         
                         // $home_info  = new HomeInfoModel();
@@ -296,8 +296,8 @@ public function edit_home_info(Request $request)
 
             if($home_info['type']==2){
                 $home_info_detail['background'] = asset("storage/app/".$home_info_detail['background']);
-                $home_info_detail['overlay_image_1'] = asset("storage/app/".$home_info_detail['overlay_image_1']);
-                $home_info_detail['overlay_image_2'] = asset("storage/app/".$home_info_detail['overlay_image_2']);
+                // $home_info_detail['overlay_image_1'] = asset("storage/app/".$home_info_detail['overlay_image_1']);
+                // $home_info_detail['overlay_image_2'] = asset("storage/app/".$home_info_detail['overlay_image_2']);
 
                 $home_info['details'] = $home_info_detail;  
          
