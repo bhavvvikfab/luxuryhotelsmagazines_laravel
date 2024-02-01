@@ -75,7 +75,7 @@ class UserController extends Controller
 
               
                             $token = $user->createToken('AppName')->accessToken;
-                            $response = ['status' => true, 'message' => 'Login Successfully','token'=>$token];
+                            $response = ['status' => true, 'message' => 'Login Successfully','token'=>$token,'data'=>$user];
                         } else {
                             Auth::logout();
                             $response = ['status' => true, 'message' => 'Unauthorized access'];
@@ -91,7 +91,7 @@ class UserController extends Controller
                
                             $token = $user->createToken('AppName')->accessToken;
 
-                            $response = ['status' => true, 'message' => 'Login Successfully','token'=>$token];
+                            $response = ['status' => true, 'message' => 'Login Successfully','token'=>$token,'data'=>$user];
                         } else {
                             Auth::logout();
                             $response = ['status' => true, 'message' => 'Unauthorized access'];
@@ -139,7 +139,7 @@ class UserController extends Controller
                 $result = $helpers->sendOtp($user);
 
                 if ($result) {
-                    $response =  response()->json(['status' => true,'message' => 'User Registered Successfully']);
+                    $response =  response()->json(['status' => true,'message' => 'User Registered Successfully','data'=>$user]);
                 } else {
                     $response = response()->json(['status' => false,'message' => 'Failed to register user']);
                 }
@@ -156,7 +156,7 @@ class UserController extends Controller
         $rules = [
             'name' => 'required',
             'email' => 'required|email',
-            'password' => 'required',
+            // 'password' => 'required',
             'contact_no' => 'nullable', // Making 'contact_no' optional
         ];
         $requestData = $request->all();
@@ -175,21 +175,48 @@ class UserController extends Controller
                 exit;
             }
     
+
+            $randomNumber = rand(100000, 999999);
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $user_password = substr(str_shuffle($characters), 0, 8);
+
             $user = new User();
    
 
             $user->name = $requestData['name'];
             $user->email = $requestData['email'];
-            $user->token = $requestData['token'];
-            $user->password = $requestData['password'];
+            $user->token = $randomNumber;
+            $user->password = $user_password;
+
             if (isset($requestData['contact_no'])) {
                 $user->contact_no = $requestData['contact_no'];
             }
      
     
             $user->save();
+
+            $subject = 'Password for User Login';
+            $key = 4;
+            $body = "User Details!\nName: {$request->input('name')}\nEmail: {$request->input('email')}\nPassword: {$user_password}";
+
+            // Email data
+            $to = $request->input('email');
+            $data = [
+                'name' => $user->name,
+                'user_name' => $user->user_name,
+                'email' => $to,
+                'token' => $randomNumber,
+                'password' => $user_password,
+                'id' => $user->id,
+                'key' => $key,
+            ];
+
+
+            $helpers = new Helpers();
+            $result = $helpers->sendEmail($to, $subject, $body, $key, $data);
+
     
-            if ($user) {
+            if ($result) {
                 $response =  response()->json(['status' => true, 'message' => 'User Added Successfully']);
             } else {
                 $response = response()->json(['status' => false, 'message' => 'Failed to add user']);
@@ -214,7 +241,7 @@ class UserController extends Controller
                 Rule::unique('users', 'email')->ignore($user_id,'id'),
             ],
 
-            'password' => 'required',
+            // 'password' => 'required',
             // 'confirm_password' => 'required|same:password',
             'contact_no' => 'nullable', // Making 'contact_no' optional
         ];
@@ -233,7 +260,7 @@ class UserController extends Controller
     
             $user->name = $requestData['name'];
             $user->email = $requestData['email'];
-            $user->password = Hash::make($requestData['password']);
+            // $user->password = Hash::make($requestData['password']);
 
             if (isset($requestData['contact_no'])) {
                 $user->contact_no = $requestData['contact_no'];

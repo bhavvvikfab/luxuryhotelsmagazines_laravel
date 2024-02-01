@@ -10,6 +10,7 @@ class MediaKitModel extends Model
     use HasFactory;
     protected $table = "media_kit";
     protected $fillable = [
+        'title',
         'media_kit_image',
         'file_pdf',
         'created_at',

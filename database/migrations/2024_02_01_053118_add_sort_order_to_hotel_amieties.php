@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('distribution_details', function (Blueprint $table) {
-            $table->id();
-            $table->text('main_page_title');
-            $table->text('title');
-            $table->text('sub_title')->nullable();
-            $table->timestamps();
+        Schema::table('hotel_amieties', function (Blueprint $table) {
+             $table->integer('sort_order')->after('type')->default(0)->unique();
+            // $table->text('image')->after('sort_order');
         });
     }
 
@@ -25,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('distribution_details');
+        Schema::table('hotel_amieties', function (Blueprint $table) {
+            //
+        });
     }
 };

@@ -27,13 +27,13 @@ class DistibutionController extends Controller
 {
     public function AddDistributor(Request $request)
      {
-        
+       
         $response = array("status" => false, 'message' => '');
         $requestData = $request->all(); 
      
         $rules = [
             'title' => 'required',
-            'country_name' => 'required',
+            'category' => 'required',
             'hotel_image' => 'required',
             'hotel_description' => 'required',
             'link' => 'required',
@@ -49,7 +49,7 @@ class DistibutionController extends Controller
     
 
             $distributor->title = $request['title'];
-            $distributor->country_name = $request['country_name'];
+            $distributor->category = $request['category'];
             $distributor->hotel_description = $request['hotel_description'];
             $distributor->link = $request['link'];
            
@@ -141,7 +141,7 @@ class DistibutionController extends Controller
         
     //     $rules = [
     //         'title' => 'required',
-    //         'country_name' => 'required',
+    //         'category' => 'required',
     //         'hotel_image' => 'required',
     //         'hotel_description' => 'required',
     //         'link' => 'required',
@@ -167,7 +167,7 @@ class DistibutionController extends Controller
     //             }
 
     //             $distributor->title = $request['title'];
-    //             $distributor->country_name = $request['country_name'];
+    //             $distributor->category = $request['category'];
     //             $distributor->hotel_description = $request['hotel_description'];
     //             $distributor->link = $request['link'];
 
@@ -191,7 +191,7 @@ class DistibutionController extends Controller
     
         $rules = [
             'title' => 'required',
-            'country_name' => 'required',
+            'category' => 'required',
             'hotel_image' => 'required',
             'hotel_description' => 'required',
             'link' => 'required',
@@ -213,7 +213,7 @@ class DistibutionController extends Controller
                 }
     
                 $distributor->title = $request->input('title');
-                $distributor->country_name = $request->input('country_name');
+                $distributor->category = $request->input('category');
                 $distributor->hotel_description = $request->input('hotel_description');
                 $distributor->link = $request->input('link');
     
@@ -412,9 +412,9 @@ public function EditDistributorData(Request $request)
                 $requestData = $request->all(); 
             
                 $rules = [
+                    'main_page_title' => 'required',
                     'title' => 'required',
-                    'hotel_image' => 'required',
-                    'link' => 'required',
+                    'sub_title' => 'required',
                 ];
 
     
@@ -426,17 +426,11 @@ public function EditDistributorData(Request $request)
                 $distributor = new DistributionDetailsModel();
         
 
+                $distributor->main_page_title = $request['main_page_title'];
                 $distributor->title = $request['title'];
-                $distributor->link = $request['link'];
+                $distributor->sub_title = $request['sub_title'];
            
 
-
-                    if ($request->hasFile('hotel_image')) {
-                        $pdfFiles = $request->file('hotel_image');
-                        $path = $pdfFiles->store('uploads');
-                        $distributor->hotel_image = $path;
-
-                }
         
                     $distributor->save();
             
@@ -558,9 +552,9 @@ public function EditDistributorData(Request $request)
     $requestData = $request->all();
 
     $rules = [
+        'main_page_title' => 'required',
         'title' => 'required',
-        'hotel_image' => 'required',
-        'link' => 'required',
+        'sub_title' => 'required',
     ];
 
     $validator = Validator::make($request->all(), $rules);
@@ -572,14 +566,10 @@ public function EditDistributorData(Request $request)
         $distributorDetailData = DistributionDetailsModel::find($distributorDetailId);
 
         if ($distributorDetailData) {
-            if ($request->hasFile('hotel_image')) {
-                // Assuming 'uploads' is the storage directory; adjust as needed.
-                $imagePath = $request->file('hotel_image')->store('uploads');
-                $distributorDetailData->hotel_image = $imagePath;
-            }
 
+            $distributorDetailData->main_page_title = $request->input('main_page_title');
             $distributorDetailData->title = $request->input('title');
-            $distributorDetailData->link = $request->input('link');
+            $distributorDetailData->sub_title = $request->input('sub_title');
 
             if ($distributorDetailData->save()) {
                 $response = ['status' => true, 'message' => 'Distribution Detail Updated Successfully'];

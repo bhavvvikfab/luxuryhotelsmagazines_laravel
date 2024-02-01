@@ -61,7 +61,7 @@
 
 
 
-<p>Hi {{ isset($data['name']) ? $data['name'] : 'User' }},</p>
+<p>Hi {{ isset($data['name']) ? $data['name'] : 'Employer' }},</p>
 <p>It seems you've forgotten your password. No worries! Click the button below to reset it:</p>
 <p><a href="{{ url($data['url'] . '/forgot-password/' . $data['remember_token']) }}" class="btn">Reset Password</a></p>
  
@@ -75,6 +75,18 @@
     <p>Hi {{ isset($data['name']) ? $data['name'] : 'User' }},</p>
 <!-- <p>It seems you've forgotten your password. No worries! Click the button below to reset it:</p> -->
 <p>Name: <b>{{ isset($data['user_name']) ? $data['user_name'] : 'N/A' }}</b></p>
+<p>Email: <b>{{ isset($data['email']) ? $data['email'] : 'N/A' }}</b></p>
+<p>Password: <b>{{ isset($data['password']) ? $data['password'] : 'N/A' }}</b></p>
+
+<!-- <p>If you didn't request a password reset, you can ignore this email.</p> -->
+<p>Thanks,<br>Your Application Team</p>
+@elseif($data['key']==4)
+    <h2>User Details</h2>
+
+
+    <p>Hi {{ isset($data['name']) ? $data['name'] : 'User' }},</p>
+<!-- <p>It seems you've forgotten your password. No worries! Click the button below to reset it:</p> -->
+<p>Name: <b>{{ isset($data['name']) ? $data['name'] : 'N/A' }}</b></p>
 <p>Email: <b>{{ isset($data['email']) ? $data['email'] : 'N/A' }}</b></p>
 <p>Password: <b>{{ isset($data['password']) ? $data['password'] : 'N/A' }}</b></p>
 

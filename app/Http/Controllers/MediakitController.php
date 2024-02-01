@@ -25,6 +25,7 @@ class MediakitController extends Controller
      
         $rules = [
             // 'user_id' => 'required',
+            'title' => 'required',
             'media_kit_image' => 'required',
             'file_pdf' => 'required',
         ];
@@ -37,7 +38,7 @@ class MediakitController extends Controller
         } else {
             $media_kit = new MediaKitModel();
             
-
+             $media_kit->title = $requestData['title'];
             if ($request->hasFile('file_pdf')) {
                 $pdfFiles = $request->file('file_pdf');
                 $path = $pdfFiles->store('uploads');
@@ -93,6 +94,7 @@ class MediakitController extends Controller
 
                     $rules = [
                         // 'user_id' => 'required',
+                        'title' => 'required',
                         'media_kit_image' => 'required',
                         'file_pdf' => 'required',
                     ];
@@ -109,6 +111,7 @@ class MediakitController extends Controller
               
 
                         if ($media_kit) {
+                            $media_kit->title = $requestData['title'];
                             if ($request->hasFile('media_kit_image')) {
                                 $media_kit->media_kit_image = $request->file('media_kit_image')->store('uploads');
                             }
