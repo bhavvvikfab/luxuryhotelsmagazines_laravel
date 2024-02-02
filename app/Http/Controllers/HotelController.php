@@ -136,6 +136,7 @@ public function HotelRegister(Request $request)
                     'hotel_id' => $hotel->id,
                     'offer_title' => $request->input('offer_title'),
                     'type' => $request->input('type'),
+                    'phone_number' => $request->input('phone_number'),
                     'contact_no' => $request->input('contact_no'),
                     'description' => $request->input('description'),
                     'from_date' => $request->input('from_date'),
@@ -515,18 +516,12 @@ public function UpdateHotelAmeties(Request $request)
  
     $validator = Validator::make($request->all(), $rules);
   
- 
-    // $validator = Validator::make($request->all(), $rules);
-
     if ($validator->fails()) {
         $response['message'] = $validator->messages();
 
     } else {
 
-        // Validation passed, proceed with the update logic
-
-        // Assuming you have a model for HotelAmenity
-        
+      
  
         $amenity = HotelAmetiesModel::find($ameties_id);
 
@@ -664,5 +659,42 @@ public function LoginUserHotels(Request $request)
 }
 
 
+public function sort_order_ameties(Request $request)
+{
+    // echo "fewrf";
+    $response = array("status" => false, 'message' => '');
+
+    $rules = [
+        'sort_order' => 'required',
+        'key' => 'required',
+    ];
+
+    $requestData =  $request->all();
+    $validator = Validator::make($requestData, $rules);
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    }
+    else{
+        $sort_order = $requestData['sort_order'];
+        $key = $requestData['key'];
+
+        $hotel_amenity_sort_data = HotelAmetiesModel::where('id', $key)->first();
+
+        if (!$hotel_amenity_sort_data) {
+            $response['message'] = 'Amenity not found';
+        } else {
+            $hotel_amenity_sort_data->sort_order = $requestData['sort_order'];
+            $hotel_amenity_sort_data->save();
+
+            if ($hotel_amenity_sort_data) {
+                $response = response()->json(['status' => true, 'message' => 'Hotel Ameties Sort Order Updated Successfully']);
+            } else {
+                $response = response()->json(['status' => false, 'message' => 'Failed to update hotel ameties sort order!']);
+            }
+        }
+    
+    }
+    return $response;
+}
 
 }

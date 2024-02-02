@@ -12,6 +12,7 @@ class PackagePriceModel extends Model
     protected $fillable = [
         'package_catagory',
         'package_name',
+        'package_position',
         'package_original_price',
         'package_price',
         'hotel_package_price',

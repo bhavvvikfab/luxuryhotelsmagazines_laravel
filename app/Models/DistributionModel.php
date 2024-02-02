@@ -11,7 +11,7 @@ class DistributionModel extends Model
     protected $table = "distribution";
     protected $fillable = [
         'title',
-        'country_name',
+        'category',
         'hotel_image',
         'hotel_description',
         'created_at',

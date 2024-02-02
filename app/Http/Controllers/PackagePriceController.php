@@ -69,6 +69,7 @@ class PackagePriceController extends Controller
         $rules = [
             'package_catagory' => 'required',
             'package_name' => 'required',
+            'package_position' => 'required',
             'package_original_price' => 'required',
             'package_price' => 'nullable',
             'hotel_package_price' => 'nullable',
@@ -94,6 +95,7 @@ class PackagePriceController extends Controller
    
             $package_data->package_catagory = $requestData['package_catagory'];
             $package_data->package_name = $requestData['package_name'];
+            $package_data->package_position = $requestData['package_position'];
             $package_data->package_original_price = $requestData['package_original_price'];
             $package_data->package_validity = $requestData['package_validity'];
             $package_data->package_validity_title = $requestData['package_validity_title'];
@@ -122,6 +124,80 @@ class PackagePriceController extends Controller
                 $response =  response()->json(['status' => true, 'message' => 'Package Added Successfully']);
             } else {
                 $response = response()->json(['status' => false, 'message' => 'Failed to add Package']);
+            }
+        }
+    
+        return $response;
+    }
+
+    public function UpdatePackagePrice(Request $request)
+    {
+        
+        $response = array("status" => false, 'message' => '');
+
+        $rules = [
+            'package_catagory' => 'required',
+            'package_name' => 'required',
+            'package_position' => 'required',
+            'package_original_price' => 'required',
+            'package_price' => 'nullable',
+            'hotel_package_price' => 'nullable',
+            'package_validity' => 'required',
+            'package_validity_title' => 'required',
+            'package_inner_title' => 'nullable',
+            'package_inner_sub_title' => 'nullable',
+            'package_inner_content' => 'nullable',
+            'package_expiry_date' => 'required',
+            'package_action' => 'required',
+        ];
+
+        $requestData = $request->all();
+      
+
+        $validator = Validator::make($requestData, $rules);
+    
+        if ($validator->fails()) {
+            $response['message'] = $validator->messages();
+        } else {
+
+            $package_price_id = $requestData['package_price_id'];
+            $package_data = PackagePriceModel::find($package_price_id);
+        
+
+            if($package_data)
+            {
+
+            $package_data->package_catagory = $requestData['package_catagory'];
+            $package_data->package_name = $requestData['package_name'];
+            $package_data->package_position = $requestData['package_position'];
+            $package_data->package_original_price = $requestData['package_original_price'];
+            $package_data->package_validity = $requestData['package_validity'];
+            $package_data->package_validity_title = $requestData['package_validity_title'];
+            $package_data->package_expiry_date = $requestData['package_expiry_date'];
+            $package_data->package_action = $requestData['package_action'];
+
+            if (isset($requestData['package_price'])) {
+                $package_data->package_price = $requestData['package_price'];
+            }
+            if (isset($requestData['hotel_package_price'])) {
+                $package_data->hotel_package_price = $requestData['hotel_package_price'];
+            }
+            if (isset($requestData['package_inner_title'])) {
+                $package_data->package_inner_title = $requestData['package_inner_title'];
+            }
+            if (isset($requestData['package_inner_sub_title'])) {
+                $package_data->package_inner_sub_title = $requestData['package_inner_sub_title'];
+            }
+            if (isset($requestData['package_inner_content'])) {
+                $package_data->package_inner_content = $requestData['package_inner_content'];
+            }
+    
+            $package_data->save();
+    
+         
+                $response =  response()->json(['status' => true, 'message' => 'Package Updated Successfully']);
+            } else {
+                $response = response()->json(['status' => false, 'message' => 'Failed to update Package']);
             }
         }
     

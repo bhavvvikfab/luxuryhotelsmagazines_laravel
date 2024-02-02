@@ -5,16 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class HotelAmetiesModel extends Model
+class WhatWeDoModel extends Model
 {
     use HasFactory;
-
-    protected $table = "hotel_amieties";
+    protected $table = "what_we_do";
     protected $fillable = [
-        'title',
         'type',
-        'sort_order ',
-        'image',
+        'details',
         'created_at',
         'updated_at',
     ];

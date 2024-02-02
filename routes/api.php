@@ -156,6 +156,9 @@ Route::middleware(['user_login'])->group(function () {
     Route::get('/all-hotel-ameties', [HotelController::class, 'AllHotelAmeties']);
     Route::post('/edit-hotel-ameties', [HotelController::class, 'EditHotelAmeties']);
 
+    Route::post('/sort_order_ameties', [HotelController::class, 'sort_order_ameties']);
+    
+
 
     Route::post('/add-media-kit', [MediakitController::class, 'AddMediaKit']);
     Route::get('/all-media-kit', [MediakitController::class, 'AllMediaKit']);
@@ -175,6 +178,9 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/update-query', [QueriesController::class, 'UpdateQuery']);
     Route::post('/delete-query', [QueriesController::class, 'DeleteQuery']);
     Route::post('/edit-query', [QueriesController::class, 'EditQuery']);
+
+    Route::post('/send_query_reply', [QueriesController::class, 'send_query_reply']);
+    
 
     Route::post('/add-team', [TeamController::class, 'AddTeam']);
     Route::get('/all-team', [TeamController::class, 'AllTeam']);
@@ -238,5 +244,9 @@ Route::post('/add_home_info', [HomeInfoController::class, 'add_home_info']);
 Route::post('/update_home_info', [HomeInfoController::class, 'update_home_info']);
 Route::post('/delete_home_info', [HomeInfoController::class, 'delete_home_info']);
 Route::post('/edit_home_info', [HomeInfoController::class, 'edit_home_info']);
+
+Route::post('/single_page_details', [HomeInfoController::class, 'single_page_details']);
+
+
 
 

@@ -10,9 +10,9 @@ class DistributionDetailsModel extends Model
     use HasFactory;
     protected $table = "distribution_details";
     protected $fillable = [
+        'main_page_title',
         'title',
-        'hotel_image',
-        'link',
+        'sub_title',
         'created_at',
         'updated_at',
     ];
