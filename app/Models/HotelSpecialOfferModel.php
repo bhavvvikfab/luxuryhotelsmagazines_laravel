@@ -20,6 +20,7 @@ class HotelSpecialOfferModel extends Model
         'from_date',
         'to_date',
         'description',
+        'special_offer',
         'redeem_link',
         'created_at',
         'updated_at',
