@@ -117,6 +117,9 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/update-news', [NewsController::class, 'UpdateNews']);
     Route::post('/views-news', [NewsController::class, 'ViewNews']);
     Route::post('/delete-news', [NewsController::class, 'DeleteNews']);
+    Route::post('/delete_single_news_image', [NewsController::class, 'delete_single_news_image']);
+    Route::post('/update_single_news_image', [NewsController::class, 'update_single_news_image']);
+    Route::post('/add_multiple_images_news', [NewsController::class, 'add_multiple_images_news']);
     
 
     

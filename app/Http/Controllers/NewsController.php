@@ -26,7 +26,22 @@ class NewsController extends Controller
             return response()->json(["status" => false, "message" => "News Data Not Found", "data" => []]);
         } else {
             $result->transform(function ($item) {
-                $item->fullImagePath = asset("storage/app/".$item->news_image);
+                // Convert news images to full URLs
+                
+                if (!empty($item->news_image)) {
+                   
+                    $imagePaths = json_decode($item->news_image, true);
+                   
+                    $fullImagePaths = [];
+                    foreach ($imagePaths as $image) {
+                        $fullImagePaths[] = asset("storage/app/".$image);
+                    }
+    
+                    $item->news_image = $fullImagePaths;
+                } else {
+                    $item->news_image = [];
+                }
+    
                 return $item;
             });
             return response()->json(["status" => true, "message" => "News Data Found", "data" => $result]);
@@ -62,27 +77,29 @@ class NewsController extends Controller
             // dd($u_id);
 
             $rules = [
+                'news_type' => 'required',
                 'bussiness_name' => 'required',
                 'country' => 'required',
                 'full_name' => 'required',
                 'email_address' => 'required|email',
                 'news_title' => 'required',
                 'news_desc' => 'required',
-                'news_image' => 'required',
-                'status' => 'required',
+                'news_images' => 'required',
+                // 'status' => 'required',
                 'catagory' => 'required',
                 'editor_choice' => 'required',
-                'phone_number' => 'required',
-                'news_views' => 'required',
-                'news_likes' => 'required',
-                'youtube_link' => 'required',
-                'special_offers' => 'required',
+                // 'news_views' => 'required',
+                // 'news_likes' => 'required',
+                'youtube_link' => 'nullable',
                 'offer_title' => 'required',
+                'phone_number' => 'required',
+                'contact_no' => 'required',
                 'from_date' => 'required',
                 'to_date' => 'required',
                 'description' => 'required',
+                'special_offers' => 'required',
                 'redeem_link' => 'required',
-                'contact_no' => 'required',
+                
             ];
 
         $requestData = $request->all();
@@ -99,12 +116,15 @@ class NewsController extends Controller
                 $news = new News();
                 $news->user_id = $user['id'];
                 // $news->user_id = $requestData['user_id'];
+                $news->news_type = $requestData['news_type'];
                 $news->bussiness_name = $requestData['bussiness_name'];
                 $news->country = $requestData['country'];
                 $news->full_name = $requestData['full_name'];
                 $news->email_address = $requestData['email_address'];
                 $news->news_title = $requestData['news_title'];
                 $news->news_desc = $requestData['news_desc'];
+                $news->editor_choice = $requestData['editor_choice'];
+                
                 // $news->news_image = $requestData['news_image'];
 
                 // if ($request->hasFile('news_image')) {
@@ -114,21 +134,40 @@ class NewsController extends Controller
                 //     $news->news_image = $imageName;
                 // }
 
-                if ($request->hasFile('news_image')) {
-                    $news->news_image = $request->file('news_image')->store('uploads');
-                }
-                if ($request->hasFile('youtube_shorts')) {
-                    $news->youtube_shorts = $request->file('youtube_shorts')->store('uploads');
-                }
+                // if ($request->hasFile('news_images')) {
+                //     $news->news_image = $request->file('news_image')->store('uploads');
+                // }
+                if ($request->hasFile('news_images')) {
+                    $images = $request->file('news_images');
                 
-                $news->status = $requestData['status'];
+                    $imagePaths = [];
+                
+                    foreach ($images as $image) {
+                        $imagePath = $image->store('uploads');
+                        $imagePaths[] = $imagePath;
+                    }
+                
+                    $news->news_image = json_encode($imagePaths);
+                }
+
+                // if ($request->hasFile('youtube_shorts')) {
+                //     $news->youtube_shorts = $request->file('youtube_shorts')->store('uploads');
+                // }
+                
+                // $news->status = $requestData['status'];
                 $news->catagory = $requestData['catagory'];
-                $news->editor_choice = $requestData['editor_choice'];
+              //  $news->editor_choice = $requestData['editor_choice'];
                 // $news->phone_number = $requestData['phone_number'];
-                $news->news_views = $requestData['news_views'];
-                $news->news_likes = $requestData['news_likes'];
-                $news->youtube_link = $requestData['youtube_link'];
-                $news->special_offers = $requestData['special_offers'];
+                // $news->news_views = $requestData['news_views'];
+                // $news->news_likes = $requestData['news_likes'];
+                if(!empty($requestData['youtube_link'])){
+                    $news->youtube_link = $requestData['youtube_link'];
+                }
+                else{
+                    $news->youtube_link = NULL;
+                }
+               
+                // $news->special_offers = $requestData['special_offers'];
                 $news->save();
 
                 $lastInsertId = $news->id;
@@ -142,8 +181,10 @@ class NewsController extends Controller
                 $HotelSpecialOfferModel->from_date = $requestData['from_date'];
                 $HotelSpecialOfferModel->to_date = $requestData['to_date'];
                 $HotelSpecialOfferModel->description = $requestData['description'];
-                $HotelSpecialOfferModel->redeem_link = $requestData['redeem_link'];
-                
+                $HotelSpecialOfferModel->special_offer = $requestData['special_offers'];
+                $HotelSpecialOfferModel->reedem_link = $requestData['redeem_link'];
+               
+
                 $HotelSpecialOfferModel->save();
 				
                 if ($news && $HotelSpecialOfferModel) {
@@ -177,9 +218,22 @@ class NewsController extends Controller
                 
                 $newsData = News::with('special_offer')->find($newsId);
                 if ($newsData) {
-                    $newsData['news_image'] = asset('storage/app/'.$newsData['news_image']);
-                    $data = $newsData;
-        
+                    // $newsData['news_image'] = asset('storage/app/'.$newsData['news_image']);
+                    // $data = $newsData;
+                    $newsImages = [];
+                    
+                    if(!empty($newsData['news_image'])){
+                        $news_images = json_decode($newsData['news_image']);
+                        
+                        foreach ($news_images as $image) {
+                            $newsImages[] = asset('storage/app/'.$image);
+                        }
+                      
+                        $newsData['news_image'] = $newsImages;
+
+                        $data = $newsData;
+                    }
+                        
                     $response = response()->json(['status' => true, 'message' => 'News Data Found', 'data' => $data]);
                 } else {
                     $response = response()->json(['status' => false, 'message' => 'News Data Not Found','data'=>$data]);
@@ -212,6 +266,7 @@ class NewsController extends Controller
              $u_id = $user['id'];
 
             $rules = [
+                'news_type' => 'required',
                 'news_id' => 'required',
                 'bussiness_name' => 'required',
                 'country' => 'required',
@@ -219,22 +274,24 @@ class NewsController extends Controller
                 'email_address' => 'required|email',
                 'news_title' => 'required',
                 'news_desc' => 'required',
-                'news_image' => 'required',
-                'status' => 'required',
+                'news_images' => 'required',
+                //'status' => 'required',
                 'catagory' => 'required',
                 'editor_choice' => 'required',
-                'phone_number' => 'required',
                 'news_views' => 'required',
                 'news_likes' => 'required',
-                'youtube_link' => 'required',
-                'special_offers' => 'required',
+                'youtube_link' => 'nullable',
                 'offer_title' => 'required',
+                'phone_number' => 'required',
+                'contact_no' => 'required',
                 'from_date' => 'required',
                 'to_date' => 'required',
                 'description' => 'required',
+                'special_offers' => 'required',
                 'redeem_link' => 'required',
-                'contact_no' => 'required',
+               
             ];
+
 
             $requestData = $request->all();
             $validator = Validator::make($requestData, $rules);
@@ -248,6 +305,7 @@ class NewsController extends Controller
                     if ($news) {
                     
                     $news->user_id = $user['id'];
+                    $news->news_type = $requestData['news_type'];
                     $news->bussiness_name = $requestData['bussiness_name'];
                     $news->country = $requestData['country'];
                     $news->full_name = $requestData['full_name'];
@@ -255,22 +313,50 @@ class NewsController extends Controller
                     $news->news_title = $requestData['news_title'];
                     $news->news_desc = $requestData['news_desc'];
 
-                    // $news->news_image = $requestData['news_image'];
-                    if ($request->hasFile('news_image')) {
-                        $news->news_image = $request->file('news_image')->store('uploads');
-                    }
-                    if ($request->hasFile('youtube_shorts')) {
-                        $news->youtube_shorts = $request->file('youtube_shorts')->store('uploads');
-                    }
+
+                    if ($request->hasFile('news_images')) {
+                        $images = $request->file('news_images');
                     
-                    $news->status = $requestData['status'];
+                        $imagePaths = [];
+                    
+                        foreach ($images as $image) {
+                            $imagePath = $image->store('uploads');
+                            $imagePaths[] = $imagePath;
+                        }
+                    
+                        $news->news_image = json_encode($imagePaths);
+                    }
+
+                    // $news->news_image = $requestData['news_image'];
+                    // if ($request->hasFile('news_image')) {
+                    //     $news->news_image = $request->file('news_image')->store('uploads');
+                    // }
+                    // if ($request->hasFile('youtube_shorts')) {
+                    //     $news->youtube_shorts = $request->file('youtube_shorts')->store('uploads');
+                    // }
+                    
+                    //$news->status = $requestData['status'];
                     $news->catagory = $requestData['catagory'];
                     $news->editor_choice = $requestData['editor_choice'];
                     // $news->phone_number = $requestData['phone_number'];
                     $news->news_views = $requestData['news_views'];
                     $news->news_likes = $requestData['news_likes'];
-                    $news->youtube_link = $requestData['youtube_link'];
-                    $news->special_offers = $requestData['special_offers'];
+                    
+                    if(!empty($requestData['youtube_shorts'])){
+                        $news->youtube_shorts = $requestData['youtube_shorts'];
+                    }
+                    else{
+                        $news->youtube_shorts = NULL;
+                    }
+
+                    if(!empty($requestData['youtube_link'])){
+                        $news->youtube_link = $requestData['youtube_link'];
+                    }
+                    else{
+                        $news->youtube_link = NULL;
+                    }
+
+                    // $news->special_offers = $requestData['special_offers'];
                     
                     
                     $news->save();
@@ -290,7 +376,9 @@ class NewsController extends Controller
                     $HotelSpecialOfferModel->from_date = $requestData['from_date'];
                     $HotelSpecialOfferModel->to_date = $requestData['to_date'];
                     $HotelSpecialOfferModel->description = $requestData['description'];
-                    $HotelSpecialOfferModel->redeem_link = $requestData['redeem_link'];
+                    $HotelSpecialOfferModel->special_offer = $requestData['special_offers'];
+                    $HotelSpecialOfferModel->reedem_link = $requestData['redeem_link'];
+                    
                     $HotelSpecialOfferModel->save();
         
                     $response = response()->json(['status' => true, 'message' => 'News Updated Successfully']);
@@ -303,37 +391,37 @@ class NewsController extends Controller
     }
 
     
-     public function ViewNews(Request $request)
-     {
+    //  public function ViewNews(Request $request)
+    //  {
         
-        $response = array("status"=>false,'message' => '');
-        $rules = [
-                'news_id' => 'required'
-            ];
+    //     $response = array("status"=>false,'message' => '');
+    //     $rules = [
+    //             'news_id' => 'required'
+    //         ];
 
-        $requestData = $request->all();
-        $validator = Validator::make($requestData, $rules);
-        $data = [];
+    //     $requestData = $request->all();
+    //     $validator = Validator::make($requestData, $rules);
+    //     $data = [];
 
-            if ($validator->fails()) {
-                $response['message'] = $validator->messages();
-              } else {
-                $newsId = $requestData['news_id'];
+    //         if ($validator->fails()) {
+    //             $response['message'] = $validator->messages();
+    //           } else {
+    //             $newsId = $requestData['news_id'];
 
                 
-                $newsData = News::with('special_offer')->find($newsId);
-                if ($newsData) {
-                    $newsData['news_image'] = asset('storage/app/'.$newsData['news_image']);
-                    $data = $newsData;
+    //             $newsData = News::with('special_offer')->find($newsId);
+    //             if ($newsData) {
+    //                 $newsData['news_image'] = asset('storage/app/'.$newsData['news_image']);
+    //                 $data = $newsData;
         
-                    $response = response()->json(['status' => true, 'message' => 'News Data Found', 'data' => $data]);
-                } else {
-                    $response = response()->json(['status' => false, 'message' => 'News Data Not Found','data'=>$data]);
-                }
-            }
+    //                 $response = response()->json(['status' => true, 'message' => 'News Data Found', 'data' => $data]);
+    //             } else {
+    //                 $response = response()->json(['status' => false, 'message' => 'News Data Not Found','data'=>$data]);
+    //             }
+    //         }
 
-              return $response;
-    }
+    //           return $response;
+    // }
 
     public function DeleteNews(Request $request)
     {
@@ -371,4 +459,167 @@ class NewsController extends Controller
     
         return $response;
     }
+
+    
+            public function update_single_news_image(Request $request)
+         {
+            $response = array("status" => false, 'message' => '');
+
+            $rules = [
+                'news_id' => 'required',
+                'key' => 'required',
+                'news_image' => 'required',
+            ];
+
+            $requestData = $request->all();
+            $validator = Validator::make($requestData, $rules);
+
+            if ($validator->fails()) {
+                $response['message'] = $validator->messages();
+            } else {
+                $news_id = $requestData['news_id'];
+                $key = $requestData['key'];
+
+                $news_data = News::find($news_id);
+
+                if ($news_data) {
+                    $news_images = json_decode($news_data['news_image'], true);
+
+                    if (array_key_exists($key, $news_images)) {
+                        // Handle image update logic here
+                        if ($request->hasFile('news_image')) {
+                            $image = $request->file('news_image');
+                            $imagePath = $image->store('uploads');
+
+                            // Update the image path for the specified key
+                            $news_images[$key] = $imagePath;
+
+                            // Update the 'hotel_images' array in the database
+                            $news_data->news_image = json_encode($news_images);
+                            $news_data->save();
+
+                            $response['status'] = true;
+                            $response['message'] = 'News Image Updated successfully.';
+                        } else {
+                            $response['message'] = 'Please provide a valid image file.';
+                        }
+                    } else {
+                        $response['message'] = 'Invalid key provided.';
+                    }
+                }
+            }
+
+            return response()->json($response);
+        }
+        public function delete_single_news_image(Request $request)
+        {
+
+            $response = array("status" => false, 'message' => '');
+
+            $rules = [
+                'news_id' => 'required',
+                'key' => 'required'
+                
+            ];
+
+            $requestData = $request->all();
+
+            $validator = Validator::make($requestData, $rules);
+
+            // $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $response['message'] = $validator->messages();
+            } else {
+
+            $news_id = $requestData['news_id'];
+            $key = $requestData['key'];
+
+
+            $news_data = News::find($news_id);
+            
+            
+                if ($news_data) {
+                    $news_images = json_decode($news_data['news_image'], true);
+                
+                if (array_key_exists($key, $news_images)) {
+            
+                    // Remove the file using the provided key
+                    unset($news_images[$key]);
+                    // Reindex array keys
+                    $news_images = array_values($news_images);
+                    // dd($hotel_images);
+
+                    // Update the 'file_pdf' array in the database
+                    $news_data->news_image = json_encode($news_images);
+                    $news_data->save();
+
+                    $response['status'] = true;
+                    $response['message'] = 'News Image deleted successfully.';
+                } else {
+                    $response['message'] = 'Invalid key provided.';
+                }
+            }
+
+            
+            }
+            return response()->json($response);
+        
+        }
+
+        public function add_multiple_images_news(Request $request)
+        {
+            $response = array("status" => false, 'message' => '');
+
+            $rules = [
+                'news_id' => 'required',
+                'news_image' => 'required',
+            ];
+
+            $requestData = $request->all();
+            $validator = Validator::make($requestData, $rules);
+
+            if ($validator->fails()) {
+                $response['message'] = $validator->messages();
+            } else {
+
+                $news_id = $requestData['news_id'];
+        
+                $news_data = News::find($news_id);
+                // dd($hotel_data);
+
+
+                if ($news_data) {
+                    // $hotel_images = json_decode($hotel_data['hotel_images'], true);
+                    $currentImages = json_decode($news_data->news_image, true) ?? [];
+                    if ($request->hasFile('news_image')) {
+                        $images = $request->file('news_image');
+                        // dd($images);
+
+                        $imagePaths = [];
+                    
+                        foreach ($images as $image) {
+                            $imagePath = $image->store('uploads');
+                            $imagePaths[] = $imagePath;
+                        }
+
+                        $updatedImages = array_merge($currentImages, $imagePaths);
+                        $news_data->news_image = json_encode($updatedImages);
+                        // $news_data->news_image = json_encode($updatedImages, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+                        // dd($hotel_data->hotel_images);
+
+                    }
+                    $news_data->save();
+                    $response = response()->json(['status' => true, 'message' => 'News Images Added Successfully!']);
+                }
+                else {
+                    $response = response()->json(['status' => false, 'message' => 'Failed to upload images!']);
+                }
+
+            
+        }
+        return $response;
+
+
+        }
 }

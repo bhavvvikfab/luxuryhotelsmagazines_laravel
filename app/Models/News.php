@@ -11,7 +11,9 @@ class News extends Model
     protected $table = "news";
     protected $fillable = [
         'user_id',
+        'news_type',
         'business_name',
+        'country',
         'full_name',
         'email_address',
         'news_title',
@@ -25,7 +27,6 @@ class News extends Model
         'news_likes',
         'youtube_link',
         'youtube_shorts',
-        'special_offers'
     ];
 
     public function special_offer()
