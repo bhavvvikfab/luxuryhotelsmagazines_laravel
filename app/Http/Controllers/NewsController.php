@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\News;
 use App\Models\User;
+use App\Models\SubscribersModel;
 use App\Models\HotelSpecialOfferModel;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\Helpers;
 
 class NewsController extends Controller
 {
@@ -621,5 +623,72 @@ class NewsController extends Controller
         return $response;
 
 
+        }
+
+        public function CreateNewsLetter(Request $request){
+            $response = array("status" => false, 'message' => '');
+
+            $rules = [
+                'name' => 'required',
+                'email' => 'required|email|unique:subscribers,email' 
+            ];
+
+            $messages = [
+                'email.unique' => 'This user has already subscribed to the newsletter.'
+            ];
+
+            $requestData = $request->all();
+            $validator = Validator::make($requestData, $rules, $messages);
+           
+            if ($validator->fails()) {
+                $response['message'] = $validator->messages();
+            } else {
+
+                $SubscribersModel = new SubscribersModel();
+    
+               
+                $SubscribersModel->name = $request->input('name');
+                $SubscribersModel->email = $request->input('email');
+               
+                $SubscribersModel->save();
+    
+                $subject = 'New Subscriber';
+               
+                $body = "Subscriber Details!\nName: {$request->input('name')}\nEmail: {$request->input('email')}";
+    
+                // Email data
+                $to = $request->input('email');
+                $key=5;
+
+                $data = [
+                    'name' => $request->input('name'),
+                    'email' => $to,
+                    'key' => $key
+                ];
+
+               
+                // Use the helper function to send the email
+                $helpers = new Helpers();
+                $result = $helpers->sendEmail($to, $subject, $body, $key, $data);
+  
+                if ($result) {
+                    $response = response()->json(['status' => true, 'message' => 'Subscriber Created Successfully']);
+                } else {
+                    $response = response()->json(['status' => false, 'message' => 'Failed to create subscriber']);
+                }
+             
+            }
+
+            return $response;
+        }
+
+        public function All_Newsletter(){
+            $subscribers = SubscribersModel::orderBy('id','DESC')->get();
+
+            if ($subscribers->isEmpty()) {
+                return response()->json(['status' => false, 'message' => 'No subscribers found']);
+            }
+        
+            return response()->json(['status' => true, 'data' => $subscribers]);
         }
 }

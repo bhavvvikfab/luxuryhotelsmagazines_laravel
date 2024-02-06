@@ -44,7 +44,7 @@
 </head>
 <body>
   <div class="container" style="border:1px solid grey; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-
+  
   @if($data['key']==1)
     <h2>Login</h2>
 
@@ -93,6 +93,19 @@
 <!-- <p>If you didn't request a password reset, you can ignore this email.</p> -->
 <p>Thanks,<br>Your Application Team</p>
   
+
+@elseif($data['key']==5)
+
+    <h2>Subscriber Details</h2>
+
+
+    <p>Hi {{ isset($data['name']) ? $data['name'] : 'User' }},</p>
+    <!-- <p>It seems you've forgotten your password. No worries! Click the button below to reset it:</p> -->
+    <p>Name: <b>{{ isset($data['name']) ? $data['name'] : 'N/A' }}</b></p>
+    <p>Email: <b>{{ isset($data['email']) ? $data['email'] : 'N/A' }}</b></p>
+
+    <p>Thanks,<br> For subscribed to the newsletter</p>
+
 @endif
 
 

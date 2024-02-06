@@ -121,7 +121,8 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/update_single_news_image', [NewsController::class, 'update_single_news_image']);
     Route::post('/add_multiple_images_news', [NewsController::class, 'add_multiple_images_news']);
     
-
+    Route::post('/CreateNewsLetter', [NewsController::class, 'CreateNewsLetter']);
+    Route::get('/all-newsletter', [NewsController::class, 'All_Newsletter']);
     
     Route::post('/add-home-hotel', [HomeHotelController::class, 'AddHomeHotel']);
     Route::get('/all-home-hotel', [HomeHotelController::class, 'AllHomeHotel']);
