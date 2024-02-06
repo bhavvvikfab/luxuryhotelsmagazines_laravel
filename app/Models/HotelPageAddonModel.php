@@ -16,6 +16,7 @@ class HotelPageAddonModel extends Model
         'hotel_latest_news',
         'special_offer_to_homepage',
         'home_page_spotlight',
+        'reedem_link',
         'created_at',
         'updated_at',
     ];

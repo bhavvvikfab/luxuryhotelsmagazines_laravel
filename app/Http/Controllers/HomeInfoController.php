@@ -21,6 +21,8 @@ use App\Models\AllpagedetailsModel;
 
 
 
+
+
 class HomeInfoController extends Controller
 {
     
@@ -269,6 +271,243 @@ return $response;
 
 
     }
+
+    public function get_single_page_details(Request $request)
+    {
+        // dd($request);
+    
+        $response = array("status" => false, 'message' => '');
+
+    $type = $request->input('type');
+
+    if ($type == "team") 
+{
+    // dd('hbfrhfrh');
+
+    $rules = [
+        'type' => 'required',
+       
+    ];
+
+    $requestData =  $request->all();
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    } else {
+
+
+            $all_page_details = AllpagedetailsModel::where('type', $type)->first();
+          
+
+           
+                          
+            if ($all_page_details) {
+                $all_page_detail = json_decode($all_page_details['details'], true);
+                // dd($all_page_detail);
+
+                $all_page_details['details'] = $all_page_detail;
+      
+                // $all_page_details->details = json_encode($all_page_detail);
+
+
+                $response = response()->json(['status' => true, 'message' => 'Team Page Data get Successfully,','data'=> $all_page_details]);
+            } else {
+                $response = response()->json(['status' => false, 'message' => 'Failed to get team page data!']);
+            }
+
+    }
+    
+}
+else if ($type == "package") 
+{
+    // dd('hbfrhfrh');
+
+    $rules = [
+        'type' => 'required',
+       
+    ];
+
+    $requestData =  $request->all();
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    } else {
+
+            $all_page_details = AllpagedetailsModel::where('type', $type)->first();
+         
+                          
+            if ($all_page_details) {
+                $all_page_detail = json_decode($all_page_details['details'], true);
+                // dd($all_page_detail);
+
+                $all_page_details['details'] = $all_page_detail;
+      
+                // $all_page_details->details = json_encode($all_page_detail);
+
+
+                $response = response()->json(['status' => true, 'message' => 'Package Page Data get Successfully,','data'=> $all_page_details]);
+            } else {
+                $response = response()->json(['status' => false, 'message' => 'Failed to get Package page data!']);
+            }
+
+    }
+    
+}
+
+else if ($type == "mediakit") 
+{
+    // dd('hbfrhfrh');
+
+    $rules = [
+        'type' => 'required',
+       
+    ];
+
+    $requestData =  $request->all();
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    } else {
+
+        $all_page_details = AllpagedetailsModel::where('type', $type)->first();
+     
+                      
+        if ($all_page_details) {
+            $all_page_detail = json_decode($all_page_details['details'], true);
+            // dd($all_page_detail);
+
+            $all_page_details['details'] = $all_page_detail;
+  
+            // $all_page_details->details = json_encode($all_page_detail);
+
+
+            $response = response()->json(['status' => true, 'message' => 'Media kit Page Data get Successfully,','data'=> $all_page_details]);
+        } else {
+            $response = response()->json(['status' => false, 'message' => 'Failed to get Media kit page data!']);
+        }
+
+}
+
+}
+else if ($type == "news") 
+{
+    // dd('hbfrhfrh');
+
+    $rules = [
+        'type' => 'required',
+       
+    ];
+
+    $requestData =  $request->all();
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    } else {
+
+        $all_page_details = AllpagedetailsModel::where('type', $type)->first();
+     
+                      
+        if ($all_page_details) {
+            $all_page_detail = json_decode($all_page_details['details'], true);
+            // dd($all_page_detail);
+
+            $all_page_details['details'] = $all_page_detail;
+  
+            // $all_page_details->details = json_encode($all_page_detail);
+
+
+            $response = response()->json(['status' => true, 'message' => 'News Page Data get Successfully,','data'=> $all_page_details]);
+        } else {
+            $response = response()->json(['status' => false, 'message' => 'Failed to get News page data!']);
+        }
+
+}
+
+}
+
+else if ($type == "hotel") 
+{
+    // dd('hbfrhfrh');
+
+    $rules = [
+        'type' => 'required',
+       
+    ];
+
+    $requestData =  $request->all();
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    } else {
+
+        $all_page_details = AllpagedetailsModel::where('type', $type)->first();
+     
+                      
+        if ($all_page_details) {
+            $all_page_detail = json_decode($all_page_details['details'], true);
+            // dd($all_page_detail);
+
+            $all_page_details['details'] = $all_page_detail;
+  
+            // $all_page_details->details = json_encode($all_page_detail);
+
+
+            $response = response()->json(['status' => true, 'message' => 'Hotel Page Data get Successfully,','data'=> $all_page_details]);
+        } else {
+            $response = response()->json(['status' => false, 'message' => 'Failed to get Hotel page data!']);
+        }
+
+}
+
+}
+
+else if ($type == "hotelmagazine") 
+{
+    // dd('hbfrhfrh');
+
+    $rules = [
+        'type' => 'required',
+       
+    ];
+
+    $requestData =  $request->all();
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    } else {
+
+        $all_page_details = AllpagedetailsModel::where('type', $type)->first();
+     
+                      
+        if ($all_page_details) {
+            $all_page_detail = json_decode($all_page_details['details'], true);
+            // dd($all_page_detail);
+
+            $all_page_details['details'] = $all_page_detail;
+  
+            // $all_page_details->details = json_encode($all_page_detail);
+
+
+            $response = response()->json(['status' => true, 'message' => 'Hotel Magazine Page Data get Successfully,','data'=> $all_page_details]);
+        } else {
+            $response = response()->json(['status' => false, 'message' => 'Failed to get Hotel Magazine page data!']);
+        }
+
+}
+
+}
+
+return $response;
+
+
+    }
+
 
     public function add_home_info(Request $request)
 {
@@ -648,72 +887,276 @@ if ($validator->fails()) {
 }
 
 else if ($hotel_type == 6) 
-{
+// {
 
+//     // $rules = [
+//     //     'type' => 'required',
+//     //     'title' => 'required',
+//     //     'hotel_type' => 'required',
+//     //     'category' => 'required',
+//     //     'pos' => 'required',
+//     // ];
+
+//     $rules = [
+//         'type' => 'required',
+//         'magazine_id' => 'required',
+//     ];
+
+
+
+//     $requestData = $request->all();
+//     // dd($requestData);
+
+//     $validator = Validator::make($request->all(), $rules);
+
+//     if ($validator->fails()) {
+//         $response['message'] = $validator->messages();
+//     } else {
+       
+//             $home_info = HomeInfoModel::where('type', $requestData['type'])->first();
+            
+//             if($home_info){
+//                 $detailsArray = json_decode($home_info->details, true);
+//                 //   dd($detailsArray);
+     
+//                 // $detailsArray2 = $digitalCampaignDetails;
+//                 //  $detailsArray = $homeaboutDetails;
+//                 // $detailsArray = $digitalCampaignDetails;
+//                 $home_info->details = $requestData['magazine_id'];
+        
+//                 // dd($home_info->details);
+          
+
+
+//             $home_info->save();
+
+  
+//                 $response = response()->json(['status' => true, 'message' => 'Home Info Added Successfully']);
+//             } else {
+//                 $response = response()->json(['status' => false, 'message' => 'Failed to add home info!']);
+//             }
+     
+//     }
+// }
+
+{
     $rules = [
         'type' => 'required',
-        'title' => 'required',
-        'hotel_type' => 'required',
-        'category' => 'required',
-        'pos' => 'required',
+        'magazine_id' => 'required',
     ];
-
+    
     $requestData = $request->all();
     $validator = Validator::make($request->all(), $rules);
-
+    
     if ($validator->fails()) {
         $response['message'] = $validator->messages();
     } else {
+        $home_info = HomeInfoModel::where('type', $requestData['type'])->first();
+
         
-        // if ($hotel_type == 1) {
-
-            $headerSliderDetails = [
-                'title' => $request->input('title'),
-                'hotel_type' => $request->input('hotel_type'),
-                // 'category' => $request->file('category')->store('uploads'),
-                'pos' => $request->input('pos'),
-            ];
-
-
-            if ($requestData['hotel_type'] == 1 && $request->hasFile('category')) {
-                $headerSliderDetails['category'] = $request->file('category')->store('uploads');
-            } elseif ($requestData['hotel_type'] == 2) {
-           
-                $headerSliderDetails['category'] = $requestData['category'];
-            }
-
-            $home_info = HomeInfoModel::where('type', $request->input('type'))->first();
-            // dd($home_info);
-
-
-            if (!$home_info) {
-                $home_info = new HomeInfoModel();
-                $home_info->type = $request->input('type');
-                $home_info->details = json_encode([$headerSliderDetails]);
-            } else {
-                $detailsArray = json_decode($home_info->details, true);
-                $detailsArray[] = $headerSliderDetails;
-                $home_info->details = json_encode($detailsArray);
-            }
-
-            $home_info->save();
-
-            if ($home_info) {
-                $response = response()->json(['status' => true, 'message' => 'Home Info Added Successfully']);
-            } else {
-                $response = response()->json(['status' => false, 'message' => 'Failed to add home info!']);
-            }
+        if ($home_info) {
+            $existingIds = json_decode($home_info->details, true) ?? [];
      
+             
+              
+                $newIds = $requestData['magazine_id']; 
+                $combinedIds = array_merge($existingIds, $newIds);
+    
+                // Convert the combined array back to JSON
+                $requestData['magazine_id'] = json_encode($combinedIds);
+      
+    
+            $home_info->details = $requestData['magazine_id'];
+            $home_info->save();
+    
+            $response = response()->json(['status' => true, 'message' => 'Home Info Added Successfully']);
+        } else {
+            $response = response()->json(['status' => false, 'message' => 'Failed to add home info!']);
+        }
     }
+    
 }
-
 
 
     return $response;
     
 }
 
+// public function delete_magazine_cover(Request $request)
+// {
+//     $response = array("status" => false, 'message' => '');
 
+//     $rules = [
+//         'type' => 'required',
+//         'magazine_id' => 'required',
+//     ];
+    
+
+//      $requestData = $request->all();
+
+//     // $validator = Validator::make($requestData, $rules);
+
+//     $validator = Validator::make($request->all(), $rules);
+//     if ($validator->fails()) {
+//         $response['message'] = $validator->messages();
+//     } else {
+
+//         $magazine_id = $requestData['magazine_id'];
+
+
+
+//         // $ids = array_map('intval', explode(',', $magazine_id));
+//         //  dd($ids);
+
+        
+//         // $type = $requestData['type'];
+
+
+//          $home_info = HomeInfoModel::where('type', $requestData['type'])->first();
+//          if (!$home_info) {
+//             return response()->json(['message' => 'Magazine cover data not found'], 404);
+//         }
+//          $magazine_ids = $home_info->details;
+//         //  dd(json_decode($magazine_ids));
+//          unset($magazine_ids[$key]);
+
+//          $magazine_ids = array_values($magazine_ids);
+//          // dd($hotel_images);
+
+//          // Update the 'file_pdf' array in the database
+//          $home_info->details = json_encode($magazine_ids);
+//          $hotel_data->save();
+
+//         // $ids = array_map('intval', $magazine_ids);
+
+//         //   dd($magazine_ids);
+
+       
+
+       
+
+    
+       
+
+//         return response()->json(['message' => 'Magazine Cover data deleted Successfully!']);
+        
+
+//     }
+
+
+// }
+public function delete_magazine_cover(Request $request)
+{
+    $response = ['status' => false, 'message' => ''];
+
+    $rules = [
+        'type' => 'required',
+        'magazine_id' => 'required',
+    ];
+
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+        return response()->json($response, 400);
+    }
+
+    $magazineId = $request->input('magazine_id');
+    $type = $request->input('type');
+
+    $homeInfo = HomeInfoModel::where('type', $type)->first();
+
+    if (!$homeInfo) {
+        return response()->json(['message' => 'Magazine cover data not found'], 404);
+    }
+
+    $magazineIds = json_decode($homeInfo->details, true);
+
+    // Find the index of the magazine_id in the array
+    $key = array_search($magazineId, $magazineIds);
+
+    // Check if the magazine_id exists in the array
+    if ($key !== false) {
+        // Unset the element at the specified key
+        unset($magazineIds[$key]);
+
+        // Re-index the array
+        $magazineIds = array_values($magazineIds);
+
+        // Update the 'details' field in the database
+        $homeInfo->details = json_encode($magazineIds);
+        $homeInfo->save();
+
+        return response()->json(['message' => 'Magazine Cover data deleted successfully']);
+    } else {
+        return response()->json(['message' => 'Invalid magazine_id for the given type'], 400);
+    }
+}
+
+
+public function edit_magazine_cover(Request $request)
+{
+    $response = ['status' => false, 'message' => ''];
+
+    $rules = [
+        'type' => 'required',
+        'magazine_id' => 'required',
+    ];
+
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+        return response()->json($response, 400);
+    }
+
+    $magazineId = $request->input('magazine_id');
+    $type = $request->input('type');
+
+    $homeInfo = HomeInfoModel::where('type', $type)->first();
+
+    if (!$homeInfo) {
+        return response()->json(['message' => 'Magazine cover data not found'], 404);
+    }
+
+    $magazineIds = json_decode($homeInfo->details, true);
+   
+
+    $magazine_dt = MagazinesModel::whereIn('id', $magazineIds)->get();
+    //  dd($magazine_dt);
+
+    if ($magazine_dt) {
+        foreach ($magazine_dt as $magazine) {
+        $magazine->thumbnail = asset("storage/app/".$magazine->thumbnail);
+        $pdf_files = $magazine->file_pdf;
+        $pdfarr = []; // Initialize $pdfarr here
+        if(!empty($pdf_files)){
+
+           $pdf  = json_decode($pdf_files);
+           foreach ($pdf as $key => $val) {
+               $fullImagePath = asset("storage/app/".$val);
+               $pdfarr[] = $fullImagePath;
+           }
+           
+   
+        }
+        $magazine->file_pdf = $pdfarr; 
+        
+        // $hotel_magazine->file_pdf = asset("storage/app/".$hotel_magazine->file_pdf);
+        $response['status'] = true;
+        $response['message'] = $magazine_dt;
+        // Do something with $hotel_amenity
+ 
+    }
+}
+    else {
+        $response['message'] = 'Magazine not found';
+    }
+    return response()->json($response);
+}
+
+
+  
 public function edit_home_info(Request $request)
 {
     $response = array("status" => false, 'message' => '');
@@ -962,6 +1405,139 @@ return response()->json($response);
 
 
 }
+
+public function delete_single_hotel_image(Request $request)
+{
+
+    // echo "rtrt";
+
+    $response = array("status" => false, 'message' => '');
+
+    $rules = [
+        'hotel_id' => 'required',
+        'key' => 'required'
+        
+    ];
+
+     $requestData = $request->all();
+
+    $validator = Validator::make($requestData, $rules);
+
+    // $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    } else {
+
+    $hotel_id = $requestData['hotel_id'];
+    $key = $requestData['key'];
+
+
+    $hotel_data = HotelModel::find($hotel_id);
+       
+       
+        if ($hotel_data) {
+            $hotel_images = json_decode($hotel_data['hotel_images'], true);
+         
+        if (array_key_exists($key, $hotel_images)) {
+     
+            // Remove the file using the provided key
+            unset($hotel_images[$key]);
+            // Reindex array keys
+            $hotel_images = array_values($hotel_images);
+            // dd($hotel_images);
+
+            // Update the 'file_pdf' array in the database
+            $hotel_data->hotel_images = json_encode($hotel_images);
+            $hotel_data->save();
+
+            $response['status'] = true;
+            $response['message'] = 'Hotel Image deleted successfully.';
+        } else {
+            $response['message'] = 'Invalid key provided.';
+        }
+    }
+
+    
+    }
+    return response()->json($response);
+   
+}
+
+public function update_single_home_info(Request $request)
+{
+
+     echo "rtrt";
+
+    $response = array("status" => false, 'message' => '');
+
+    $rules = [
+        'type' => 'required',
+        'key' => 'required',
+        
+    ];
+
+     $requestData = $request->all();
+
+    // $validator = Validator::make($requestData, $rules);
+
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    } else {
+
+    $home_info_type = $requestData['type'];
+    
+    $key = $requestData['key'];
+
+
+    $home_info = HomeInfoModel::where('type',$home_info_type)->first();
+    // dd($home_info['type']);
+    
+
+
+        if (!$home_info) {
+            return response()->json(['message' => 'Home Info not found'], 404);
+        }
+       
+
+    if ($home_info['type'] == 5) {
+        $home_detail = json_decode($home_info['details'], true);
+    
+        // Get all sections data
+        $sections = $home_detail['sections'];
+    
+        if (array_key_exists($key, $sections)) {
+            // Remove the section using the provided key
+            unset($sections[$key]);
+    
+            // Reindex array keys
+            $sections = array_values($sections);
+    
+            // Update detailsArray with the modified sections
+            $detailsArray = json_decode($home_info->details, true);
+            $detailsArray['sections'] = $sections;
+    
+            $home_info->details = json_encode($detailsArray);
+            $home_info->save();
+    
+            $response['status'] = true;
+            $response['message'] = 'Home Info deleted successfully.';
+        } else {
+            $response['message'] = 'Invalid key provided.';
+        }
+    }
+
+}
+return response()->json($response);
+
+
+}
+
+
+
+
 
     }
 

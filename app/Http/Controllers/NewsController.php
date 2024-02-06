@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\News;
+use App\Models\NewsCategoryModel;
+
 use App\Models\User;
 use App\Models\SubscribersModel;
 use App\Models\HotelSpecialOfferModel;
@@ -49,6 +51,151 @@ class NewsController extends Controller
             return response()->json(["status" => true, "message" => "News Data Found", "data" => $result]);
         }
     }
+
+    public function add_news_category(Request $request)
+    {
+        $response = array("status" => false, 'message' => '');
+        $requestData = $request->all(); 
+     
+        $rules = [
+            'news_category' => 'required',
+        ];
+
+    
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            $response['message'] = $validator->messages();
+        } else {
+            $news_category = new NewsCategoryModel();
+            
+             $news_category->news_category = $requestData['news_category'];
+      
+                    $news_category->save();
+            
+            
+                    if ($news_category) {
+                        $response = response()->json(['status' => true, 'message' => 'News Category Added Successfully']);
+                    } else {
+                        $response = response()->json(['status' => false, 'message' => 'Failed to add news category!']);
+                    }
+                    return $response;
+                }
+            
+    }
+    public function edit_news_category(Request $request)
+    {
+
+        $response = array("status" => false, 'message' => '');
+        $requestData = $request->all(); 
+
+        $rules = [
+            'news_category_id' => 'required',
+         
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $response['message'] = $request->messages();
+        } else {
+            $news_category_id = $requestData['news_category_id'];
+    
+            $news_category = NewsCategoryModel::find($news_category_id);
+
+            if ($news_category) {
+
+                $response['status'] = true;
+                $response['message'] = $news_category;
+                // Do something with $hotel_amenity
+         
+            } else {
+                $response['message'] = 'News category not found';
+            }
+        }
+    
+        // You might want to return the response at the end of your function
+        return response()->json($response);
+}
+
+    
+   
+      
+
+
+    public function update_news_category(Request $request)
+    {
+        $response = array("status" => false, 'message' => '');
+        $requestData = $request->all(); 
+
+        $rules = [
+            'news_category_id' => 'required',
+            'news_category' => 'required',
+        ];
+
+    
+        $validator = Validator::make($request->all(), $rules); 
+
+        if ($validator->fails()) {
+            $response['message'] = $validator->messages();
+        } else {
+            $news_category_id = $requestData['news_category_id'];
+    
+            $news_category_data = NewsCategoryModel::find($news_category_id);
+  
+
+            if ($news_category_data) {
+                $news_category_data->news_category = $requestData['news_category'];
+                
+
+                 $news_category_data->save(); 
+
+     
+                    $response = response()->json(['status' => true, 'message' => 'News Category Updated Successfully']);
+                } else {
+                    $response = response()->json(['status' => false, 'message' => 'Failed to updated news category!']);
+                }
+                return $response;
+            }
+        
+}
+                
+                
+                
+
+    public function delete_news_category(Request $request)
+    {
+
+        $response = array("status" => false, 'message' => '');
+        $requestData = $request->all(); 
+
+        $rules = [
+            'news_category_id' => 'required',
+        
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+
+    $news_category_id = $requestData['news_category_id'];
+    $delete_news_category_id = NewsCategoryModel::find($news_category_id);
+
+    if (!$delete_news_category_id) {
+        return response()->json(['message' => 'News Category not found'], 404);
+    }
+
+    $delete_news_category_id->delete();
+
+    return response()->json(['message' => 'News Category deleted successfully']);
+
+
+}
+ 
+
+    public function all_news_category()
+    {
+
+    }
+
     
     // 1 = no 
     // 2 = display for 1 week(+10 euro)

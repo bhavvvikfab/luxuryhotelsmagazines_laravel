@@ -5,16 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class QueriesModel extends Model
+class HotelCreateProfileModel extends Model
 {
     use HasFactory;
-    protected $table = "queries";
+
+    protected $table = "hotel_create_profile";
     protected $fillable = [
-        'name',
-        'email',
-        'message',
-        'reply_query_msg',
-        'status',
+        'type',
+        'details',
         'created_at',
         'updated_at',
     ];

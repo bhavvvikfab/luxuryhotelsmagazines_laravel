@@ -92,6 +92,20 @@
 
 <!-- <p>If you didn't request a password reset, you can ignore this email.</p> -->
 <p>Thanks,<br>Your Application Team</p>
+
+@elseif($data['key']==6)
+    <h2>Query Details</h2>
+
+
+    <p>Hi <b>{{ isset($data['name']) ? $data['name'] : 'User' }}</b>,</p>
+<!-- <p>It seems you've forgotten your password. No worries! Click the button below to reset it:</p> -->
+<p>Your Query Solved Successfully!</p>
+<!-- <p>Email: <b>{{ isset($data['email']) ? $data['email'] : 'N/A' }}</b></p>
+<p>Password: <b>{{ isset($data['password']) ? $data['password'] : 'N/A' }}</b></p> -->
+
+<!-- <p>If you didn't request a password reset, you can ignore this email.</p> -->
+<p>Thanks,<br>Your Application Team</p>
+  
   
 
 @elseif($data['key']==5)

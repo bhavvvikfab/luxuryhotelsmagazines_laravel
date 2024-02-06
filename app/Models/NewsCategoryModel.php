@@ -5,16 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class QueriesModel extends Model
+class NewsCategoryModel extends Model
 {
     use HasFactory;
-    protected $table = "queries";
+    protected $table = "news_category";
     protected $fillable = [
-        'name',
-        'email',
-        'message',
-        'reply_query_msg',
-        'status',
+        'news_category',
         'created_at',
         'updated_at',
     ];

@@ -23,6 +23,8 @@ use App\Http\Controllers\PackagePriceController;
 use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\SubscribersController;
 use App\Http\Controllers\HomeInfoController;
+use App\Http\Controllers\HotelCreateProfileController;
+
 
 
 /*
@@ -77,6 +79,7 @@ Route::middleware(['Api_Auth'])->group(function () {
     Route::post('/delete-user', [UserController::class, 'DeleteUser']);
 
     
+    
     Route::post('/search-hotel', [HotelController::class, 'SearchHotel']);
     
     // Route::get('/about-us', [About_Us_Controller::class, 'index']);
@@ -120,6 +123,14 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/delete_single_news_image', [NewsController::class, 'delete_single_news_image']);
     Route::post('/update_single_news_image', [NewsController::class, 'update_single_news_image']);
     Route::post('/add_multiple_images_news', [NewsController::class, 'add_multiple_images_news']);
+
+    // news category
+    
+    Route::post('/add_news_category', [NewsController::class, 'add_news_category']);
+    Route::post('/edit_news_category', [NewsController::class, 'edit_news_category']);
+    Route::post('/update_news_category', [NewsController::class, 'update_news_category']);
+    Route::get('/all_news_category', [NewsController::class, 'all_news_category']);
+    Route::post('/delete_news_category', [NewsController::class, 'delete_news_category']);
     
     Route::post('/CreateNewsLetter', [NewsController::class, 'CreateNewsLetter']);
     Route::get('/all-newsletter', [NewsController::class, 'All_Newsletter']);
@@ -130,6 +141,9 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/update-home-hotel', [HomeHotelController::class, 'UpdateHomeHotel']);
     Route::post('/delete-home-hotel', [HomeHotelController::class, 'DeleteHomeHotel']);
     Route::post('/limit-all-home-hotel', [HomeHotelController::class, 'LimitAllHomeHotel']);
+
+    
+   
     
 
     Route::post('/payment', [PaymentController::class, 'payment']);
@@ -150,7 +164,12 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/delete-hotels', [HotelController::class, 'DeleteHotels']);
 
     Route::post('/login-user-hotels', [HotelController::class, 'LoginUserHotels']);
-    
+
+    Route::post('/delete_single_hotel_image', [HotelController::class, 'delete_single_hotel_image']);
+    Route::post('/update_single_hotel_image', [HotelController::class, 'update_single_hotel_image']);
+    Route::post('/add_multiple_images_hotels', [HotelController::class, 'add_multiple_images_hotels']);
+      
+ 
 
 
 
@@ -250,7 +269,20 @@ Route::post('/delete_home_info', [HomeInfoController::class, 'delete_home_info']
 Route::post('/edit_home_info', [HomeInfoController::class, 'edit_home_info']);
 
 Route::post('/single_page_details', [HomeInfoController::class, 'single_page_details']);
+Route::post('/update_single_home_info', [HomeInfoController::class, 'update_single_home_info']);
+Route::post('/get_single_page_details', [HomeInfoController::class, 'get_single_page_details']);
+Route::post('/delete_magazine_cover', [HomeInfoController::class, 'delete_magazine_cover']);
+Route::post('/edit_magazine_cover', [HomeInfoController::class, 'edit_magazine_cover']);
 
+
+
+
+
+Route::post('/add_hotel_create_profile', [HotelCreateProfileController::class, 'add_hotel_create_profile']);
+Route::post('/edit_hotel_create_profile', [HotelCreateProfileController::class, 'edit_hotel_create_profile']);
+
+
+Route::post('/delete_hotel_create_profile', [HotelCreateProfileController::class, 'delete_hotel_create_profile']);
 
 
 
