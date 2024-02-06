@@ -19,6 +19,7 @@ use App\Models\DistributionDataModel;
 use App\Models\DistributionDetailsModel;
 use App\Models\BannerModel;
 use App\Models\QueriesModel;
+use App\Helpers\Helpers;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -63,13 +64,30 @@ class QueriesController extends Controller
               return $response;
     }
 
-    public function AllQuery()
-    {
-        $data = QueriesModel::all();
+    // public function AllQuery()
+    // {
+    //     $data = QueriesModel::all();
+    //     dd($data);
+    //     if(!empty($data['reply_query_msg']))
+    //     {}
+    //     else{} 
+        
 
-        return response()->json(['status' => true,'data'=>$data]);
+    //     return response()->json(['status' => true,'data'=>$data]);
     
+    // }
+    public function AllQuery()
+{
+    $data = QueriesModel::all();
+
+    foreach ($data as $record) {
+        $record->reply_query_msg_status = !empty($record->reply_query_msg);
     }
+
+    return response()->json(['status' => true, 'data' => $data]);
+}
+
+
 
     public function EditQuery(Request $request)
     {
@@ -182,4 +200,67 @@ class QueriesController extends Controller
         return $response;
     }
 
+    public function send_query_reply(Request $request)
+    {
+        $response = array("status" => false, 'message' => '');
+    
+        $rules = [
+            'query_id' => 'required',
+            'reply_query_msg' => 'required',
+        ];
+    
+        $requestData = $request->all();
+    
+        $validator = Validator::make($requestData, $rules);
+    
+        if ($validator->fails()) {
+            $response['message'] = $validator->messages();
+        } else {
+
+            $query_id = $requestData['query_id'];
+    
+    
+        $query_data = QueriesModel::find($query_id);
+        // dd($query_data);
+
+       
+        if(!empty($query_data)){
+            
+
+            $query_data->reply_query_msg = $requestData['reply_query_msg'];
+            $query_data->save();
+
+            $subject = 'Reply for the query';
+            $key = 6;
+            $body = 'Your Query Reply';
+
+            $to = $query_data['email'];
+
+            $data = [
+                'name' => $query_data['name'],
+                'email' => $to,
+                'message' => $query_data['message'],
+                'reply_query_msg' => $query_data['reply_query_msg'],
+                'key' => $key,
+            ];
+            // dd($data);
+
+            $helpers = new Helpers();
+            $result = $helpers->sendEmail($to, $subject, $body, $key, $data);
+            // dd($query_data);
+
+            if ($result) {
+                $response =  response()->json(['status' => true,'message' => 'Query Reply Successfully','status'=>1]);
+            } else {
+                $response = response()->json(['status' => false,'message' => 'Failed to reply query!']);
+            }
+
+
+        }
+
+    }
+    return $response;
+
 }
+}
+

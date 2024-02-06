@@ -103,7 +103,7 @@ class MediakitController extends Controller
                     $validator = Validator::make($request->all(), $rules); 
 
                     if ($validator->fails()) {
-                        $response['message'] = $request->messages();
+                        $response['message'] = $validator->messages();
                     } else {
                         $media_kit_id = $request['media_kit_id'];
                 
@@ -125,20 +125,18 @@ class MediakitController extends Controller
                         }
 
                              $media_kit->save(); 
-                            
-                            
-                            $response['status'] = true;
-                            $response['message'] = $media_kit;
-                           
-                        } else {
-                            $response['message'] = 'Magazine not found';
+
+                             $response = response()->json(['status' => true, 'message' => 'Media Kit Updated Successfully']);
+                            } else {
+                                $response = response()->json(['status' => false, 'message' => 'Failed to updated Media Kit!']);
+                            }
+                            return $response;
                         }
-                    }
-                
-                    // You might want to return the response at the end of your function
-                    return response()->json($response);
-        }
-                
+                    
+            }
+                            
+                            
+                           
     public function EditMediaKit(Request $request)
         {
 
@@ -154,7 +152,7 @@ class MediakitController extends Controller
             
                     $validator = Validator::make($request->all(), $rules);
                     if ($validator->fails()) {
-                        $response['message'] = $request->messages();
+                        $response['message'] = $validator->messages();
                     } else {
                         $media_kit_id = $request['media_kit_id'];
                 
@@ -181,7 +179,7 @@ class MediakitController extends Controller
                             // Do something with $hotel_amenity
                      
                         } else {
-                            $response['message'] = 'Magazine not found';
+                            $response['message'] = 'Media Kit not found';
                         }
                     }
                 
