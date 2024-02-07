@@ -44,7 +44,7 @@
 </head>
 <body>
   <div class="container" style="border:1px solid grey; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-  
+
   @if($data['key']==1)
     <h2>Login</h2>
 
@@ -119,6 +119,33 @@
     <p>Email: <b>{{ isset($data['email']) ? $data['email'] : 'N/A' }}</b></p>
 
     <p>Thanks,<br> For subscribed to the newsletter</p>
+
+@endif
+
+@elseif($data['key']==7)
+
+    <h2>Hotel Details</h2>
+
+
+    <p>Hi {{ isset($data['name']) ? $data['name'] : 'User' }},</p>
+    <!-- <p>It seems you've forgotten your password. No worries! Click the button below to reset it:</p> -->
+    <p>Name: <b>{{ isset($data['name']) ? $data['name'] : 'N/A' }}</b></p>
+    <p>Email: <b>{{ isset($data['email']) ? $data['email'] : 'N/A' }}</b></p>
+
+    <p>Thanks,<br> For voted this hotel</p>
+
+    @elseif($data['key']==8)
+
+    <h2>News Details</h2>
+
+
+    <p>Hi {{ isset($data['name']) ? $data['name'] : 'User' }},</p>
+    <!-- <p>It seems you've forgotten your password. No worries! Click the button below to reset it:</p> -->
+    <p>Name: <b>{{ isset($data['name']) ? $data['name'] : 'N/A' }}</b></p>
+    <p>Email: <b>{{ isset($data['email']) ? $data['email'] : 'N/A' }}</b></p>
+
+    <p>Thanks,<br> For voted this news</p>
+
 
 @endif
 

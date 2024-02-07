@@ -18,6 +18,7 @@ class HotelModel extends Model
         'about_hotel',
         'hotel_images',
         'amities',
+        'facilities',
         'rooms_and_suites',
         'restaurent_bars',
         'spa_wellness',
