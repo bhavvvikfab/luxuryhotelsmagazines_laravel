@@ -24,6 +24,10 @@ use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\SubscribersController;
 use App\Http\Controllers\HomeInfoController;
 use App\Http\Controllers\HotelCreateProfileController;
+use App\Http\Controllers\HotelFacilitiesController;
+use App\Http\Controllers\VotingDetailsController;
+
+
 
 
 
@@ -180,6 +184,15 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/edit-hotel-ameties', [HotelController::class, 'EditHotelAmeties']);
 
     Route::post('/sort_order_ameties', [HotelController::class, 'sort_order_ameties']);
+
+    Route::post('/add-hotel-facilities', [HotelFacilitiesController::class, 'AddHotelFacilities']);
+    Route::post('/update-hotel-facilities', [HotelFacilitiesController::class, 'UpdateHotelFacilities']);
+    Route::post('/delete-hotel-facilities', [HotelFacilitiesController::class, 'DeleteHotelFacilities']);
+    Route::get('/all-hotel-facilities', [HotelFacilitiesController::class, 'AllHotelFacilities']);
+    Route::post('/edit-hotel-facilities', [HotelFacilitiesController::class, 'EditHotelFacilities']);
+
+    Route::post('/sort_order_facilities', [HotelFacilitiesController::class, 'sort_order_facilities']);
+
     
 
 
@@ -283,6 +296,11 @@ Route::post('/edit_hotel_create_profile', [HotelCreateProfileController::class, 
 
 
 Route::post('/delete_hotel_create_profile', [HotelCreateProfileController::class, 'delete_hotel_create_profile']);
+
+Route::post('/add_voting_details', [VotingDetailsController::class, 'add_voting_details']);
+
+
+
 
 
 

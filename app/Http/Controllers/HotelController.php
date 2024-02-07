@@ -80,6 +80,7 @@ public function HotelRegister(Request $request)
                 'hotel_images' => 'required',
                 'rooms_and_suites' => 'required',
                 'amities' => 'required',
+                'facilities' => 'required',
                 'other_facilities' => 'nullable',
                 'aditional_information' => 'nullable',
                 'subscription_package' => 'nullable',
@@ -110,13 +111,24 @@ public function HotelRegister(Request $request)
             if ($validator->fails()) {
                 $response['message'] = $validator->messages();
             } else {
+
+                
+                $hotel_data = HotelModel::where('user_id',$user['id'])->first();
+                if($hotel_data)
+                {
+                    $response = response()->json(['status' => false, 'message' => 'Hotel Already added by this user!']);
+
+                }
+                else {
+               
                 $hotel = new HotelModel($request->only([
                     'user_id',
                     'country',
                      'hotel_title',
                       'address',
                        'about_hotel',
-                        'amities', 
+                        'amities',
+                        'facilities', 
                         'rooms_and_suites',
                         'restaurent_bars', 
                         'spa_wellnessc',
@@ -128,7 +140,9 @@ public function HotelRegister(Request $request)
                            'website',
                         ]));
                
-                $hotel->user_id = $user['id'];
+                        $hotel->user_id = $user['id'];
+
+               
 
                 if ($request->hasFile('hotel_images')) {
                     $images = $request->file('hotel_images');
@@ -185,6 +199,7 @@ public function HotelRegister(Request $request)
 
                 $response = response()->json(['status' => true, 'message' => 'Hotel Created Successfully']);
             }
+        }
 
             return $response;
 }
@@ -352,20 +367,14 @@ public function AllHotels()
                 // $hotel_data['details'] = $hotel_images_data;
 
                 $data = $hotel_data;
-                $response = response()->json(['status' => true, 'message' => 'Home Info Data Found', 'data' => $data]);
+                $response = response()->json(['status' => true, 'message' => 'Hotel Data Found', 'data' => $data]);
             } else {
-                $response = response()->json(['status' => false, 'message' => 'Data Not Found','data'=>$data]);
+                $response = response()->json(['status' => false, 'message' => 'Hotel Data Not Found','data'=>$data]);
             }
         }
     
           return $response;
     }
-
-
-
-               
-              
-
 
 
 public function UpdateHotels(Request $request)
@@ -401,6 +410,7 @@ public function UpdateHotels(Request $request)
                  'hotel_images' => 'required',
                 'rooms_and_suites' => 'required',
                 'amities' => 'required',
+                'facilities' => 'required',
                 'other_facilities' => 'nullable',
                 'aditional_information' => 'nullable',
                 'subscription_package' => 'nullable',
@@ -448,11 +458,8 @@ public function UpdateHotels(Request $request)
                 $hotel_data->address = $requestData['address'];
                 $hotel_data->about_hotel = $requestData['about_hotel'];
                 $hotel_data->amities =$requestData['amities'];
+                $hotel_data->facilities =$requestData['facilities'];
                 $hotel_data->rooms_and_suites = $requestData['rooms_and_suites'];
-                
-              
-               
-               
                 
                
                 $hotel_data->youtube_link =$requestData['youtube_link'];
@@ -744,8 +751,6 @@ public function AddHotelAmeties(Request $request)
 public function UpdateHotelAmeties(Request $request)
 {
 
-
-
     $response = array("status" => false, 'message' => '');
     // $requestData = $request->all();
     $ameties_id = $request['ameties_id'];
@@ -757,7 +762,6 @@ public function UpdateHotelAmeties(Request $request)
         // 'image' => 'required',
     ];
 
-   
  
     $validator = Validator::make($request->all(), $rules);
   
@@ -766,11 +770,7 @@ public function UpdateHotelAmeties(Request $request)
 
     } else {
 
-      
- 
         $amenity = HotelAmetiesModel::find($ameties_id);
-
-
 
         if (!$amenity) {
             $response['message'] = 'Amenity not found';
@@ -781,10 +781,7 @@ public function UpdateHotelAmeties(Request $request)
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
                 $amenity->image = $request->file('image')->store('uploads');
             }
-            // $amenity->amenities_id = $requestData->input('amenities_id');
-            // Handle image update logic here
-
-            // Save the changes
+            
             $amenity->save();
 
             if ($amenity) {
