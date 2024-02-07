@@ -25,20 +25,30 @@ class HotelController extends Controller
 
    
     
-    public function AllHomeData()
+    public function AllHomeData(Request $request)
 {
-   
+    
 
     // Retrieve data from MagazinesModel
-    $magazine_data = MagazinesModel::orderBy('id', 'desc')->limit(10)->get();
-
-
+    $magazine_count = 10;
+    if(isset($request['magazine_count'])){
+        $magazine_count = $request['magazine_count'];
+    }
+    $magazine_data = MagazinesModel::orderBy('id', 'desc')->limit($magazine_count)->get();
 
     // Retrieve data from HotelModel
-    $hotel_data = HotelModel::orderBy('id', 'desc')->limit(10)->get();
+    $Hotel_count = 10;
+    if(isset($request['Hotel_count'])){
+        $Hotel_count = $request['Hotel_count'];
+    }
+    $hotel_data = HotelModel::orderBy('id', 'desc')->limit($Hotel_count)->get();
 
     // Retrieve data from News model
-    $news_data = News::orderBy('id', 'desc')->limit(10)->get();
+    $News_count = 10;
+    if(isset($request['News_count'])){
+        $News_count = $request['News_count'];
+    }
+    $news_data = News::orderBy('id', 'desc')->limit($News_count)->get();
 
     // Merge data into a single array
     $data = [
