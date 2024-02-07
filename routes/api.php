@@ -87,7 +87,8 @@ Route::middleware(['Api_Auth'])->group(function () {
     Route::post('/search-hotel', [HotelController::class, 'SearchHotel']);
     
     // Route::get('/about-us', [About_Us_Controller::class, 'index']);
-  
+    Route::post('/home', [HotelController::class, 'AllHomeData']);
+
 });
 
 Route::middleware(['user_login'])->group(function () {
@@ -275,7 +276,6 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/payment-success', [PaymentController::class, 'paypalPaymentSuccess']);
 });
 
-Route::get('/home', [HotelController::class, 'AllHomeData']);
 Route::post('/add_home_info', [HomeInfoController::class, 'add_home_info']);
 Route::post('/update_home_info', [HomeInfoController::class, 'update_home_info']);
 Route::post('/delete_home_info', [HomeInfoController::class, 'delete_home_info']);
