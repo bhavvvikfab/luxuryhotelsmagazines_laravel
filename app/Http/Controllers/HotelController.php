@@ -96,26 +96,6 @@ class HotelController extends Controller
         return $item;
     });
 
-    $hotel_data->transform(function ($item) {
-        
-
-        // Convert news images to full URLs
-        if (!empty($item->hotel_images)) {
-            $imagePaths = json_decode($item->hotel_images, true);
-            $fullImagePaths = [];
-
-            foreach ($imagePaths as $image) {
-                $fullImagePaths[] = asset("storage/app/" . $image);
-            }
-
-            $item->hotel_images = $fullImagePaths;
-        } else {
-            $item->hotel_images = [];
-        }
-
-        return $item;
-    });
-
 
     // Retrieve data from News model
     $News_count = 10;
