@@ -161,17 +161,21 @@ class MediakitController extends Controller
 
                    
                         if ($media_kit) {
-                            if ($request->hasFile('media_kit_image')) {
-                                $media_kit->media_kit_image = $request->file('media_kit_image')->store('uploads');
-                            }
+                            $media_kit->media_kit_image = asset("storage/app/".$media_kit->media_kit_image);
+                            $media_kit->file_pdf = asset("storage/app/".$media_kit->file_pdf); 
+                         
+
+                        //     if ($request->hasFile('media_kit_image')) {
+                        //         $media_kit->media_kit_image = $request->file('media_kit_image')->store('uploads');
+                        //     }
 
                           
-                            if ($request->hasFile('file_pdf')) {
-                                $pdfFiles = $request->file('file_pdf')->store('uploads');
-                                $path = $pdfFiles->store('uploads');
-                                $media_kit->file_pdf = asset("storage/app/".$path);
+                        //     if ($request->hasFile('file_pdf')) {
+                        //         $pdfFiles = $request->file('file_pdf')->store('uploads');
+                        //         $path = $pdfFiles->store('uploads');
+                        //         $media_kit->file_pdf = asset("storage/app/".$path);
                 
-                        }
+                        // }
 
                      
                             $response['status'] = true;
