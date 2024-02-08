@@ -111,9 +111,10 @@ class HotelController extends Controller
         if (!empty($item->news_image)) {
             $imagePaths = json_decode($item->news_image, true);
             $fullImagePaths = [];
-
-            foreach ($imagePaths as $image) {
-                $fullImagePaths[] = asset("storage/app/" . $image);
+            if(!empty($imagePaths)){
+                foreach ($imagePaths as $image) {
+                    $fullImagePaths[] = asset("storage/app/" . $image);
+                }
             }
 
             $item->news_image = $fullImagePaths;
