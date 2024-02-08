@@ -50,12 +50,17 @@ class TeamController extends Controller
                 $team_data->position = $requestData['position'];
                 $team_data->status = $requestData['status'];
 
+
                 if ($request->hasFile('image')) {
-                    $pdfFiles = $request->file('image');
-                    $path = $pdfFiles->store('uploads');
-                    $team_data->image = $path;
+                    $team_data->image = $request->file('image')->store('uploads');
+               }
+
+            //     if ($request->hasFile('image')) {
+            //         $pdfFiles = $request->file('image');
+            //         $path = $pdfFiles->store('uploads');
+            //         $team_data->image = $path;
     
-            }
+            // }
             
 
                 $team_data->save();
@@ -74,6 +79,15 @@ class TeamController extends Controller
     public function AllTeam()
     {
         $data = TeamModel::all();
+        // dd($data);
+
+
+        $data->transform(function ($item) {
+            $item->image = asset("storage/app/".$item->image);
+            
+            return $item;
+        });
+
 
         return response()->json(['status' => true,'data'=>$data]);
     
@@ -95,8 +109,11 @@ class TeamController extends Controller
         } else {
             $team_id = $request['team_id'];
             $team_data = TeamModel::find($team_id);
-    
+
             if ($team_data) {
+            
+                    $team_data->image = asset("storage/app/".$team_data->image);
+         
                
                 $response['status'] = true;
                 $response['message'] = $team_data;
