@@ -35,6 +35,40 @@ class HotelController extends Controller
         $magazine_count = $request['magazine_count'];
     }
     $magazine_data = MagazinesModel::orderBy('id', 'desc')->limit($magazine_count)->get();
+    $magazine_data->transform(function ($item) {
+
+        $item->thumbnail = asset("storage/app/".$item->thumbnail);
+        $pdf_files = $item->file_pdf;
+        $pdf_images = $item->file_image;
+
+        $pdfarr = []; // Initialize $pdfarr here
+        $imagearr = [];
+     if(!empty($pdf_files)){
+
+        $pdf  = json_decode($pdf_files);
+        foreach ($pdf as $key => $val) {
+            $fullImagePath = asset("storage/app/".$val);
+            $pdfarr[] = $fullImagePath;
+        }
+        
+
+     }
+     if(!empty($pdf_images)){
+
+        $pdf  = json_decode($pdf_images);
+        foreach ($pdf as $key => $val) {
+            $fullImagePath = asset("storage/app/".$val);
+            $imagesarr[] = $fullImagePath;
+        }
+        
+
+     }
+
+     $item->file_pdf = isset($pdfarr)?$pdfarr:''; 
+     $item->file_image = isset($imagesarr)?$imagesarr:''; 
+
+        return $item;
+    });
 
     // Retrieve data from HotelModel
     $Hotel_count = 10;
@@ -42,6 +76,25 @@ class HotelController extends Controller
         $Hotel_count = $request['Hotel_count'];
     }
     $hotel_data = HotelModel::orderBy('id', 'desc')->limit($Hotel_count)->get();
+    $hotel_data->transform(function ($item) {
+        
+
+        // Convert news images to full URLs
+        if (!empty($item->hotel_images)) {
+            $imagePaths = json_decode($item->hotel_images, true);
+            $fullImagePaths = [];
+
+            foreach ($imagePaths as $image) {
+                $fullImagePaths[] = asset("storage/app/" . $image);
+            }
+
+            $item->hotel_images = $fullImagePaths;
+        } else {
+            $item->hotel_images = [];
+        }
+
+        return $item;
+    });
 
     // Retrieve data from News model
     $News_count = 10;
@@ -49,6 +102,27 @@ class HotelController extends Controller
         $News_count = $request['News_count'];
     }
     $news_data = News::orderBy('id', 'desc')->limit($News_count)->get();
+    $news_data->transform(function ($item) {
+        // dd($item);
+
+        
+
+        // Convert news images to full URLs
+        if (!empty($item->news_image)) {
+            $imagePaths = json_decode($item->news_image, true);
+            $fullImagePaths = [];
+
+            foreach ($imagePaths as $image) {
+                $fullImagePaths[] = asset("storage/app/" . $image);
+            }
+
+            $item->news_image = $fullImagePaths;
+        } else {
+            $item->news_image = [];
+        }
+
+        return $item;
+    });
 
     // Merge data into a single array
     $data = [
