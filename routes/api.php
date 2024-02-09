@@ -89,6 +89,10 @@ Route::middleware(['Api_Auth'])->group(function () {
     // Route::get('/about-us', [About_Us_Controller::class, 'index']);
     Route::post('/home', [HotelController::class, 'AllHomeData']);
 
+
+    Route::post('/CreateNewsLetter', [NewsController::class, 'CreateNewsLetter']);
+    Route::get('/all-newsletter', [NewsController::class, 'All_Newsletter']);
+  
 });
 
 Route::middleware(['user_login'])->group(function () {
@@ -137,8 +141,7 @@ Route::middleware(['user_login'])->group(function () {
     Route::get('/all_news_category', [NewsController::class, 'all_news_category']);
     Route::post('/delete_news_category', [NewsController::class, 'delete_news_category']);
     
-    Route::post('/CreateNewsLetter', [NewsController::class, 'CreateNewsLetter']);
-    Route::get('/all-newsletter', [NewsController::class, 'All_Newsletter']);
+
     
     Route::post('/add-home-hotel', [HomeHotelController::class, 'AddHomeHotel']);
     Route::get('/all-home-hotel', [HomeHotelController::class, 'AllHomeHotel']);
@@ -274,6 +277,15 @@ Route::middleware(['user_login'])->group(function () {
     Route::post('/stripe-subscription-payment', [PaymentController::class, 'stripeSubscriptionPayment']);
     
     Route::post('/payment-success', [PaymentController::class, 'paypalPaymentSuccess']);
+
+    
+    Route::post('/create-review-category', [HotelController::class, 'Create_Review_Category']);
+    Route::get('/all-review-categories', [HotelController::class, 'All_Review_Categories']);
+    Route::post('/create-review-topic', [HotelController::class, 'Create_Review_Topic']);
+    Route::get('/all-review-topics', [HotelController::class, 'All_Review_Topics']);
+    Route::post('/create-guest-review', [HotelController::class, 'Create_Guest_Review']);
+    Route::post('/get-reviews-by-topics', [HotelController::class, 'Get_Reviews_By_Topics']);
+
 });
 
 Route::post('/add_home_info', [HomeInfoController::class, 'add_home_info']);

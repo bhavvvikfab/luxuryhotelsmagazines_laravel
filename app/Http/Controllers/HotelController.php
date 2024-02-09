@@ -14,6 +14,9 @@ use App\Models\HotelPageAddonModel;
 use App\Models\HotelAmetiesModel;
 use App\Models\MagazinesModel;
 use App\Models\News;
+use App\Models\Review_Category_Model;
+use App\Models\Review_Topics_Model;
+use App\Models\Guest_Review_Model;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -1405,6 +1408,219 @@ public function add_multiple_images_hotels(Request $request)
 return $response;
 
 
+}
+
+public function Create_Review_Category(Request $request){
+    $response = array("status" => false, 'message' => '');
+
+    $rules = [
+        'title' => 'required|unique:review_categories',
+        'max_rating' => 'required',
+    ];
+
+    $requestData = $request->all();
+
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    } else {
+        $review_category = new Review_Category_Model();
+        $review_category->title = $requestData['title'];
+        $review_category->max_rating = $requestData['max_rating'];
+
+        $last = Review_Category_Model::orderBy('sort_order','desc');
+        if($last->count() > 0){
+            $last = $last->first();
+            $last->sort_order++;
+
+            $review_category->sort_order = $last->sort_order;
+        }else{
+            $review_category->sort_order = 1;
+        }
+
+        $review_category->save();
+        
+
+        if ($review_category) {
+            $response = response()->json(['status' => true, 'message' => 'Review Category Added Successfully']);
+        } else {
+            $response = response()->json(['status' => false, 'message' => 'Failed to add review category!']);
+        }
+    }
+
+    return $response;
+}
+
+public function Create_Review_Topic(Request $request){
+
+$response = array("status" => false, 'message' => '');
+
+$rules = [
+    'title' => 'required|unique:review_topics',
+];
+
+$messages = ['unique' => "this topic has already exists."];
+
+$requestData = $request->all();
+
+$validator = Validator::make($request->all(), $rules, $messages);
+
+if ($validator->fails()) {
+    $response['message'] = $validator->messages();
+} else {
+    $review_topics = new Review_Topics_Model();
+    $review_topics->title = $requestData['title'];
+    $last = Review_Topics_Model::orderBy('sort_order','desc');
+    if($last->count() > 0){
+        $last = $last->first();
+        $last->sort_order++;
+
+        $review_topics->sort_order = $last->sort_order;
+    }else{
+        $review_topics->sort_order = 1;
+    }
+
+    $review_topics->save();
+    
+
+    if ($review_topics) {
+        $response = response()->json(['status' => true, 'message' => 'Review Topic Added Successfully']);
+    } else {
+        $response = response()->json(['status' => false, 'message' => 'Failed to add review topic!']);
+    }
+}
+
+return $response;
+}
+
+
+public function All_Review_Categories(){
+
+$data = Review_Category_Model::orderBy('id','DESC')->get();
+
+if ($data->isEmpty()) {
+    return response()->json(['status' => false, 'message' => 'No categories found']);
+}
+    
+return response()->json(['status' => true, 'data' => $data]);
+}
+
+public function All_Review_Topics(){
+
+$data = Review_Topics_Model::orderBy('id','DESC')->get();
+
+if ($data->isEmpty()) {
+    return response()->json(['status' => false, 'message' => 'No topics found']);
+}
+    
+return response()->json(['status' => true, 'data' => $data]);
+}
+
+public function Create_Guest_Review(Request $request){
+$response = array("status" => false, 'message' => '');
+
+$rules = [
+    'hotel_id' => 'required',
+    'category_id' => 'required',
+    'rating' => 'required',
+    'name' => 'required',
+    'email' => 'required',
+    'description' => 'required',
+];
+
+$requestData = $request->all();
+
+$validator = Validator::make($request->all(), $rules);
+
+if ($validator->fails()) {
+    $response['message'] = $validator->messages();
+} else {
+    $guest_review = new Guest_Review_Model();
+
+    $guest_reviews = [];
+
+    foreach ($requestData['category_id'] as $key => $categoryId) {
+        $guest_reviews[] = [
+            'category_id' => $categoryId,
+            'rating' => $requestData['rating'][$key],
+        ];
+    }
+
+    $guest_review->hotel_id = $requestData['hotel_id'];
+    $guest_review->type = 1;
+    $guest_review->category_rating = json_encode($guest_reviews);
+    $guest_review->name = $requestData['name'];
+    $guest_review->email = $requestData['email'];
+    $guest_review->description = $requestData['description'];
+
+    $guest_review->save();
+    
+    if ($guest_review) {
+        $response = response()->json(['status' => true, 'message' => 'Guest Review Added Successfully']);
+    } else {
+        $response = response()->json(['status' => false, 'message' => 'Failed to add guest review!']);
+    }
+}
+
+return $response;
+}
+
+public function Get_Reviews_By_Topics(Request $request){
+
+$response = array("status" => false, 'message' => '');
+
+$rules = [
+   'hotel_id' => 'required',
+];
+
+$requestData = $request->all();
+
+$validator = Validator::make($request->all(), $rules);
+
+if ($validator->fails()) {
+   $response['message'] = $validator->messages();
+} else {
+    
+    if(!empty($requestData) && !empty($requestData['topic_title'])){
+        $topicTitles = $requestData['topic_title'];
+    
+        $data = Guest_Review_Model::
+            where(function($query) use ($topicTitles) {
+            foreach ($topicTitles as $title) {
+                $query->orWhere('description', 'LIKE', '%' . $title . '%');
+            }
+            $query->orWhere('hotel_id', '=', $requestData['hotel_id']);
+        })
+        ->orderBy('id', 'DESC')
+        ->get();
+
+        if($data->isEmpty()){
+            $all_reviews_data = Guest_Review_Model::where('hotel_id',$requestData['hotel_id'])->orderBy('id','DESC')->get();
+            if($all_reviews_data->isEmpty()){
+                $response = json_encode(['status'=>false,"message"=>"Reviews Not Found","data"=>[]]);
+            }
+            else{
+                $response = json_encode(['status'=>true,"message"=>"Reviews Found","data"=>$all_reviews_data]);
+            }
+            
+        }
+        else{
+            $response = json_encode(['status'=>true,"message"=>"Reviews Found","data"=>$data]);
+        }
+  }
+  else{
+      $all_reviews_data = Guest_Review_Model::where('hotel_id',$requestData['hotel_id'])->orderBy('id','DESC')->get();
+        if($all_reviews_data->isEmpty()){
+            $response = json_encode(['status'=>false,"message"=>"Reviews Not Found","data"=>[]]);
+        }
+        else{
+            $response = json_encode(['status'=>true,"message"=>"Reviews Found","data"=>$all_reviews_data]);
+        }
+  }
+}
+
+return $response;
 }
 
 }
