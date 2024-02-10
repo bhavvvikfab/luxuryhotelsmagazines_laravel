@@ -120,7 +120,7 @@
 
     <p>Thanks,<br> For subscribed to the newsletter</p>
 
-@endif
+
 
 @elseif($data['key']==7)
 

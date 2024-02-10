@@ -345,6 +345,7 @@ public function AllHotels()
 {
     $data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->get();
 
+
     $data->transform(function ($item) {
         $name = json_decode($item['hotel_contacts']['name'], true);
         $email = json_decode($item['hotel_contacts']['email'], true);
@@ -496,7 +497,7 @@ public function UpdateHotels(Request $request)
                 'about_hotel' => 'required',
                 'restaurent_bars' => 'nullable',
                 'spa_wellness' => 'nullable',
-                 'hotel_images' => 'required',
+                //  'hotel_images' => 'required',
                 'rooms_and_suites' => 'required',
                 'amities' => 'required',
                 'facilities' => 'required',
