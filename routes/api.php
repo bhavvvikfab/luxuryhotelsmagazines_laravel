@@ -26,6 +26,8 @@ use App\Http\Controllers\HomeInfoController;
 use App\Http\Controllers\HotelCreateProfileController;
 use App\Http\Controllers\HotelFacilitiesController;
 use App\Http\Controllers\VotingDetailsController;
+use App\Http\Controllers\AdevertisingWithUsController;
+
 
 
 
@@ -298,6 +300,13 @@ Route::post('/update_single_home_info', [HomeInfoController::class, 'update_sing
 Route::post('/get_single_page_details', [HomeInfoController::class, 'get_single_page_details']);
 Route::post('/delete_magazine_cover', [HomeInfoController::class, 'delete_magazine_cover']);
 Route::post('/edit_magazine_cover', [HomeInfoController::class, 'edit_magazine_cover']);
+
+// advertise with us 
+
+Route::post('/add_advertise_with_us', [AdevertisingWithUsController::class, 'add_advertise_with_us']);
+Route::post('/update_advertise_with_us', [AdevertisingWithUsController::class, 'update_advertise_with_us']);
+Route::post('/delete_advertise_with_us', [AdevertisingWithUsController::class, 'delete_advertise_with_us']);
+Route::post('/edit_advertise_with_us', [AdevertisingWithUsController::class, 'edit_advertise_with_us']);
 
 
 

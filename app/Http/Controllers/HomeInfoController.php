@@ -266,7 +266,65 @@ else if ($type == "hotelmagazine")
     }
     
 }
+else if ($type == "hotelselection") 
+{
 
+
+$rules = [
+    'title' => 'required',
+    'sections' => 'required',
+];
+
+$requestData = $request->all();
+$validator = Validator::make($requestData, $rules);
+
+if ($validator->fails()) {
+    $response['status'] = false;
+    $response['message'] = $validator->messages();
+} else {
+
+    $home_info = AllpagedetailsModel::where('type', $requestData['type'])->first();
+    if($home_info){
+    $details = json_decode($home_info->details);
+    //   dd($details);
+    $detail_dt = $details->sections;
+    $sections = $request->sections;
+    $digitalCampaignDetails = [];
+    if(count($sections) >= count($detail_dt)){
+        foreach($sections as $key=>$val){
+           
+
+
+            $digitalCampaignDetails[] = [
+                "sub_title" => $sections[$key]['sub_title'],
+                "content" => $sections[$key]['content'],
+            ];
+        }
+    }
+
+
+    $home_info->type = $requestData['type'];
+
+    $detailtmp['title'] =  $requestData['title'];
+   
+    $detailtmp['sections'] = array_values($digitalCampaignDetails);
+    $home_info->details = json_encode($detailtmp);
+
+
+$home_info->save();
+
+
+        $response = response()->json(['status' => true, 'message' => 'Home Info Updated Successfully']);
+    } else {
+        $response = response()->json(['status' => false, 'message' => 'Failed to add home info!']);
+    }
+            
+       
+    }
+
+}
+
+    
 return $response;
 
 
@@ -503,6 +561,44 @@ else if ($type == "hotelmagazine")
 
 }
 
+else if ($type == "hotelselection") 
+{
+    // dd('hbfrhfrh');
+
+    $rules = [
+        'type' => 'required',
+       
+    ];
+
+    $requestData =  $request->all();
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    } else {
+
+        $all_page_details = AllpagedetailsModel::where('type', $type)->first();
+     
+                      
+        if ($all_page_details) {
+            $all_page_detail = json_decode($all_page_details['details'], true);
+            // dd($all_page_detail);
+
+            $all_page_details['details'] = $all_page_detail;
+  
+            // $all_page_details->details = json_encode($all_page_detail);
+
+
+            $response = response()->json(['status' => true, 'message' => 'Hotel Selection Page Data get Successfully,','data'=> $all_page_details]);
+        } else {
+            $response = response()->json(['status' => false, 'message' => 'Failed to get Hotel Selection page data!']);
+        }
+
+}
+
+}
+
+
 return $response;
 
 
@@ -569,102 +665,10 @@ if ($hotel_type == 1)
     }
 }
 
-// else if ($hotel_type == 2) 
-// {
-
-//         $rules = [
-//             // 'user_id' => 'required',
-//             'type' => 'required',
-//             'background_type' => 'required',
-//             'background' => 'required',
-//             'content' => 'required',
-//             // 'overlay_image_1' => 'required',
-//             // 'overlay_image_2' => 'required',
-            
-//         ];
 
 
-//         $requestData = $request->all();
-
-
-//         $validator = Validator::make($request->all(), $rules);
-
-//         if ($validator->fails()) {
-//                     $response['message'] = $validator->messages();
-//                 } else {
-                    
-                   
-//                     // if($hotel_type == 2)
-//                     // {
-                    
-
-//                         if($requestData['background_type'] == 1){
-                     
-
-                      
-                       
-//                         $homeaboutDetails = [
-
-//                             'background_type' => $requestData['background_type'],
-//                             // 'background' => $request->file('background')->store('uploads'),
-//                             'content' => $requestData['content'],
-//                             // 'overlay_image_1' => $request->file('overlay_image_1')->store('uploads'),
-//                             // 'overlay_image_2' => $request->file('overlay_image_2')->store('uploads'),
-                            
-//                         ];
-
-//                         // dd($homeaboutDetails);
-
-                  
-//                         if ($request->hasFile('background')) {
-//                             $homeaboutDetails['background'] = $request->file('background')->store('uploads');
-//                         }
-//                     }
-//                     else if($requestData['background_type'] == 2){
-
-//                         $homeaboutDetails = [
-
-//                             'background_type' => $requestData['background_type'],
-                           
-//                             'content' => $requestData['content'],
-//                            'background' => $requestData['background'],
-//                             // 'overlay_image_1' => $request->file('overlay_image_1')->store('uploads'),
-//                             // 'overlay_image_2' => $request->file('overlay_image_2')->store('uploads'),
-                            
-//                         ];
-
-//                     }
-
-//                         // if ($request->hasFile('overlay_image_1')) {
-//                         //     $homeaboutDetails['overlay_image_1'] = $request->file('overlay_image_1')->store('uploads');
-//                         // }
-
-//                         // if ($request->hasFile('overlay_image_2')) {
-//                         //     $homeaboutDetails['overlay_image_2'] = $request->file('overlay_image_2')->store('uploads');
-//                         // }
-
-                        
-//                         // $home_info  = new HomeInfoModel();
-//                         $home_info = HomeInfoModel::where('type',$requestData['type'])->first();
-//                         // dd($home_info);
-
-
-//                           $home_info->details = $homeaboutDetails;
-//                         //    dd($homeaboutDetails);
-//                           $home_info->save();
-                          
-//             if ($home_info) {
-//                 $response = response()->json(['status' => true, 'message' => 'Home Info Updated Successfully']);
-//             } else {
-//                 $response = response()->json(['status' => false, 'message' => 'Failed to add home info!']);
-//             }
-//         // }
-//     }
-
-            
-// }
-
-else if ($hotel_type == 2) {
+else if ($hotel_type == 2)
+ {
     $rules = [
         'type' => 'required',
         'background_type' => 'required',
@@ -741,6 +745,7 @@ else if ($hotel_type == 2) {
                 continue;
             }
 
+            
             $image = $request->file('image')[$key];
                 $filename = $image->store('uploads'); // Store the image in the storage/images directory
                 $digitalCampaignDetails[] = [
@@ -771,112 +776,7 @@ else if ($hotel_type == 2) {
     }
 }
 
-// {
-// // print_r(json_encode($request->input('section')));
 
-//     $rules = [
-//         'type' => 'required',
-//         'image' => 'required',
-//         'link' => 'required',
-//     ];
-
-//     $validator = Validator::make($request->all(), $rules);
-
-//     if ($validator->fails()) {
-//         $response['message'] = $validator->messages();
-//     } else {
-
-//         $home_info = HomeInfoModel::where('type', $request->input('type'))->first();
-//         // $bg_data = json_decode($home_info['details'], true);
-//         $img = [];
-//         $digitalCampaignDetails = [
-
-     
-//             foreach ($request->file('image') as $key=>$image) {
-
-//                 $filename = $image->store('uploads'); // Store the image in the storage/images directory
-//             //   dd($filename);
-//             $img []= array("image"=>$filename,"link"=>$request->input('link')[$key]);
-                
-//             }
-
-//             // 'image' => $request->file('image')->store('uploads'), // Adjust the storage path as needed
-//             // 'link' => $requestData['link'],
-            
-//         ];
-
-//         // // dd($bg_data);
-
-//         // $details = [];
-//         // foreach ($bg_data as $detail) {
-//         //      dd($detail);
-//         //     $details[] = [
-//         //         'image' => asset('storage/app/'.$detail['image']),
-//         //          'link' => $detail['link'],
-//         //     ];
-//         // }
-        
-//         // $home_info['details'] = $details;
-
-
-        
-
-        
-//         // if ($hotel_type == 1) {
-            
-
-//             // $headerSliderDetails = [
-//             //     // 'image' => $request->file('image')->store('uploads'),
-//             //     'link' => $request->input('link'),
-//             // ];
-
-//             $img = [];
-//             foreach ($request->file('image') as $key=>$image) {
-
-//                 $filename = $image->store('uploads'); // Store the image in the storage/images directory
-//             //   dd($filename);
-//             $img []= array("image"=>$filename,"link"=>$request->input('link')[$key]);
-                
-//             }
-// // print_r(json_encode($img));
-// // die;
-//                 // $post->images()->create(['filename' => $filename]);
-//             // }
-
-//             // if ($request->hasFile('image')) {
-//             //     $headerSliderDetails['image'] = $request->file('image')->store('uploads');
-//             // }
-
-
-       
-
-//             // if (!$home_info) {
-//             //     $home_info = new HomeInfoModel();
-//             //     $home_info->type = $request->input('type');
-//             //     $home_info->details = json_encode([$headerSliderDetails]);
-//             // } else {
-//             //     // $detailsArray = json_decode($home_info->details, true);
-//             //     // $detailsArray[] = $headerSliderDetails;
-//             //     // $home_info->details = json_encode($detailsArray);
-              
-//             // }
-
-           
-
-//             if ($home_info) {
-//                 $detailsArray = json_decode($home_info->details, true);
-//                 //  $detailsArray = $homeaboutDetails;
-//                 $detailsArray[] = $digitalCampaignDetails;
-//                 $home_info->details = json_encode($detailsArray);
-//                 // $home_info->details = json_encode($img);
-//                 $home_info->save();
-//                 $response = response()->json(['status' => true, 'message' => 'Home Info Added Successfully']);
-//             } else {
-//                 $response = response()->json(['status' => false, 'message' => 'Failed to add home info!']);
-//             }
-//         // }
-//     }
-// }
 
 else if ($hotel_type == 4) 
 {
@@ -924,14 +824,15 @@ else if ($hotel_type == 5)
 {
 
 $rules = [
-    'title' => 'required',
-    'image' => 'required|image', // Add appropriate validation for image uploads
-    'country' => 'required',
-    'you_tube_link' => 'required',
-    'content' => 'required',
+    // 'title' => 'required',
+    // 'image' => 'required|image', // Add appropriate validation for image uploads
+    // 'country' => 'required',
+    // 'you_tube_link' => 'required',
+    // 'content' => 'required',
     'background_title' => 'required',
     'background_sub_title' => 'required',
-
+    'background_image' => 'required',
+    'sections' => 'required',
 ];
 
 $requestData = $request->all();
@@ -942,52 +843,64 @@ if ($validator->fails()) {
     $response['message'] = $validator->messages();
 } else {
 
-    $homeInfo = HomeInfoModel::where('type', $requestData['type'])->first();
-    $detail = $homeInfo['details'];
-    $bg_data = json_decode($detail);
 
-        
-    
+    $home_info = HomeInfoModel::where('type', $request->input('type'))->first();
+    // dd($home_info);
+    if ($home_info) {
 
-    $digitalCampaignDetails = [
-        'title' => $requestData['title'],
-        'image' => $request->file('image')->store('uploads'), // Adjust the storage path as needed
-        'country' => $requestData['country'],
-        'you_tube_link' => $requestData['you_tube_link'],
-        'content' => $requestData['content'],
-    ];
+        $details = json_decode($home_info->details);
+        //   dd($details);
+        $detail_dt = $details->sections;
+        $sections = $request->sections;
+        $digitalCampaignDetails = [];
+        if(count($sections) >= count($detail_dt)){
+            foreach($sections as $key=>$val){
+                // dd($val);
+                if (!isset($val['image'])) {
+                    if(isset($detail_dt[$key]->image)){
+                        $filename = $detail_dt[$key]->image;
+                    }
+                }else{
+                    $image = $request->file('sections')[$key]['image'];
+                    $filename = $image->store('uploads');
+                }
 
-   
-    if (!$homeInfo) {
-        // $home_info->details = json_encode([$homeaboutDetails]);
-        $homeInfo->details = json_encode([$homeaboutDetails],['sections' => [$digitalCampaignDetails]]);
-    } else {
-        $detailsArray = json_decode($homeInfo->details, true);
-        //  $detailsArray = $homeaboutDetails;
-        $detailsArray['sections'][] = $digitalCampaignDetails;
 
-        // $homeInfo = new HomeInfoModel();
-        $homeInfo->type = $requestData['type'];
-
-        $detailsArray['background_title'] =  $requestData['background_title'];
-        $detailsArray['background_sub_title'] = $requestData['background_sub_title'];
-        if ($request->hasFile('background_image') && $request->file('background_image')->isValid()) {
-            $detailsArray['background_image'] = $request->file('background_image')->store('uploads');
+                $digitalCampaignDetails[] = [
+                    "title" => $sections[$key]['title'],
+                    "image" => isset($filename) && !empty($filename)?$filename:'',
+                    "country" => $sections[$key]['country'],
+                    "you_tube_link" => $sections[$key]['you_tube_link'],
+                    "content" => $sections[$key]['content'],
+                ];
+            }
         }
-        $homeInfo->details = json_encode($detailsArray);
+        // dd($digitalCampaignDetails);
+
+        $home_info->type = $requestData['type'];
+
+        $detailtmp['background_title'] =  $requestData['background_title'];
+        $detailtmp['background_sub_title'] = $requestData['background_sub_title'];
+        if ($request->hasFile('background_image') && $request->file('background_image')->isValid()) {
+            $detailtmp['background_image'] = $request->file('background_image')->store('uploads');
+        }
+        $detailtmp['sections'] = array_values($digitalCampaignDetails);
+        $home_info->details = json_encode($detailtmp);
     }
 
-    $homeInfo->save();
+    $home_info->save();
 
-    if ($homeInfo) {
-    $response = response()->json(['status' => true, 'message' => 'Home Info Updated Successfully']);
-} else {
-    $response = response()->json(['status' => false, 'message' => 'Failed to add home info!']);
-}
-        
-   
-}
-}
+    if ($home_info) {
+            $response = response()->json(['status' => true, 'message' => 'Home Info Updated Successfully']);
+        } else {
+            $response = response()->json(['status' => false, 'message' => 'Failed to add home info!']);
+        }
+                
+           
+        }
+
+    }
+
 
 else if ($hotel_type == 6) 
 // {
@@ -1337,7 +1250,7 @@ public function edit_home_info(Request $request)
             }
 
             if($home_info['type']==4){
-                $home_info_detail['you_tybe_link'] = asset("storage/app/".$home_info_detail['you_tybe_link']);
+                // $home_info_detail['you_tybe_link'] = asset("storage/app/".$home_info_detail['you_tybe_link']);
                 $home_info['details'] = $home_info_detail;  
                 
          
