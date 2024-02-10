@@ -94,6 +94,7 @@ Route::middleware(['Api_Auth'])->group(function () {
 
     Route::post('/CreateNewsLetter', [NewsController::class, 'CreateNewsLetter']);
     Route::get('/all-newsletter', [NewsController::class, 'All_Newsletter']);
+    Route::get('/all-hotel-magazines', [HotelMagazinesController::class, 'AllHotelMagazines']);
   
 });
 
@@ -158,7 +159,7 @@ Route::middleware(['user_login'])->group(function () {
 
     Route::post('/payment', [PaymentController::class, 'payment']);
      Route::post('/add-hotel-magazines', [HotelMagazinesController::class, 'AddHotelMagazines']);
-     Route::get('/all-hotel-magazines', [HotelMagazinesController::class, 'AllHotelMagazines']);
+   
      Route::post('/edit-hotel-magazines', [HotelMagazinesController::class, 'EditHotelMagazines']);
      Route::post('/update-hotel-magazines', [HotelMagazinesController::class, 'UpdateHotelMagazines']);
      Route::post('/delete-hotel-magazines', [HotelMagazinesController::class, 'DeleteHotelMagazines']);
@@ -287,6 +288,8 @@ Route::middleware(['user_login'])->group(function () {
     Route::get('/all-review-topics', [HotelController::class, 'All_Review_Topics']);
     Route::post('/create-guest-review', [HotelController::class, 'Create_Guest_Review']);
     Route::post('/get-reviews-by-topics', [HotelController::class, 'Get_Reviews_By_Topics']);
+    Route::post('/get-reviews-average', [HotelController::class, 'Get_Reviews_Avereage']);
+
 
 });
 

@@ -92,7 +92,14 @@ class UserController extends Controller
                             $token = $user->createToken('AppName')->accessToken;
 
                             $response = ['status' => true, 'message' => 'Login Successfully','token'=>$token,'data'=>$user];
-                        } else {
+                        } elseif($user->type == 5){
+                            $user->token = $randomNumber;
+                            $user->save();
+
+                            $token = $user->createToken('AppName')->accessToken;
+
+                            $response = ['status' => true, 'message' => 'Login Successfully','token'=>$token,'data'=>$user];
+                        }else {
                             Auth::logout();
                             $response = ['status' => true, 'message' => 'Unauthorized access'];
                         }
@@ -125,19 +132,28 @@ class UserController extends Controller
                 }
 
                 $randomNumber = rand(100000, 999999);
-    
+                $type = ''; 
                 $user = new User();
                 $user->name = $requestData['name'];
                 $user->email = $requestData['email'];
                 $user->password = Hash::make($requestData['password']);
                 $user->token = $randomNumber;
+                if(isset($requestData['type']) && !empty($requestData['type']) && $requestData['type'] == 5){
+                    $type = $requestData['type'];
+                    $user->type = $requestData['type'];
+                }
                 $lastInsertId = $user->id;
 
                 $user->save();
 
-                $helpers = new Helpers();
-                $result = $helpers->sendOtp($user);
-
+                if($type != 5){
+                    $helpers = new Helpers();
+                    $result = $helpers->sendOtp($user);
+                }else{
+                    if($type == 5){
+                        $result = true;
+                    }
+                }
                 if ($result) {
                     $response =  response()->json(['status' => true,'message' => 'User Registered Successfully','data'=>$user]);
                 } else {
