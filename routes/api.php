@@ -288,7 +288,6 @@ Route::middleware(['user_login'])->group(function () {
     Route::get('/all-review-topics', [HotelController::class, 'All_Review_Topics']);
     Route::post('/create-guest-review', [HotelController::class, 'Create_Guest_Review']);
     Route::post('/get-reviews-by-topics', [HotelController::class, 'Get_Reviews_By_Topics']);
-    Route::post('/get-reviews-average', [HotelController::class, 'Get_Reviews_Avereage']);
 
 
 });
