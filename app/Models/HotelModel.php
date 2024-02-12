@@ -55,6 +55,9 @@ public function special_offer() {
     return $this->hasOne(HotelSpecialOfferModel::class, 'hotel_id');
    
 }
-
+public function voting_details()
+{
+    return $this->belongsTo(VotingDetailsModel::class, 'id');
+}
 
 }

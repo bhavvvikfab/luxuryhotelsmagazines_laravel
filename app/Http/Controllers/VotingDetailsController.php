@@ -33,10 +33,10 @@ class VotingDetailsController extends Controller
     {
         $response = array("status" => false, 'message' => '');
         $requestData = $request->all();
-        if($requestData['type']==1)
-        {
+        // if($requestData['type']==1)
+        // {
             $rules = [
-                'type' => 'required',
+                 'type' => 'required',
                 'hotel_id' => 'nullable',
                 'name' => 'required',
                 'email' => 'required',
@@ -44,18 +44,18 @@ class VotingDetailsController extends Controller
             ];
 
 
-        }
-        else if($requestData['type']==2)
-        {
-            $rules = [
-                'type' => 'required',
-                'news_id' => 'nullable',
-                'name' => 'required',
-                'email' => 'required',
-                'description' => 'required',
-            ];
+        // }
+        // else if($requestData['type']==2)
+        // {
+        //     $rules = [
+        //         'type' => 'required',
+        //         'news_id' => 'nullable',
+        //         'name' => 'required',
+        //         'email' => 'required',
+        //         'description' => 'required',
+        //     ];
 
-        }
+        // }
         
    
      $validator = Validator::make($request->all(), $rules);
@@ -70,23 +70,23 @@ class VotingDetailsController extends Controller
         $voting_details->type = $requestData['type'];
         $voting_details->email = $requestData['email'];
         $voting_details->description = $requestData['description'];
-        if($requestData['type']==1){
+        // if($requestData['type']==1){
             $voting_details->hotel_id = $requestData['hotel_id'];
             $hotel_dt = HotelModel::where('id', $requestData['hotel_id'])->first();
             $hotel_name = $hotel_dt['hotel_title'];
 
-        }
-        else if($requestData['type']==2) {
-            $voting_details->news_id = $requestData['news_id'];
-            $voting_details->hotel_id = $requestData['hotel_id'];
-            $news_dt = News::where('id', $requestData['hotel_id'])->first();
-            $news_name = $news_dt['news_title'];
-        }
+        // }
+        // else if($requestData['type']==2) {
+        //     $voting_details->news_id = $requestData['news_id'];
+        //     $voting_details->hotel_id = $requestData['hotel_id'];
+        //     $news_dt = News::where('id', $requestData['hotel_id'])->first();
+        //     $news_name = $news_dt['news_title'];
+        // }
 
 
         $voting_details->save();
 
-        if($requestData['type']==1){
+        // if($requestData['type']==1){
     
             $subject = 'Voting User Data';
     
@@ -105,28 +105,28 @@ class VotingDetailsController extends Controller
                 'description name' => $requestData['description'],
             ];
           
-        }
+        // }
 
-        if($requestData['type']==2){
+        // if($requestData['type']==2){
     
-            $subject = 'Voting User Data';
+        //     $subject = 'Voting User Data';
     
-            $key = 8;
+        //     $key = 8;
   
-            $body = "Voting Details!\nNews Name: {$news_name}\nName: {$requestData['name']}\nEmail: {$requestData['email']}";
+        //     $body = "Voting Details!\nNews Name: {$news_name}\nName: {$requestData['name']}\nEmail: {$requestData['email']}";
             
-            // Email data
-            $to = $requestData['email'];
+        //     // Email data
+        //     $to = $requestData['email'];
     
-            $data = [
-                'name' => $requestData['name'],
-                'email' => $to,
-                'key' => $key,
-                'news_name' => $news_name,
-                'description' => $requestData['description'],
-            ];
+        //     $data = [
+        //         'name' => $requestData['name'],
+        //         'email' => $to,
+        //         'key' => $key,
+        //         'news_name' => $news_name,
+        //         'description' => $requestData['description'],
+        //     ];
           
-        }
+        // }
 
 
             $helpers = new Helpers();
@@ -142,6 +142,35 @@ class VotingDetailsController extends Controller
     return $response;
 }
 
-    }
+public function all_voting_details(Request $request)
+{
+    $data = VotingDetailsModel::with('hotels')->get();
+
+    $data->transform(function ($item) {
+        
+        // Convert news images to full URLs
+        if (!empty($item->hotel_images)) {
+            $imagePaths = json_decode($item->hotel_images, true);
+            $fullImagePaths = [];
+
+            foreach ($imagePaths as $image) {
+                $fullImagePaths[] = asset("storage/app/" . $image);
+            }
+
+            $item->hotel_images = $fullImagePaths;
+        } else {
+            $item->hotel_images = [];
+        }
+
+      
+
+        return $item;
+    });
+
+  
+
+    return response()->json(['status' => true, 'data' => $data]);
+}
+}
 
 
