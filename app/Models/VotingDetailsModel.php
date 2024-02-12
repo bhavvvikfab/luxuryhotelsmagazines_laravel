@@ -19,4 +19,15 @@ class VotingDetailsModel extends Model
         'created_at',
         'updated_at'
     ];
+
+    public function hotels()
+    {
+        return $this->belongsTo(HotelModel::class, 'hotel_id');
+    }
+    // public function hotels()
+    // {
+    //     return $this->hasMany(HotelModel::class, 'id');
+    //     // Replace 'foreign_key' with the actual foreign key column name
+    // }
+
 }

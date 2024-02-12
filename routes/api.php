@@ -392,6 +392,8 @@ Route::post('/edit_hotel_create_profile', [HotelCreateProfileController::class, 
 Route::post('/delete_hotel_create_profile', [HotelCreateProfileController::class, 'delete_hotel_create_profile']);
 
 Route::post('/add_voting_details', [VotingDetailsController::class, 'add_voting_details']);
+Route::post('/all_voting_details', [VotingDetailsController::class, 'all_voting_details']);
+
 
 
 
