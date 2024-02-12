@@ -780,11 +780,38 @@ public function searchHotel(Request $request)
             $hotel_data = HotelModel::all();
         }
 
+        
+
         if ($hotel_data->isEmpty()) {
             return response()->json(['message' => 'No data found']);
         }
 
+        $hotel_data->transform(function ($item) {
+          
+            // Convert news images to full URLs
+            if (!empty($item->hotel_images)) {
+                $imagePaths = json_decode($item->hotel_images, true);
+                $fullImagePaths = [];
+    
+                foreach ($imagePaths as $image) {
+                    $fullImagePaths[] = asset("storage/app/" . $image);
+                }
+    
+                $item->hotel_images = $fullImagePaths;
+            } else {
+                $item->hotel_images = [];
+            }
+    
+          
+    
+            return $item;
+        });
+    
         return response()->json(['hotel_data' => $hotel_data]);
+    
+    
+
+        
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
     }
