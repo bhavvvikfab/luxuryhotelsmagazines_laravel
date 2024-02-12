@@ -91,6 +91,10 @@ Route::middleware(['Api_Auth'])->group(function () {
     Route::get('/all-hotels', [HotelController::class, 'AllHotels']);
     Route::post('/edit-hotels', [HotelController::class, 'EditHotels']);
 
+    Route::get('/all_special_offer', [HotelController::class, 'all_special_offer']);
+    Route::post('/edit_special_offer', [HotelController::class, 'edit_special_offer']);
+    
+
     Route::get('/all-distibutor', [DistibutionController::class, 'AllDistributor']);
     Route::post('/edit-distibutor', [DistibutionController::class, 'EditDistributor']);
 
@@ -242,6 +246,14 @@ Route::middleware(['user_login'])->group(function () {
 
     Route::post('/update-hotels', [HotelController::class, 'UpdateHotels']);
     Route::post('/delete-hotels', [HotelController::class, 'DeleteHotels']);
+
+    Route::post('/add_special_offer', [HotelController::class, 'add_special_offer']);
+   
+    
+ 
+
+    Route::post('/update_special_offer', [HotelController::class, 'update_special_offer']);
+    Route::post('/delete_special_offer', [HotelController::class, 'delete_special_offer']);
 
     Route::post('/login-user-hotels', [HotelController::class, 'LoginUserHotels']);
 

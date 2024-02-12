@@ -143,6 +143,256 @@ class HotelController extends Controller
     return response()->json(['status' => true, 'data' => $data]);
 }
 
+public function add_special_offer(Request $request)
+{
+ 
+    $response = array("status" => false, 'message' => '');
+    // $user = Auth::guard('api')->user();
+    // if(isset($request['user_id']) && !empty($request['user_id'])){
+    //     $userExists = User::where('id', $request['user_id'])->exists();
+    //     if ($userExists) {
+    //         $user = User::where('id', $request['user_id'])->first();
+    //     } else {
+    //         $response['message'] = 'User does not exist.';
+    //         return $response;
+    //     }
+    // }
+
+            $rules = [
+                // 'user_id' => 'required',
+                'hotel_id' => 'required',
+                'phone_number' => 'required',
+                 'contact_no' => 'required',
+                 'offer_title' => 'required',
+                 'type' => 'required',
+                 'from_date' => 'required',
+                'to_date' => 'required',
+                'description' => 'nullable',
+                'reedem_link' => 'nullable', 
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+
+
+            if ($validator->fails()) {
+                $response['message'] = $validator->messages();
+            } else {
+
+                // $hotel_data  = HotelModel::where()
+                $hotel_special_offer = new HotelSpecialOfferModel();
+                $hotel_special_offer->hotel_id = $request->input('hotel_id');
+                $hotel_special_offer->offer_title = $request->input('offer_title');
+                $hotel_special_offer->type = $request->input('type');
+                $hotel_special_offer->phone_number = $request->input('phone_number');
+                $hotel_special_offer->contact_no = $request->input('contact_no');
+                $hotel_special_offer->description = $request->input('description');
+                $hotel_special_offer->from_date = $request->input('from_date');
+                $hotel_special_offer->to_date = $request->input('to_date');
+                $hotel_special_offer->reedem_link = $request->input('reedem_link');
+                
+                $hotel_special_offer->save();
+
+                
+
+                $response = response()->json(['status' => true, 'message' => 'Special Offer Created Successfully','data'=>$hotel_special_offer]);
+            
+        }
+
+            return $response;
+}
+
+public function all_special_offer()
+{
+    // $data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->get();
+    $data = HotelSpecialOfferModel::with('hotels')->get();
+    //  dd($data);
+
+
+    $data->transform(function ($item) {
+
+        // Convert news images to full URLs
+        if (!empty($item->hotel_images)) {
+            $imagePaths = json_decode($item->hotel_images, true);
+            $fullImagePaths = [];
+
+            foreach ($imagePaths as $image) {
+                $fullImagePaths[] = asset("storage/app/" . $image);
+            }
+
+            $item->hotel_images = $fullImagePaths;
+        } else {
+            $item->hotel_images = [];
+        }
+
+
+        return $item;
+    });
+
+    return response()->json(['status' => true, 'data' => $data]);
+}
+
+public function edit_special_offer(Request $request)
+        {
+
+            $response = array("status" => false, 'message' => '');
+
+            $rules = [
+                'special_offer_id' => 'required',
+                
+            ];
+
+            $requestData = $request->all();
+
+            $validator = Validator::make($requestData, $rules);
+
+            if ($validator->fails()) {
+                $response['message'] = $validator->messages();
+            } else {
+                $special_offer_id = $requestData['special_offer_id'];
+                $data = [];
+
+            // $hotel_data = HotelSpecialOfferModel::with('hotels')->find($special_offer_id);
+            $special_offer_data = HotelSpecialOfferModel::find($special_offer_id);
+            $hotel_data = HotelModel::where('id',$special_offer_data['hotel_id'])->first();
+            // dd($hotel_data);
+            $hotel_name  = $hotel_data['hotel_title'];
+  
+
+
+            if ($special_offer_data) {
+                
+
+                // $hotel_images_data = json_decode($hotel_data['hotel_images'], true);
+                
+                // $details = [];
+                // foreach ($hotel_images_data as $detail) {
+                //     $details[] = asset('storage/app/'.$detail);
+                // }
+                // $hotel_data['hotel_images'] = $details;
+                
+         
+
+                $data = $special_offer_data;
+                $response = response()->json(['status' => true, 'message' => 'Special Offer Data Found', 'data' => $data,'hotel_name' => $hotel_name]);
+            } else {
+                $response = response()->json(['status' => false, 'message' => 'Special Offer Data Not Found','data'=>$data]);
+            }
+        }
+    
+          return $response;
+    }
+
+    public function update_special_offer(Request $request)
+{
+
+    $response = array("status" => false, 'message' => '');
+    $rules = [
+        // 'user_id' => 'required',
+        'special_offer_id' => 'required',
+        'phone_number' => 'required',
+         'contact_no' => 'required',
+         'offer_title' => 'required',
+         'type' => 'required',
+         'from_date' => 'required',
+        'to_date' => 'required',
+        'description' => 'nullable',
+        'reedem_link' => 'nullable', 
+    ];
+
+
+    $requestData = $request->all();
+    $validator = Validator::make($requestData, $rules);
+    
+        if ($validator->fails()) {
+            $response['message'] = $validator->messages();
+          }else {
+            $special_offer_id = $requestData['special_offer_id'];
+         $HotelSpecialOfferData = HotelSpecialOfferModel::where('id', $special_offer_id)->first();
+        //  dd($HotelSpecialOfferData);
+
+    if($HotelSpecialOfferData){
+        
+        $HotelSpecialOfferData->offer_title = $requestData['offer_title'];
+        $HotelSpecialOfferData->type = $requestData['type'];
+        $HotelSpecialOfferData->from_date =$requestData['from_date'];
+        $HotelSpecialOfferData->to_date =$requestData['to_date'];
+      
+       
+       
+        $HotelSpecialOfferData->phone_number =$requestData['phone_number'];
+        $HotelSpecialOfferData->contact_no =$requestData['contact_no'];
+
+        if (isset($requestData['description'])) {
+            $HotelSpecialOfferData->description =$requestData['description'];
+        }
+
+        // if (isset($requestData['special_offer'])) {
+        //     $HotelSpecialOfferData->special_offer =$requestData['special_offer'];
+        // }
+
+        
+        $HotelSpecialOfferData->save();
+
+        $response = response()->json(['status' => true, 'message' => 'Special Offer Data Updated Successfully!']);
+    } else {
+        $response = response()->json(['status' => false, 'message' => 'Special Offer Data Not Found!']);
+    }
+}
+
+  return $response;
+}
+
+
+
+
+public function delete_special_offer(Request $request)
+{
+    $response = array("status" => false, 'message' => '');
+
+    $rules = [
+        'special_offer_id' => 'required',
+        
+    ];
+
+    $requestData = $request->all();
+
+    $validator = Validator::make($requestData, $rules);
+
+    // $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        $response['message'] = $validator->messages();
+    } else {
+
+
+    
+
+    $special_offer_id = $requestData['special_offer_id'];
+
+
+    // $hotel_data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->find($hotel_id);
+    $special_offer_data = HotelSpecialOfferModel::find($special_offer_id);
+
+
+        if (!$special_offer_data) {
+            return response()->json(['message' => 'Special Offer not found'], 404);
+        }
+
+    
+
+        // Now, delete the hotel itself
+        $special_offer_data->delete();
+
+        return response()->json(['message' => 'Special Offer Deleted Successfully!']);
+
+    
+    }
+
+
+}
+
+
 public function HotelRegister(Request $request)
 {
  
@@ -181,16 +431,16 @@ public function HotelRegister(Request $request)
                 'contact_no' => 'required',
                 'name' => 'required',
                 'email' => 'required',
-                'contact_no' => 'required',
-                'offer_title' => 'required',
-                'type' => 'required',
-                'from_date' => 'required',
-                'to_date' => 'required',
+                // 'contact_no' => 'required',
+                // 'offer_title' => 'required',
+                // 'type' => 'required',
+                // 'from_date' => 'required',
+                // 'to_date' => 'required',
                 'home_page_latest_news' => 'required',
                 'hotel_latest_news' => 'required',
                 'special_offer_to_homepage' => 'required',
                 'home_page_spotlight' => 'required',
-                'reedem_link' => 'nullable', 
+                // 'reedem_link' => 'nullable', 
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -262,19 +512,19 @@ public function HotelRegister(Request $request)
                 ]);
                 $hotel_contacts->save();
 
-                $hotel_special_offer = new HotelSpecialOfferModel([
-                    'hotel_id' => $hotel->id,
-                    'offer_title' => $request->input('offer_title'),
-                    'type' => $request->input('type'),
-                    'phone_number' => $request->input('phone_number'),
-                    'contact_no' => $request->input('contact_no'),
-                    'description' => $request->input('description'),
-                    'from_date' => $request->input('from_date'),
-                    'to_date' => $request->input('to_date'),
-                    'description' => $request->input('description'),
-                    'reedem_link' => $request->input('reedem_link'),
-                ]);
-                $hotel_special_offer->save();
+                // $hotel_special_offer = new HotelSpecialOfferModel([
+                //     'hotel_id' => $hotel->id,
+                //     'offer_title' => $request->input('offer_title'),
+                //     'type' => $request->input('type'),
+                //     'phone_number' => $request->input('phone_number'),
+                //     'contact_no' => $request->input('contact_no'),
+                //     'description' => $request->input('description'),
+                //     'from_date' => $request->input('from_date'),
+                //     'to_date' => $request->input('to_date'),
+                //     'description' => $request->input('description'),
+                //     'reedem_link' => $request->input('reedem_link'),
+                // ]);
+                // $hotel_special_offer->save();
 
                 $hotel_page_addon = new HotelPageAddonModel([
                     'hotel_id' => $hotel->id,
@@ -343,8 +593,8 @@ public function HotelRegister(Request $request)
 
 public function AllHotels()
 {
-    $data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->get();
-
+    // $data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->get();
+    $data = HotelModel::with('hotel_contacts')->with('home_page_addon')->get();
 
     $data->transform(function ($item) {
         $name = json_decode($item['hotel_contacts']['name'], true);
@@ -396,8 +646,11 @@ public function AllHotels()
                 $hotel_id = $requestData['hotel_id'];
                 $data = [];
 
-            $hotel_data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->find($hotel_id);
-//  dd($hotel_data['hotel_contacts']['email']);
+            // $hotel_data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->find($hotel_id);
+            $hotel_data = HotelModel::with('hotel_contacts')->with('home_page_addon')->find($hotel_id);
+// dd($hotel_data);
+
+            //  dd($hotel_data['hotel_contacts']['email']);
 
 
             // $details = [];
@@ -513,15 +766,15 @@ public function UpdateHotels(Request $request)
                 'name' => 'required',
                 'email' => 'required',
                 'contact_no' => 'required',
-                'offer_title' => 'required',
-                'type' => 'required',
-                'from_date' => 'required',
-                'to_date' => 'required',
+                // 'offer_title' => 'required',
+                // 'type' => 'required',
+                // 'from_date' => 'required',
+                // 'to_date' => 'required',
                 'home_page_latest_news' => 'required',
                 'hotel_latest_news' => 'required',
                 'special_offer_to_homepage' => 'required',
                 'home_page_spotlight' => 'required',
-                'reedem_link' => 'nullable', 
+                 'reedem_link' => 'nullable', 
             ];
 
 
@@ -641,35 +894,35 @@ public function UpdateHotels(Request $request)
                 $HotelContactsModel->save();
 
 
-                $HotelSpecialOfferModel = HotelSpecialOfferModel::where('hotel_id', $hotel_id)->first();
+                // $HotelSpecialOfferModel = HotelSpecialOfferModel::where('hotel_id', $hotel_id)->first();
     
-                if (!$HotelSpecialOfferModel) {
-                    $HotelSpecialOfferModel = new HotelSpecialOfferModel();
-                    $HotelSpecialOfferModel->hotel_id = $hotel_id;
-                }
+                // if (!$HotelSpecialOfferModel) {
+                //     $HotelSpecialOfferModel = new HotelSpecialOfferModel();
+                //     $HotelSpecialOfferModel->hotel_id = $hotel_id;
+                // }
 
 
-                $HotelSpecialOfferModel->offer_title = $requestData['offer_title'];
-                $HotelSpecialOfferModel->type = $requestData['type'];
-                $HotelSpecialOfferModel->from_date =$requestData['from_date'];
-                $HotelSpecialOfferModel->to_date =$requestData['to_date'];
+                // $HotelSpecialOfferModel->offer_title = $requestData['offer_title'];
+                // $HotelSpecialOfferModel->type = $requestData['type'];
+                // $HotelSpecialOfferModel->from_date =$requestData['from_date'];
+                // $HotelSpecialOfferModel->to_date =$requestData['to_date'];
               
                
                
-                $HotelSpecialOfferModel->phone_number =$requestData['phone_number'];
-                $HotelSpecialOfferModel->contact_no =$requestData['contact_no'];
+                // $HotelSpecialOfferModel->phone_number =$requestData['phone_number'];
+                // $HotelSpecialOfferModel->contact_no =$requestData['contact_no'];
 
-                if (isset($requestData['description'])) {
-                    $HotelSpecialOfferModel->description =$requestData['description'];
-                }
+                // if (isset($requestData['description'])) {
+                //     $HotelSpecialOfferModel->description =$requestData['description'];
+                // }
 
-                if (isset($requestData['special_offer'])) {
-                    $HotelSpecialOfferModel->special_offer =$requestData['special_offer'];
-                }
+                // if (isset($requestData['special_offer'])) {
+                //     $HotelSpecialOfferModel->special_offer =$requestData['special_offer'];
+                // }
 
                 
 
-                $HotelSpecialOfferModel->save();
+                // $HotelSpecialOfferModel->save();
 
 
                 $HotelPageAddonModel = HotelPageAddonModel::where('hotel_id', $hotel_id)->first();
@@ -727,8 +980,8 @@ public function DeleteHotels(Request $request)
     $hotel_id = $requestData['hotel_id'];
 
 
-    $hotel_data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->find($hotel_id);
-
+    // $hotel_data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->find($hotel_id);
+    $hotel_data = HotelModel::with('hotel_contacts')->with('home_page_addon')->find($hotel_id);
 
 
         if (!$hotel_data) {
@@ -737,7 +990,7 @@ public function DeleteHotels(Request $request)
 
         $hotel_data->hotel_contacts()->delete();
         $hotel_data->home_page_addon()->delete();
-        $hotel_data->special_offer()->delete();
+        // $hotel_data->special_offer()->delete();
 
         // Now, delete the hotel itself
         $hotel_data->delete();
@@ -1438,7 +1691,8 @@ return $response;
 
 }
 
-public function Create_Review_Category(Request $request){
+public function Create_Review_Category(Request $request)
+{
     $response = array("status" => false, 'message' => '');
 
     $rules = [
@@ -1480,7 +1734,8 @@ public function Create_Review_Category(Request $request){
     return $response;
 }
 
-public function Create_Review_Topic(Request $request){
+public function Create_Review_Topic(Request $request)
+{
 
 $response = array("status" => false, 'message' => '');
 
@@ -1523,7 +1778,8 @@ return $response;
 }
 
 
-public function All_Review_Categories(){
+public function All_Review_Categories()
+{
 
 $data = Review_Category_Model::orderBy('id','DESC')->get();
 
@@ -1594,7 +1850,8 @@ if ($validator->fails()) {
 return $response;
 }
 
-public function Get_Reviews_By_Topics(Request $request){
+public function Get_Reviews_By_Topics(Request $request)
+{
 
 $response = array("status" => false, 'message' => '');
 
