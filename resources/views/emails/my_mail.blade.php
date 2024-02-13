@@ -146,6 +146,19 @@
 
     <p>Thanks,<br> For voted this news</p>
 
+    @elseif($data['key']==9)
+
+    <h2>User Details</h2>
+
+
+    <p>Hi {{ isset($data['name']) ? $data['name'] : 'User' }},</p>
+    <!-- <p>It seems you've forgotten your password. No worries! Click the button below to reset it:</p> -->
+    <p>Name: <b>{{ isset($data['name']) ? $data['name'] : 'N/A' }}</b></p>
+    <p>Email: <b>{{ isset($data['email']) ? $data['email'] : 'N/A' }}</b></p>
+
+    <p>Thanks,<br> For contact to us</p>
+    <p>We will contact you very soon</p>
+
 
 @endif
 
