@@ -1005,70 +1005,7 @@ public function DeleteHotels(Request $request)
 
 
 
-public function searchHotel(Request $request)
-{
-    try {
-        $requestData = $request->all(); // Use $request->all() instead of $request->json()->all()
 
-        $country = isset($requestData['country'])?$requestData['country']:''; // Fix typo in variable name
-
-        $hotel_name = isset($requestData['hotel_keyword'])?$requestData['hotel_keyword']:'';
-        
-        // dd($coutry_id, $hotel_name);
-
-        if (!empty($country) && empty($hotel_name)) {
-            $hotel_data = HotelModel::where('country', $country)->get();
-        } elseif (!empty($hotel_name) && empty($country)) {
-            $hotel_data = HotelModel::where('hotel_title', 'like', '%' . $hotel_name . '%')
-                ->orWhere('address', 'like', '%' . $hotel_name . '%')
-                ->get();
-        } elseif (!empty($country) && !empty($hotel_name)) {
-            $hotel_data = HotelModel::where('country', $country)
-                ->where(function ($query) use ($hotel_name) {
-                    $query->where('hotel_title', 'like', '%' . $hotel_name . '%')
-                        ->orWhere('address', 'like', '%' . $hotel_name . '%');
-                })
-                ->get();
-        } else {
-            $hotel_data = HotelModel::all();
-        }
-
-        
-
-        if ($hotel_data->isEmpty()) {
-            return response()->json(['message' => 'No data found']);
-        }
-
-        $hotel_data->transform(function ($item) {
-          
-            // Convert news images to full URLs
-            if (!empty($item->hotel_images)) {
-                $imagePaths = json_decode($item->hotel_images, true);
-                $fullImagePaths = [];
-    
-                foreach ($imagePaths as $image) {
-                    $fullImagePaths[] = asset("storage/app/" . $image);
-                }
-    
-                $item->hotel_images = $fullImagePaths;
-            } else {
-                $item->hotel_images = [];
-            }
-    
-          
-    
-            return $item;
-        });
-    
-        return response()->json(['hotel_data' => $hotel_data]);
-    
-    
-
-        
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
-}
 
 public function AddHotelAmeties(Request $request)
 {
@@ -1814,6 +1751,8 @@ $rules = [
 ];
 
 $requestData = $request->all();
+// dd($requestData);
+
 
 $validator = Validator::make($request->all(), $rules);
 
@@ -1825,11 +1764,13 @@ if ($validator->fails()) {
     $guest_reviews = [];
 
     foreach ($requestData['category_id'] as $key => $categoryId) {
+        // dd($key);
         $guest_reviews[] = [
             'category_id' => $categoryId,
             'rating' => $requestData['rating'][$key],
         ];
     }
+    // dd($guest_reviews);
 
     $guest_review->hotel_id = $requestData['hotel_id'];
     $guest_review->type = 1;
@@ -1850,62 +1791,232 @@ if ($validator->fails()) {
 return $response;
 }
 
+// public function Get_Reviews_By_Topics(Request $request)
+// {
+
+// $response = array("status" => false, 'message' => '');
+
+// $rules = [
+//    'hotel_id' => 'required',
+// ];
+
+// $requestData = $request->all();
+
+
+// $validator = Validator::make($request->all(), $rules);
+
+// if ($validator->fails()) {
+//    $response['message'] = $validator->messages();
+// } else {
+    
+//     if(!empty($requestData) && !empty($requestData['topic_title'])){
+//         $topicTitles = $requestData['topic_title'];
+    
+//         $data = Guest_Review_Model::
+//             where(function($query) use ($topicTitles) {
+//             foreach ($topicTitles as $title) {
+//                 $query->orWhere('description', 'LIKE', '%' . $title . '%');
+//             }
+//             $query->orWhere('hotel_id', '=', $requestData['hotel_id']);
+//         })
+//         ->orderBy('id', 'DESC')
+//         ->get();
+
+//         if($data->isEmpty()){
+//             $all_reviews_data = Guest_Review_Model::where('hotel_id',$requestData['hotel_id'])->orderBy('id','DESC')->get();
+//             if($all_reviews_data->isEmpty()){
+//                 $response = json_encode(['status'=>false,"message"=>"Reviews Not Found","data"=>[]]);
+//             }
+//             else{
+//                 $response = json_encode(['status'=>true,"message"=>"Reviews Found","data"=>$all_reviews_data]);
+//             }
+            
+//         }
+//         else{
+//             $response = json_encode(['status'=>true,"message"=>"Reviews Found","data"=>$data]);
+//         }
+//   }
+//   else{
+//       $all_reviews_data = Guest_Review_Model::where('hotel_id',$requestData['hotel_id'])->orderBy('id','DESC')->get();
+//         if($all_reviews_data->isEmpty()){
+//             $response = json_encode(['status'=>false,"message"=>"Reviews Not Found","data"=>[]]);
+//         }
+//         else{
+//             $response = json_encode(['status'=>true,"message"=>"Reviews Found","data"=>$all_reviews_data]);
+//         }
+//   }
+// }
+
+// return $response;
+// }
+public function searchHotel(Request $request)
+{
+    try {
+        $requestData = $request->all(); // Use $request->all() instead of $request->json()->all()
+
+        $country = isset($requestData['country'])?$requestData['country']:''; // Fix typo in variable name
+
+        $hotel_name = isset($requestData['hotel_keyword'])?$requestData['hotel_keyword']:'';
+        
+        // dd($coutry_id, $hotel_name);
+
+        if (!empty($country) && empty($hotel_name)) {
+            $hotel_data = HotelModel::where('country', $country)->get();
+        } elseif (!empty($hotel_name) && empty($country)) {
+            $hotel_data = HotelModel::where('hotel_title', 'like', '%' . $hotel_name . '%')
+                ->orWhere('address', 'like', '%' . $hotel_name . '%')
+                ->get();
+        } elseif (!empty($country) && !empty($hotel_name)) {
+            $hotel_data = HotelModel::where('country', $country)
+                ->where(function ($query) use ($hotel_name) {
+                    $query->where('hotel_title', 'like', '%' . $hotel_name . '%')
+                        ->orWhere('address', 'like', '%' . $hotel_name . '%');
+                })
+                ->get();
+        } else {
+            $hotel_data = HotelModel::all();
+        }
+
+        
+
+        if ($hotel_data->isEmpty()) {
+            return response()->json(['message' => 'No data found']);
+        }
+
+        $hotel_data->transform(function ($item) {
+          
+            // Convert news images to full URLs
+            if (!empty($item->hotel_images)) {
+                $imagePaths = json_decode($item->hotel_images, true);
+                $fullImagePaths = [];
+    
+                foreach ($imagePaths as $image) {
+                    $fullImagePaths[] = asset("storage/app/" . $image);
+                }
+    
+                $item->hotel_images = $fullImagePaths;
+            } else {
+                $item->hotel_images = [];
+            }
+    
+          
+    
+            return $item;
+        });
+    
+        return response()->json(['hotel_data' => $hotel_data]);
+    
+    
+
+        
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
 public function Get_Reviews_By_Topics(Request $request)
 {
+    try {
+        $response = array("status" => false, 'message' => '');
+        $rules = [
+            'hotel_id' => 'required',
+        ];
 
-$response = array("status" => false, 'message' => '');
+        $requestData = $request->all();
 
-$rules = [
-   'hotel_id' => 'required',
-];
+        $validator = Validator::make($request->all(), $rules);
 
-$requestData = $request->all();
+        if ($validator->fails()) {
+            $response['message'] = $validator->messages();
+        } else {
+            if (!empty($requestData['hotel_id']) && !empty($requestData['topic_title'])) {
+                $topicTitles = $requestData['topic_title'];
+                $hotel_id = $requestData['hotel_id'];
+                
 
-$validator = Validator::make($request->all(), $rules);
+                $data = Guest_Review_Model::where(function ($query) use ($topicTitles,$hotel_id) {
+                    foreach ($topicTitles as $title) {
+                        $query->orWhere('description', 'LIKE', '%' . $title . '%');
+                    }
+                    $query->Where('hotel_id', '=', $hotel_id);
+                })
+                
+                    ->orderBy('id', 'DESC')
+                    ->get();
+                    // Fetch the results
+                   
 
-if ($validator->fails()) {
-   $response['message'] = $validator->messages();
-} else {
-    
-    if(!empty($requestData) && !empty($requestData['topic_title'])){
-        $topicTitles = $requestData['topic_title'];
-    
-        $data = Guest_Review_Model::
-            where(function($query) use ($topicTitles) {
-            foreach ($topicTitles as $title) {
-                $query->orWhere('description', 'LIKE', '%' . $title . '%');
+                if ($data->isEmpty()) {
+                    $all_reviews_data = Guest_Review_Model::where('hotel_id', $requestData['hotel_id'])->orderBy('id', 'DESC')->get();
+                    if ($all_reviews_data->isEmpty()) {
+                        $response = json_encode(['status' => false, "message" => "Reviews Not Found", "data" => []]);
+                    } else {
+                        $response = json_encode(['status' => true, "message" => "Reviews Found", "data" => $all_reviews_data]);
+                    }
+                } else {
+                    $response = json_encode(['status' => true, "message" => "Reviews Found", "data" => $data]);
+                }
+            } else {
+                $all_reviews_data = Guest_Review_Model::where('hotel_id', $requestData['hotel_id'])->orderBy('id', 'DESC')->get();
+                if ($all_reviews_data->isEmpty()) {
+                    $response = json_encode(['status' => false, "message" => "Reviews Not Found", "data" => []]);
+                } else {
+                    $response = json_encode(['status' => true, "message" => "Reviews Found", "data" => $all_reviews_data]);
+                }
             }
-            $query->orWhere('hotel_id', '=', $requestData['hotel_id']);
-        })
-        ->orderBy('id', 'DESC')
-        ->get();
+        }
 
-        if($data->isEmpty()){
-            $all_reviews_data = Guest_Review_Model::where('hotel_id',$requestData['hotel_id'])->orderBy('id','DESC')->get();
-            if($all_reviews_data->isEmpty()){
-                $response = json_encode(['status'=>false,"message"=>"Reviews Not Found","data"=>[]]);
-            }
-            else{
-                $response = json_encode(['status'=>true,"message"=>"Reviews Found","data"=>$all_reviews_data]);
-            }
-            
-        }
-        else{
-            $response = json_encode(['status'=>true,"message"=>"Reviews Found","data"=>$data]);
-        }
-  }
-  else{
-      $all_reviews_data = Guest_Review_Model::where('hotel_id',$requestData['hotel_id'])->orderBy('id','DESC')->get();
-        if($all_reviews_data->isEmpty()){
-            $response = json_encode(['status'=>false,"message"=>"Reviews Not Found","data"=>[]]);
-        }
-        else{
-            $response = json_encode(['status'=>true,"message"=>"Reviews Found","data"=>$all_reviews_data]);
-        }
-  }
+        return $response;
+    } catch (Exception $e) {
+        // Handle exception
+        return json_encode(['status' => false, 'message' => 'An error occurred: ' . $e->getMessage()]);
+    }
 }
 
-return $response;
-}
+public function get_review_average(Request $request)
+    {
+        $response = array("status" => false, 'message' => '');
+        $requestData = $request->all();
+    
+        $validator = Validator::make($request->all(), [
+            'category_id' => 'required',
+        ]);
+    
+        if ($validator->fails()) {
+            $response['message'] = $validator->messages();
+        } else {
+            $category_id = $requestData['category_id'];
+            $category_data = Guest_Review_Model::whereJsonContains('category_rating', [['category_id' => $category_id]])->get();
+    
+            if ($category_data->isNotEmpty()) {
+                $totalRating = 0;
+                $ratingCount = 0;
+    
+                foreach ($category_data as $review) {
+                    $ratings = json_decode($review->category_rating, true); // decode JSON string to array
+                    foreach ($ratings as $rating) {
+                        if (isset($rating['rating'])) {
+                            $totalRating += (int)$rating['rating']; // sum up ratings
+                            $ratingCount++; // increment count of ratings
+                        }
+                    }
+                }
+    
+                if ($ratingCount > 0) {
+                    // dd($totalRating);
+                    // dd($ratingCount);
+                    $averageRating = $totalRating / $ratingCount; // calculate average rating
+                    $response['status'] = true;
+                    $response['average_rating'] = $averageRating;
+                    $response['message'] = 'Rating get successfully!';
+                } else {
+                    $response['message'] = 'No ratings found for the given category.';
+                }
+            } else {
+                $response['message'] = 'No reviews found for the given category.';
+            }
+        }
+    
+        return $response;
+    }
 
 }

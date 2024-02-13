@@ -27,6 +27,10 @@ use App\Http\Controllers\HotelCreateProfileController;
 use App\Http\Controllers\HotelFacilitiesController;
 use App\Http\Controllers\VotingDetailsController;
 use App\Http\Controllers\AdevertisingWithUsController;
+use App\Http\Controllers\ContactUsController;
+use App\Http\Controllers\WhatWeDoController;
+
+
 
 
 
@@ -161,6 +165,10 @@ Route::middleware(['Api_Auth'])->group(function () {
 
     Route::post('/edit_magazine_cover', [HomeInfoController::class, 'edit_magazine_cover']);
     Route::get('/all-review-topics', [HotelController::class, 'All_Review_Topics']);
+
+    Route::post('/add_contact_us', [ContactUsController::class, 'add_contact_us']);
+
+ 
     
     // Route::get('/about-us', [About_Us_Controller::class, 'index']);
     Route::post('/home', [HotelController::class, 'AllHomeData']);
@@ -359,6 +367,8 @@ Route::middleware(['user_login'])->group(function () {
    
     Route::post('/create-guest-review', [HotelController::class, 'Create_Guest_Review']);
     Route::post('/get-reviews-by-topics', [HotelController::class, 'Get_Reviews_By_Topics']);
+    Route::post('/get_review_average', [HotelController::class, 'get_review_average']);
+
 
 
 });
@@ -381,6 +391,13 @@ Route::post('/update_advertise_with_us', [AdevertisingWithUsController::class, '
 Route::post('/delete_advertise_with_us', [AdevertisingWithUsController::class, 'delete_advertise_with_us']);
 Route::post('/edit_advertise_with_us', [AdevertisingWithUsController::class, 'edit_advertise_with_us']);
 
+
+// what we do
+
+Route::post('/add_what_we_do', [WhatWeDoController::class, 'add_what_we_do']);
+Route::post('/update_advertise_with_us', [WhatWeDoController::class, 'update_advertise_with_us']);
+Route::post('/delete_advertise_with_us', [WhatWeDoController::class, 'delete_advertise_with_us']);
+Route::post('/edit_advertise_with_us', [WhatWeDoController::class, 'edit_advertise_with_us']);
 
 
 

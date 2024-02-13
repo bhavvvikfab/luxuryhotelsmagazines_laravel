@@ -174,7 +174,7 @@ else if ($hotel_type == 2)
 
 }
 
-else if ($hotel_type == 5) 
+else if ($hotel_type == 3) 
 {
 
 $rules = [

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ReviewModel;
 
+
+
 class ReviewController extends Controller
 {
     public function index($type=null)
@@ -88,4 +90,51 @@ class ReviewController extends Controller
     
         return $response;
     }
+
+    // public function get_review_average(Request $request)
+    // {
+    //     $response = array("status" => false, 'message' => '');
+    //     $requestData = $request->all();
+
+    //     $validator = Validator::make($request->all(), [
+    //         'category_id' => 'required',
+    //     ]);
+    
+    //     if ($validator->fails()) {
+    //         $response['message'] = $validator->messages();
+    //     }
+    //     else{
+
+    //         $category_id = $requestData['category_id'];
+    //         $category_data = Guest_Review_Model::whereJsonContains('category_rating', [['category_id' => $category_id]])
+    //             ->get();
+            
+    //           dd($category_data);
+    //         if($category_data){
+    //             foreach($category_data as  $key=>$val){
+             
+    //                 $cat_data = $val['category_rating'];
+    //                 // dd($cat_data);
+
+    //                 // dd(json_decode($cat_data));
+    //                 $rating = json_decode($cat_data);
+    //                  dd($rating);
+
+                  
+    //                 $dt = json_decode($rating['rating']);
+    //                 dd($dt);
+
+                    
+    //             }
+    //         }
+
+    //     }
+    //     return $response;
+
+
+    // }
+    
+
+ 
+
 }
