@@ -207,7 +207,7 @@ class PackagePriceController extends Controller
     public function AllPackagePrice()
     {
     
-        $data = PackagePriceModel::all();
+        $data = PackagePriceModel::orderBy('id','DESC')->get();
       
             return response()->json(['status' => true,'data'=>$data]);
     

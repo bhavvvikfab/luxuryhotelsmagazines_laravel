@@ -73,7 +73,7 @@ class VotedHotelController extends Controller
     public function AllVotedHotel()
 {
 
-    $data = VotedHotelModel::all();
+    $data = VotedHotelModel::orderBy('id','DESC')->get();
     $data->transform(function ($item) {
 
         $item->hotel_thumbnail = asset("storage/app/".$item->hotel_thumbnail);

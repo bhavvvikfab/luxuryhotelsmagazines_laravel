@@ -165,7 +165,8 @@ class EmployerController extends Controller
 {
 
     // $data = User::all();
-    $data = User::whereIn('type', [1, 3, 4])->get();
+    $data = User::whereIn('type', [1, 3, 4])->orderBy('id','DESC')->get();
+
 
     return response()->json(['status' => true,'data'=>$data]);
 

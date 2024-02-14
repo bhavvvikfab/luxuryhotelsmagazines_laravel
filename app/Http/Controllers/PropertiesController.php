@@ -89,7 +89,7 @@ class PropertiesController extends Controller
     public function AllHotelProperties()
 {
 
-    $data = PropertiesModel::all();
+    $data = PropertiesModel::orderBy('id','DESC')->get();
     $data->transform(function ($item) {
 
         $item->hotel_thumbnail = asset("storage/app/".$item->hotel_thumbnail);

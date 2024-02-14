@@ -593,37 +593,40 @@ public function HotelRegister(Request $request)
 
 public function AllHotels()
 {
-    // $data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->get();
-    $data = HotelModel::with('hotel_contacts')->with('home_page_addon')->get();
+    $data = HotelModel::with('hotel_contacts')->with('home_page_addon')
+                        ->orderBy('id', 'desc') // Sort by ID in descending order
+                        ->get();
 
     $data->transform(function ($item) {
-        $name = json_decode($item['hotel_contacts']['name'], true);
-        $email = json_decode($item['hotel_contacts']['email'], true);
-        $contact = json_decode($item['hotel_contacts']['contact'], true);
+        if (!empty($item['hotel_contacts'])) {
+            $name = json_decode($item['hotel_contacts']['name'], true);
+            $email = json_decode($item['hotel_contacts']['email'], true);
+            $contact = json_decode($item['hotel_contacts']['contact'], true);
 
-        // Convert news images to full URLs
-        if (!empty($item->hotel_images)) {
-            $imagePaths = json_decode($item->hotel_images, true);
-            $fullImagePaths = [];
+            if (!empty($item->hotel_images)) {
+                $imagePaths = json_decode($item->hotel_images, true);
+                $fullImagePaths = [];
 
-            foreach ($imagePaths as $image) {
-                $fullImagePaths[] = asset("storage/app/" . $image);
+                foreach ($imagePaths as $image) {
+                    $fullImagePaths[] = asset("storage/app/" . $image);
+                }
+
+                $item->hotel_images = $fullImagePaths;
+            } else {
+                $item->hotel_images = [];
             }
 
-            $item->hotel_images = $fullImagePaths;
-        } else {
-            $item->hotel_images = [];
+            $item->hotel_contacts->name = $name;
+            $item->hotel_contacts->email = $email;
+            $item->hotel_contacts->contact_no = $contact;
         }
-
-        $item->hotel_contacts->name = $name;
-        $item->hotel_contacts->email = $email;
-        $item->hotel_contacts->contact_no = $contact; // Fix variable name here
 
         return $item;
     });
 
     return response()->json(['status' => true, 'data' => $data]);
 }
+
 
 
     public function EditHotels(Request $request)
@@ -649,6 +652,100 @@ public function AllHotels()
             // $hotel_data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->find($hotel_id);
             $hotel_data = HotelModel::with('hotel_contacts')->with('home_page_addon')->find($hotel_id);
 // dd($hotel_data);
+
+            //  dd($hotel_data['hotel_contacts']['email']);
+
+
+            // $details = [];
+            // foreach ($home_info_detail as $detail) {
+            //     // dd($detail);
+            //     $details[] = [
+            //         'image' => asset('storage/app/'.$detail['image']),
+            //          'link' => $detail['link'],
+            //     ];
+            // }
+            
+            // $home_info['details'] = $details;
+            
+
+
+            if ($hotel_data) {
+                
+
+                $hotel_images_data = json_decode($hotel_data['hotel_images'], true);
+                // dd($hotel_images_data);
+                $hotel_contacts_name= json_decode($hotel_data['hotel_contacts']['name'], true);
+            
+
+                $hotel_contacts_email= json_decode($hotel_data['hotel_contacts']['email'], true);
+                $hotel_contacts_contact_no= json_decode($hotel_data['hotel_contacts']['contact_no'], true);
+
+                // $hotel_images_data = array_column($hotel_images_data,"hotel_images");
+                $details = [];
+                foreach ($hotel_images_data as $detail) {
+                    $details[] = asset('storage/app/'.$detail);
+                }
+                $hotel_data['hotel_images'] = $details;
+                $hotel_data['hotel_contacts']['name'] = $hotel_contacts_name;
+                $hotel_data['hotel_contacts']['email'] = $hotel_contacts_email;
+                $hotel_data['hotel_contacts']['contact_no'] = $hotel_contacts_contact_no;
+                // dd($hotel_data);
+         
+                
+
+                // $details = [];
+                // foreach ($hotel_images_data as $detail) {
+                  
+                //     $details[] = [
+                //         'hotel_images' => asset('storage/app/'.$detail['hotel_images']),
+                //         //  'country' => $detail['country'],
+                //         //  'hotel_title' => $detail['hotel_title'],
+                //         //  'address'=> $detail['address'],
+                //         //  'about_hotel' => $detail['about_hotel'],
+                //         //  'amities' => $detail['amities'],
+                //         //  'rooms_and_suites'=> $detail['rooms_and_suites'],
+                //         //  'restaurent_bars' => $detail['restaurent_bars'],
+                //         //  'spa_wellness' => $detail['spa_wellness'],
+                //         //  'other_facilities'=> $detail['other_facilities'],
+                //     ];
+                // }
+                
+                // $hotel_data['details'] = $hotel_images_data;
+
+                $data = $hotel_data;
+                $response = response()->json(['status' => true, 'message' => 'Hotel Data Found', 'data' => $data]);
+            } else {
+                $response = response()->json(['status' => false, 'message' => 'Hotel Data Not Found','data'=>$data]);
+            }
+        }
+    
+          return $response;
+    }
+
+    public function user_hotel(Request $request)
+        {
+
+            $response = array("status" => false, 'message' => '');
+
+            $rules = [
+                'user_id' => 'required',
+                
+            ];
+
+            $requestData = $request->all();
+
+            $validator = Validator::make($requestData, $rules);
+
+            if ($validator->fails()) {
+                $response['message'] = $validator->messages();
+            } else {
+                $user_id = $requestData['user_id'];
+                $data = [];
+
+            // $hotel_data = HotelModel::with('hotel_contacts')->with('home_page_addon')->with('special_offer')->find($hotel_id);
+            $hotel_data = HotelModel::with('hotel_contacts')->with('home_page_addon')->where('user_id', $user_id)->first();
+
+//  dd($hotel_data);
 
             //  dd($hotel_data['hotel_contacts']['email']);
 
@@ -1148,7 +1245,7 @@ public function DeleteHotelAmeties(Request $request)
 public function AllHotelAmeties()
 {
 
-    $data = HotelAmetiesModel::all();
+    $data = HotelAmetiesModel::orderBy('sort_order','DESC')->get();
     $data->transform(function ($item) {
         $item->fullImagePath = asset("storage/app/".$item->image);
         return $item;

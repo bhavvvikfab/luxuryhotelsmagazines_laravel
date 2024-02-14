@@ -90,7 +90,7 @@ class BannerController extends Controller
 
     public function AllBanner()
     {
-        $data = BannerModel::all();
+        $data = BannerModel::orderBy('id','DESC')->get();
     
         $data->transform(function ($item) {
 

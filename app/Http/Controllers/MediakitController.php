@@ -64,7 +64,7 @@ class MediakitController extends Controller
 
     public function AllMediaKit()
         {
-                    $data = MediaKitModel::all();
+                    $data = MediaKitModel::orderBy('id','DESC')->get();
                   
 
              

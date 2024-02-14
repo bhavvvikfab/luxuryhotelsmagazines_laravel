@@ -96,9 +96,9 @@ class HotelMagazinesController extends Controller
 
     public function AllHotelMagazines()
     {
-        $data = MagazinesModel::all();
-
-
+        $data = MagazinesModel::orderBy('id','DESC')->get();
+    
+        
  
         $data->transform(function ($item) {
 

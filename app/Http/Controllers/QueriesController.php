@@ -78,7 +78,7 @@ class QueriesController extends Controller
     // }
     public function AllQuery()
 {
-    $data = QueriesModel::all();
+    $data = QueriesModel::orderBy('id','DESC')->get();
 
     foreach ($data as $record) {
         $record->reply_query_msg_status = !empty($record->reply_query_msg);

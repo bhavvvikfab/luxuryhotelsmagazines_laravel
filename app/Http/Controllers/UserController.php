@@ -374,7 +374,7 @@ class UserController extends Controller
 public function AllUser()
 {
 
-    $data = User::all();
+    $data = User::orderBy('id','DESC')->get();
    
         return response()->json(['status' => true,'data'=>$data]);
 

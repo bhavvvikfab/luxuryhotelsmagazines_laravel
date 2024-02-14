@@ -8,7 +8,7 @@ use App\Models\News;
 use App\Models\NewsCategoryModel;
 
 use App\Models\User;
-use App\Models\ContactUsmodel;
+use App\Models\ContactUsModel;
 use App\Models\HotelSpecialOfferModel;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helpers;
