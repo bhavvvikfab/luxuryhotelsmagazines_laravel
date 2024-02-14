@@ -78,7 +78,7 @@ class TeamController extends Controller
 
     public function AllTeam()
     {
-        $data = TeamModel::all();
+        $data = TeamModel::orderBy('id','DESC')->get();
         // dd($data);
 
 

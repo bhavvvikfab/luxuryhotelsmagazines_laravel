@@ -52,7 +52,7 @@ public function __construct($data)
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'My Custom Mail',
+            subject: 'Luxuryhotelsmagazines OTP',
         );
     }
 

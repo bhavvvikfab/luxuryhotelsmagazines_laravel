@@ -156,7 +156,7 @@ public function DeleteHotelFacilities(Request $request)
 public function AllHotelFacilities()
 {
 
-    $data = HotelFacilitiesModel::all();
+    $data = HotelFacilitiesModel::orderBy('id','DESC')->get();
     $data->transform(function ($item) {
         $item->fullImagePath = asset("storage/app/".$item->image);
         return $item;

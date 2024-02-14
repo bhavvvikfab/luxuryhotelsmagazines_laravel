@@ -78,7 +78,7 @@ class DistibutionController extends Controller
 
             public function AllDistributor()
             {
-                $data = DistributionModel::all();
+                $data = DistributionModel::orderBy('id','DESC')->get();
             
                 $data->transform(function ($item) {
         
@@ -336,7 +336,7 @@ public function updateDistributorData(Request $request)
 
 public function AllDistributorData()
 {
-    $data = DistributionDataModel::all();
+    $data = DistributionDataModel::orderBy('id','DESC')->get();
 
         return response()->json(['status' => true,'data'=>$data]);
 
@@ -447,7 +447,7 @@ public function EditDistributorData(Request $request)
         
             public function AllDistributorDetail()
             {
-                $data = DistributionDetailsModel::all();
+                $data = DistributionDetailsModel::orderBy('id','DESC')->get();
             
                 $data->transform(function ($item) {
                

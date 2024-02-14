@@ -65,7 +65,7 @@ class SubscribersController extends Controller
 {
 
     // $data = User::all();
-    $data = SubscribersModel::all();
+    $data = SubscribersModel::orderBy('id','DESC')->get();
 
     return response()->json(['status' => true,'data'=>$data]);
 

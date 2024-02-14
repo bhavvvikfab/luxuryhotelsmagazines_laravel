@@ -144,7 +144,7 @@ class VotingDetailsController extends Controller
 
 public function all_voting_details(Request $request)
 {
-    $data = VotingDetailsModel::with('hotels')->get();
+    $data = VotingDetailsModel::with('hotels')->orderBy('id','DESC')->get();
 
     $data->transform(function ($item) {
         

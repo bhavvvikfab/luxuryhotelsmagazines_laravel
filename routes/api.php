@@ -94,6 +94,7 @@ Route::middleware(['Api_Auth'])->group(function () {
 
     Route::get('/all-hotels', [HotelController::class, 'AllHotels']);
     Route::post('/edit-hotels', [HotelController::class, 'EditHotels']);
+    Route::post('/user_hotel', [HotelController::class, 'user_hotel']);
 
     Route::get('/all_special_offer', [HotelController::class, 'all_special_offer']);
     Route::post('/edit_special_offer', [HotelController::class, 'edit_special_offer']);
