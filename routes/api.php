@@ -395,9 +395,9 @@ Route::post('/edit_advertise_with_us', [AdevertisingWithUsController::class, 'ed
 // what we do
 
 Route::post('/add_what_we_do', [WhatWeDoController::class, 'add_what_we_do']);
-Route::post('/update_advertise_with_us', [WhatWeDoController::class, 'update_advertise_with_us']);
-Route::post('/delete_advertise_with_us', [WhatWeDoController::class, 'delete_advertise_with_us']);
-Route::post('/edit_advertise_with_us', [WhatWeDoController::class, 'edit_advertise_with_us']);
+Route::post('/update_what_we_do', [WhatWeDoController::class, 'update_what_we_do']);
+Route::post('/delete_what_we_do', [WhatWeDoController::class, 'delete_what_we_do']);
+Route::post('/edit_what_we_do', [WhatWeDoController::class, 'edit_what_we_do']);
 
 
 
