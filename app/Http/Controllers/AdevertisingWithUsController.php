@@ -198,7 +198,7 @@ if ($validator->fails()) {
 } else {
 
 
-    $home_info = HomeInfoModel::where('type', $request->input('type'))->first();
+    $home_info = AdevertiseWithUsModel::where('type', $request->input('type'))->first();
     // dd($home_info);
     if ($home_info) {
 
