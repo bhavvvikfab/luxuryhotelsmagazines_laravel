@@ -46,15 +46,11 @@
   <div class="container" style="border:1px solid grey; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
 
   @if($data['key']==1)
-    <h2>Login</h2>
+    <h2>Verification code for Login</h2>
 
-
-    <p>Hi {{ isset($data['name']) ? $data['name'] : 'User' }},</p>
-<!-- <p>It seems you've forgotten your password. No worries! Click the button below to reset it:</p> -->
-<p>Your OTP is: <b>{{ isset($data['token']) ? $data['token'] : 'N/A' }}</b></p>
-
-<!-- <p>If you didn't request a password reset, you can ignore this email.</p> -->
-<p>Thanks,<br>Your Application Team</p>
+<p>Please verify your login details, enter this verification code when promoted : <b>{{ isset($data['token']) ? $data['token'] : 'N/A' }}</b></p>
+   
+<p>Sincerely,<br>Luxury Hotel Magazines Support Team</p>
 @elseif($data['key']==2)
 
 <h2>Forgot Password</h2>
