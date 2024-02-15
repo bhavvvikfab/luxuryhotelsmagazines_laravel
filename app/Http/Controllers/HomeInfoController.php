@@ -820,86 +820,148 @@ else if ($hotel_type == 4)
                     }
 
 }
-else if ($hotel_type == 5) 
-{
+// else if ($hotel_type == 5) 
+// {
 
-$rules = [
-    // 'title' => 'required',
-    // 'image' => 'required|image', // Add appropriate validation for image uploads
-    // 'country' => 'required',
-    // 'you_tube_link' => 'required',
-    // 'content' => 'required',
-    'background_title' => 'required',
-    'background_sub_title' => 'required',
-    'background_image' => 'required',
-    'sections' => 'required',
-];
+// $rules = [
+//     // 'title' => 'required',
+//     // 'image' => 'required|image', // Add appropriate validation for image uploads
+//     // 'country' => 'required',
+//     // 'you_tube_link' => 'required',
+//     // 'content' => 'required',
+//     'background_title' => 'required',
+//     // 'background_sub_title' => 'required',
+//     'background_image' => 'required',
+//     'sections' => 'required',
+// ];
 
-$requestData = $request->all();
-$validator = Validator::make($requestData, $rules);
+// $requestData = $request->all();
+// $validator = Validator::make($requestData, $rules);
 
-if ($validator->fails()) {
-    $response['status'] = false;
-    $response['message'] = $validator->messages();
-} else {
+// if ($validator->fails()) {
+//     $response['status'] = false;
+//     $response['message'] = $validator->messages();
+// } else {
 
 
-    $home_info = HomeInfoModel::where('type', $request->input('type'))->first();
-    // dd($home_info);
-    if ($home_info) {
+//     $home_info = HomeInfoModel::where('type', $request->input('type'))->first();
+//     // dd($home_info);
+//     if ($home_info) {
 
-        $details = json_decode($home_info->details);
-        //   dd($details);
-        $detail_dt = $details->sections;
-        $sections = $request->sections;
-        $digitalCampaignDetails = [];
-        if(count($sections) >= count($detail_dt)){
-            foreach($sections as $key=>$val){
-                // dd($val);
-                if (!isset($val['image'])) {
-                    if(isset($detail_dt[$key]->image)){
-                        $filename = $detail_dt[$key]->image;
+//         $details = json_decode($home_info->details);
+//         //   dd($details);
+//         $detail_dt = $details->sections;
+//         $sections = $request->sections;
+//         $digitalCampaignDetails = [];
+//         if(count($sections) >= count($detail_dt)){
+//             foreach($sections as $key=>$val){
+//                 // dd($val);
+//                 if (!isset($val['image'])) {
+//                     if(isset($detail_dt[$key]->image)){
+//                         $filename = $detail_dt[$key]->image;
+//                     }
+//                 }else{
+//                     $image = $request->file('sections')[$key]['image'];
+//                     $filename = $image->store('uploads');
+//                 }
+
+
+//                 $digitalCampaignDetails[] = [
+//                     "title" => $sections[$key]['title'],
+//                     "image" => isset($filename) && !empty($filename)?$filename:'',
+//                     "country" => $sections[$key]['country'],
+//                     "you_tube_link" => $sections[$key]['you_tube_link'],
+//                     "content" => $sections[$key]['content'],
+//                 ];
+//             }
+//         }
+//         // dd($digitalCampaignDetails);
+
+//         $home_info->type = $requestData['type'];
+
+//         $detailtmp['background_title'] =  $requestData['background_title'];
+//         $detailtmp['background_sub_title'] = $requestData['background_sub_title'];
+//         if ($request->hasFile('background_image') && $request->file('background_image')->isValid()) {
+//             $detailtmp['background_image'] = $request->file('background_image')->store('uploads');
+//         }
+//         $detailtmp['sections'] = array_values($digitalCampaignDetails);
+//         $home_info->details = json_encode($detailtmp);
+//     }
+
+//     $home_info->save();
+
+//     if ($home_info) {
+//             $response = response()->json(['status' => true, 'message' => 'Home Info Updated Successfully']);
+//         } else {
+//             $response = response()->json(['status' => false, 'message' => 'Failed to add home info!']);
+//         }
+                
+           
+//         }
+
+//     }
+else if ($hotel_type == 5) {
+
+    $rules = [
+        'background_title' => 'required',
+        'background_image' => 'required',
+        'sections' => 'required',
+    ];
+
+    $requestData = $request->all();
+    $validator = Validator::make($requestData, $rules);
+
+    if ($validator->fails()) {
+        $response['status'] = false;
+        $response['message'] = $validator->messages();
+    } else {
+        $home_info = HomeInfoModel::where('type', $request->input('type'))->first();
+        if ($home_info) {
+            $details = json_decode($home_info->details);
+            $detail_dt = $details->sections;
+            $sections = $request->sections;
+            $digitalCampaignDetails = [];
+            if (count($sections) >= count($detail_dt)) {
+                foreach ($sections as $key => $val) {
+                    if (!isset($val['image'])) {
+                        if (isset($detail_dt[$key]->image)) {
+                            $filename = $detail_dt[$key]->image;
+                        }
+                    } else {
+                        $image = $request->file('sections')[$key]['image'];
+                        $filename = $image->store('uploads');
                     }
-                }else{
-                    $image = $request->file('sections')[$key]['image'];
-                    $filename = $image->store('uploads');
+
+                    $digitalCampaignDetails[] = [
+                        "title" => isset($val['title']) ? $val['title'] : '',
+                        "image" => isset($filename) && !empty($filename) ? $filename : '',
+                        "country" => isset($val['country']) ? $val['country'] : '',
+                        "you_tube_link" => isset($val['you_tube_link']) ? $val['you_tube_link'] : '',
+                        "content" => isset($val['content']) ? $val['content'] : '',
+                    ];
                 }
-
-
-                $digitalCampaignDetails[] = [
-                    "title" => $sections[$key]['title'],
-                    "image" => isset($filename) && !empty($filename)?$filename:'',
-                    "country" => $sections[$key]['country'],
-                    "you_tube_link" => $sections[$key]['you_tube_link'],
-                    "content" => $sections[$key]['content'],
-                ];
             }
+
+            $home_info->type = $requestData['type'];
+
+            $detailtmp['background_title'] =  $requestData['background_title'];
+            if ($request->hasFile('background_image') && $request->file('background_image')->isValid()) {
+                $detailtmp['background_image'] = $request->file('background_image')->store('uploads');
+            }
+            $detailtmp['sections'] = array_values($digitalCampaignDetails);
+            $home_info->details = json_encode($detailtmp);
         }
-        // dd($digitalCampaignDetails);
 
-        $home_info->type = $requestData['type'];
+        $home_info->save();
 
-        $detailtmp['background_title'] =  $requestData['background_title'];
-        $detailtmp['background_sub_title'] = $requestData['background_sub_title'];
-        if ($request->hasFile('background_image') && $request->file('background_image')->isValid()) {
-            $detailtmp['background_image'] = $request->file('background_image')->store('uploads');
-        }
-        $detailtmp['sections'] = array_values($digitalCampaignDetails);
-        $home_info->details = json_encode($detailtmp);
-    }
-
-    $home_info->save();
-
-    if ($home_info) {
+        if ($home_info) {
             $response = response()->json(['status' => true, 'message' => 'Home Info Updated Successfully']);
         } else {
             $response = response()->json(['status' => false, 'message' => 'Failed to add home info!']);
         }
-                
-           
-        }
-
     }
+}
+
 
 
 else if ($hotel_type == 6) 
@@ -1257,39 +1319,82 @@ public function edit_home_info(Request $request)
             }
           
 
+            // if ($home_info['type'] == 5) {
+            //     $home_info_detail = json_decode($home_info['details'], true);
+            
+            //     // Create an array to store details
+            //     $details = [];
+            
+            //     // Extract background_image from $home_info_detail
+            //     $background_image = asset("storage/app/" . $home_info_detail['background_image']);
+            //     $background_title = $home_info_detail['background_title'];
+            //     $background_sub_title = $home_info_detail['background_sub_title'];
+            
+            //     // Loop through sections and populate $details array
+            //     foreach ($home_info_detail['sections'] as $detail) {
+            //         $details[] = [
+            //             'image' => asset('storage/app/' . $detail['image']),
+            //             'title' => $detail['title'],
+            //             'country' => $detail['country'],
+            //             'you_tube_link' => $detail['you_tube_link'],
+            //             'content' => $detail['content'],
+            //         ];
+            //     }
+            
+            //     // Add background_image to $details array
+            //     $home_info_detail['background_image'] = $background_image;
+            //     $home_info_detail['background_title'] = $background_title;
+            //     $home_info_detail['background_sub_title'] = $background_sub_title;
+            //     $home_info_detail['sections'] = array_values($details);
+            
+            //     // Update $home_info['details'] with the modified $details array
+            //     $home_info['details'] = $home_info_detail;
+            // }
+            
             if ($home_info['type'] == 5) {
                 $home_info_detail = json_decode($home_info['details'], true);
-            
+                
                 // Create an array to store details
                 $details = [];
-            
+                
                 // Extract background_image from $home_info_detail
                 $background_image = asset("storage/app/" . $home_info_detail['background_image']);
                 $background_title = $home_info_detail['background_title'];
-                $background_sub_title = $home_info_detail['background_sub_title'];
-            
+                $background_sub_title = isset($home_info_detail['background_sub_title']) ? $home_info_detail['background_sub_title'] : null;
+                
                 // Loop through sections and populate $details array
                 foreach ($home_info_detail['sections'] as $detail) {
-                    $details[] = [
-                        'image' => asset('storage/app/' . $detail['image']),
-                        'title' => $detail['title'],
-                        'country' => $detail['country'],
-                        'you_tube_link' => $detail['you_tube_link'],
-                        'content' => $detail['content'],
-                    ];
+                    $detail_entry = [];
+                    if (isset($detail['image'])) {
+                        $detail_entry['image'] = asset('storage/app/' . $detail['image']);
+                    }
+                    if (isset($detail['title'])) {
+                        $detail_entry['title'] = $detail['title'];
+                    }
+                    if (isset($detail['country'])) {
+                        $detail_entry['country'] = $detail['country'];
+                    }
+                    if (isset($detail['you_tube_link'])) {
+                        $detail_entry['you_tube_link'] = $detail['you_tube_link'];
+                    }
+                    if (isset($detail['content'])) {
+                        $detail_entry['content'] = $detail['content'];
+                    }
+                    $details[] = $detail_entry;
                 }
-            
+                
                 // Add background_image to $details array
                 $home_info_detail['background_image'] = $background_image;
                 $home_info_detail['background_title'] = $background_title;
-                $home_info_detail['background_sub_title'] = $background_sub_title;
+                if ($background_sub_title !== null) {
+                    $home_info_detail['background_sub_title'] = $background_sub_title;
+                }
                 $home_info_detail['sections'] = array_values($details);
-            
+                
                 // Update $home_info['details'] with the modified $details array
                 $home_info['details'] = $home_info_detail;
             }
             
-
 
             if($home_info['type']==6){
             $details = [];
