@@ -945,6 +945,9 @@ else if ($hotel_type == 5) {
             $home_info->type = $requestData['type'];
 
             $detailtmp['background_title'] =  $requestData['background_title'];
+            if ($request->has('background_sub_title')) {
+                $detailtmp['background_sub_title'] = $requestData['background_sub_title'];
+            }
             if ($request->hasFile('background_image') && $request->file('background_image')->isValid()) {
                 $detailtmp['background_image'] = $request->file('background_image')->store('uploads');
             }

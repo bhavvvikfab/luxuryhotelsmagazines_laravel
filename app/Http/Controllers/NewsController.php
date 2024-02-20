@@ -16,15 +16,16 @@ use App\Helpers\Helpers;
 class NewsController extends Controller
 {
 
-    public function index($type=null)
+    // public function index($type=null)
+    public function index()
     {
-        $data = News::with('special_offer');
-        if(isset($type) && !empty($type)){
-            $data->whereHas('special_offer', function ($query) use ($type) {
-                $query->where('type', $type);
-            });
-        }
-        $result = $data->get();
+        // $data = News::with('special_offer');
+        // if(isset($type) && !empty($type)){
+        //     $data->whereHas('special_offer', function ($query) use ($type) {
+        //         $query->where('type', $type);
+        //     });
+        // }
+        $result = News::all();
 
         if (empty($result)) {
             return response()->json(["status" => false, "message" => "News Data Not Found", "data" => []]);
@@ -193,6 +194,10 @@ class NewsController extends Controller
 
     public function all_news_category()
     {
+        $data = NewsCategoryModel::all();
+
+    return response()->json(['status' => true, 'data' => $data]);
+
 
     }
 
@@ -228,7 +233,7 @@ class NewsController extends Controller
             $rules = [
                 'news_type' => 'required',
                 'bussiness_name' => 'required',
-                'country' => 'required',
+                // 'country' => 'required',
                 'full_name' => 'required',
                 'email_address' => 'required|email',
                 'news_title' => 'required',
@@ -267,7 +272,7 @@ class NewsController extends Controller
                 // $news->user_id = $requestData['user_id'];
                 $news->news_type = $requestData['news_type'];
                 $news->bussiness_name = $requestData['bussiness_name'];
-                $news->country = $requestData['country'];
+                // $news->country = $requestData['country'];
                 $news->full_name = $requestData['full_name'];
                 $news->email_address = $requestData['email_address'];
                 $news->news_title = $requestData['news_title'];
@@ -319,24 +324,25 @@ class NewsController extends Controller
                 // $news->special_offers = $requestData['special_offers'];
                 $news->save();
 
-                $lastInsertId = $news->id;
-                $HotelSpecialOfferModel = new HotelSpecialOfferModel();
+                // $lastInsertId = $news->id;
+                // $HotelSpecialOfferModel = new HotelSpecialOfferModel();
 				
-                $HotelSpecialOfferModel->news_id = $lastInsertId;
-                $HotelSpecialOfferModel->type = 2;
-                $HotelSpecialOfferModel->offer_title = $requestData['offer_title'];
-                $HotelSpecialOfferModel->phone_number = $requestData['phone_number'];
-                $HotelSpecialOfferModel->contact_no = $requestData['contact_no'];
-                $HotelSpecialOfferModel->from_date = $requestData['from_date'];
-                $HotelSpecialOfferModel->to_date = $requestData['to_date'];
-                $HotelSpecialOfferModel->description = $requestData['description'];
-                $HotelSpecialOfferModel->special_offer = $requestData['special_offers'];
-                $HotelSpecialOfferModel->reedem_link = $requestData['redeem_link'];
+                // $HotelSpecialOfferModel->news_id = $lastInsertId;
+                // $HotelSpecialOfferModel->type = 2;
+                // $HotelSpecialOfferModel->offer_title = $requestData['offer_title'];
+                // $HotelSpecialOfferModel->phone_number = $requestData['phone_number'];
+                // $HotelSpecialOfferModel->contact_no = $requestData['contact_no'];
+                // $HotelSpecialOfferModel->from_date = $requestData['from_date'];
+                // $HotelSpecialOfferModel->to_date = $requestData['to_date'];
+                // $HotelSpecialOfferModel->description = $requestData['description'];
+                // $HotelSpecialOfferModel->special_offer = $requestData['special_offers'];
+                // $HotelSpecialOfferModel->reedem_link = $requestData['redeem_link'];
                
 
-                $HotelSpecialOfferModel->save();
+                // $HotelSpecialOfferModel->save();
 				
-                if ($news && $HotelSpecialOfferModel) {
+                if ($news) {
+                    // if ($news && $HotelSpecialOfferModel) {
                     $response =  response()->json(['status' => true,'message' => 'News Created Successfully']);
                 } else {
                     $response = response()->json(['status' => false,'message' => 'Failed to create news']);
@@ -365,7 +371,8 @@ class NewsController extends Controller
                 $newsId = $requestData['news_id'];
 
                 
-                $newsData = News::with('special_offer')->find($newsId);
+                // $newsData = News::with('special_offer')->find($newsId);
+                $newsData = News::find($newsId);
                 if ($newsData) {
                     // $newsData['news_image'] = asset('storage/app/'.$newsData['news_image']);
                     // $data = $newsData;
@@ -418,7 +425,7 @@ class NewsController extends Controller
                 'news_type' => 'required',
                 'news_id' => 'required',
                 'bussiness_name' => 'required',
-                'country' => 'required',
+                // 'country' => 'required',
                 'full_name' => 'required',
                 'email_address' => 'required|email',
                 'news_title' => 'required',
@@ -426,18 +433,18 @@ class NewsController extends Controller
                 'news_images' => 'required',
                 //'status' => 'required',
                 'catagory' => 'required',
-                'editor_choice' => 'required',
+                 'editor_choice' => 'required',
                 'news_views' => 'required',
                 'news_likes' => 'required',
-                'youtube_link' => 'nullable',
-                'offer_title' => 'required',
-                'phone_number' => 'required',
-                'contact_no' => 'required',
-                'from_date' => 'required',
-                'to_date' => 'required',
-                'description' => 'required',
-                'special_offers' => 'required',
-                'redeem_link' => 'required',
+                // 'youtube_link' => 'nullable',
+                // 'offer_title' => 'required',
+                // 'phone_number' => 'required',
+                // 'contact_no' => 'required',
+                // 'from_date' => 'required',
+                // 'to_date' => 'required',
+                // 'description' => 'required',
+                // 'special_offers' => 'required',
+                // 'redeem_link' => 'required',
                
             ];
 
@@ -511,24 +518,24 @@ class NewsController extends Controller
                     $news->save();
         
                    
-                    $HotelSpecialOfferModel = HotelSpecialOfferModel::where('news_id', $newsId)->first();
+                    // $HotelSpecialOfferModel = HotelSpecialOfferModel::where('news_id', $newsId)->first();
         
-                    if (!$HotelSpecialOfferModel) {
-                        $HotelSpecialOfferModel = new HotelSpecialOfferModel();
-                        $HotelSpecialOfferModel->news_id = $newsId;
-                    }
+                    // if (!$HotelSpecialOfferModel) {
+                    //     $HotelSpecialOfferModel = new HotelSpecialOfferModel();
+                    //     $HotelSpecialOfferModel->news_id = $newsId;
+                    // }
         
-                    $HotelSpecialOfferModel->type = 2;
-                    $HotelSpecialOfferModel->offer_title = $requestData['offer_title'];
-                    $HotelSpecialOfferModel->phone_number = $requestData['phone_number'];
-                    $HotelSpecialOfferModel->contact_no = $requestData['contact_no'];
-                    $HotelSpecialOfferModel->from_date = $requestData['from_date'];
-                    $HotelSpecialOfferModel->to_date = $requestData['to_date'];
-                    $HotelSpecialOfferModel->description = $requestData['description'];
-                    $HotelSpecialOfferModel->special_offer = $requestData['special_offers'];
-                    $HotelSpecialOfferModel->reedem_link = $requestData['redeem_link'];
+                    // $HotelSpecialOfferModel->type = 2;
+                    // $HotelSpecialOfferModel->offer_title = $requestData['offer_title'];
+                    // $HotelSpecialOfferModel->phone_number = $requestData['phone_number'];
+                    // $HotelSpecialOfferModel->contact_no = $requestData['contact_no'];
+                    // $HotelSpecialOfferModel->from_date = $requestData['from_date'];
+                    // $HotelSpecialOfferModel->to_date = $requestData['to_date'];
+                    // $HotelSpecialOfferModel->description = $requestData['description'];
+                    // $HotelSpecialOfferModel->special_offer = $requestData['special_offers'];
+                    // $HotelSpecialOfferModel->reedem_link = $requestData['redeem_link'];
                     
-                    $HotelSpecialOfferModel->save();
+                    // $HotelSpecialOfferModel->save();
         
                     $response = response()->json(['status' => true, 'message' => 'News Updated Successfully']);
                 } else {
@@ -591,13 +598,14 @@ class NewsController extends Controller
          $news_id = $requestData['news_id'];
     
     
-        $news_data = News::with('special_offer')->find($news_id);
+        // $news_data = News::with('special_offer')->find($news_id);
+        $news_data = News::find($news_id);
        
             if (!$news_data) {
                 return response()->json(['status'=>false,'message'=>'News not found'], 404);
             }
     
-            $news_data->special_offer()->delete();
+            // $news_data->special_offer()->delete();
     
             $news_data->delete();
     
