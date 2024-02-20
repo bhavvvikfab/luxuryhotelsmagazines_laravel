@@ -13,7 +13,7 @@ class News extends Model
         'user_id',
         'news_type',
         'business_name',
-        'country',
+        // 'country',
         'full_name',
         'email_address',
         'news_title',
